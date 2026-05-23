@@ -22,18 +22,27 @@ init().catch((error) => {
 });
 
 async function init() {
-  const savedState = await loadAppState();
-  if (savedState?.bundle && savedState?.progress) {
-    appState = {
-      bundle: savedState.bundle,
-      progress: savedState.progress,
-      message: 'Loaded private study data from this browser.'
-    };
-  }
-
   render();
   root.addEventListener('click', handleClick);
   root.addEventListener('change', handleChange);
+
+  try {
+    const savedState = await loadAppState();
+    if (savedState?.bundle && savedState?.progress) {
+      appState = {
+        bundle: savedState.bundle,
+        progress: savedState.progress,
+        message: 'Loaded private study data from this browser.'
+      };
+      render();
+    }
+  } catch (error) {
+    appState = {
+      ...appState,
+      message: `Browser storage unavailable: ${error.message}`
+    };
+    render();
+  }
 }
 
 function render() {
@@ -220,9 +229,15 @@ async function handleClick(event) {
   }
 
   if (target.dataset.action === 'clear-data') {
-    await clearAppState();
     appState = { bundle: null, progress: null, message: '' };
     render();
+
+    try {
+      await clearAppState();
+    } catch (error) {
+      appState.message = `Could not clear browser storage: ${error.message}`;
+      render();
+    }
   }
 
   if (target.dataset.action === 'advance-level') {
@@ -257,8 +272,14 @@ async function loadBundle(rawBundle, message) {
   const bundle = normalizeBundle(rawBundle);
   const progress = createInitialProgress(bundle, new Date().toISOString());
   appState = { bundle, progress, message };
-  await saveAppState(appState);
   render();
+
+  try {
+    await saveAppState(appState);
+  } catch (error) {
+    appState.message = `Loaded in memory, but browser storage failed: ${error.message}`;
+    render();
+  }
 }
 
 async function answerItem(itemId, answer) {
@@ -268,8 +289,14 @@ async function answerItem(itemId, answer) {
     progress,
     message: answer === 'known' ? 'Marked known. It leaves the normal queue.' : 'Marked weak. It stays prioritized.'
   };
-  await saveAppState(appState);
   render();
+
+  try {
+    await saveAppState(appState);
+  } catch (error) {
+    appState.message = `Progress changed in memory, but browser storage failed: ${error.message}`;
+    render();
+  }
 }
 
 async function advanceLevel() {
@@ -289,8 +316,14 @@ async function advanceLevel() {
     };
   }
 
-  await saveAppState(appState);
   render();
+
+  try {
+    await saveAppState(appState);
+  } catch (error) {
+    appState.message = `Level changed in memory, but browser storage failed: ${error.message}`;
+    render();
+  }
 }
 
 function speakRussian(text) {

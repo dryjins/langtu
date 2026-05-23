@@ -10,3 +10,9 @@ test('index loads the real MVP app module instead of an inline shell', () => {
   assert.match(html, /src="\.\/src\/app\.js"/);
   assert.doesNotMatch(html, /John corpus shell/);
 });
+
+test('app renders before waiting for browser storage', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.match(script, /async function init\(\) \{\n  render\(\);/);
+});
