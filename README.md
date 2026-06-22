@@ -253,6 +253,54 @@ Imported study data is stored locally in the browser.
 
 The app should work as a static web app without a backend server.
 
+## Android APK
+
+The web MVP can be wrapped with Capacitor to produce a native Android debug APK.
+
+### Prerequisites
+
+- Node.js 18+
+- Capacitor CLI dependencies installed via `npm install`
+- Android SDK and JDK 17 installed
+
+Set these environment variables when building:
+
+- `JAVA_HOME` pointing to a JDK 17 installation
+- `ANDROID_HOME` and `ANDROID_SDK_ROOT` for your Android SDK
+- Ensure `adb`, `gradle`, and Android SDK tools are accessible from `PATH` if needed
+
+### Build Commands
+
+- Install dependencies
+
+```
+npm install
+```
+
+- Sync latest web bundle into Android assets
+
+```
+```
+
+- Build debug APK
+
+```
+```
+
+### Artifact
+
+Generated debug APK path:
+
+```
+android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+### Notes
+
+- `index.html` and `src/*` are copied to `www/` by `npm run web:prepare` before each Android sync/assemble.
+- The repository does not include copyrighted bundle content or text/audio files.
+- If you do not have Android Studio available, use an existing CI runner with the same repository and run `npm run android:assemble`.
+
 ## MVP Scope
 
 The first useful version should include:
