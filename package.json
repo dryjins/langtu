@@ -6,10 +6,12 @@
   "scripts": {
     "test": "node --test",
     "web:prepare": "node ./scripts/copy-web.mjs",
+    "web:serve": "node ./scripts/serve-web.mjs",
+    "android:ensure-sdk": "node ./scripts/ensure-android-sdk.mjs",
     "android:sync": "npm run web:prepare && npx cap sync",
     "android:copy": "npm run web:prepare && npx cap copy",
     "android:open": "npx cap open android",
-    "android:assemble": "npm run web:prepare && npx cap sync && cd android && ./gradlew assembleDebug",
+    "android:assemble": "npm run web:prepare && npx cap sync && npm run android:ensure-sdk && cd android && ./gradlew assembleDebug",
     "android:clean": "npx cap clean"
   },
   "dependencies": {

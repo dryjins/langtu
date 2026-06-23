@@ -11,6 +11,7 @@ test('capacitor config and package scripts are wired', () => {
   const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   assert.match(pkg.scripts['android:sync'], /npx cap sync/);
   assert.match(pkg.scripts['android:assemble'], /gradlew assembleDebug/);
+  assert.match(pkg.scripts['web:serve'], /scripts\/serve-web\.mjs/);
 });
 
 test('android capacitor dependency entries exist', () => {

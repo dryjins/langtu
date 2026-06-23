@@ -1,6 +1,5 @@
 import { LEVELS, normalizeBundle } from './bundle.js';
 import { clearAppState, loadAppState, saveAppState } from './db.js';
-import { DEMO_BUNDLE } from './demo-bundle.js';
 import {
   advanceLevelIfGatePassed,
   applyScreeningAnswer,
@@ -8,6 +7,7 @@ import {
   createInitialProgress,
   getLevelGateStatus
 } from './scheduler.js';
+import { buildStartupState, defaultStartupMessage } from './startup.js';
 
 const root = document.getElementById('app-root');
 
@@ -28,19 +28,27 @@ async function init() {
 
   try {
     const savedState = await loadAppState();
-    if (savedState?.bundle && savedState?.progress) {
-      appState = {
-        bundle: savedState.bundle,
-        progress: savedState.progress,
-        message: 'Loaded private study data from this browser.'
-      };
-      render();
+    const hasSavedProgress = savedState?.bundle && savedState?.progress;
+
+    appState = buildStartupState(savedState, new Date().toISOString());
+    render();
+
+    if (!hasSavedProgress) {
+      await persistStartupState('Could not persist startup bundle to browser storage.');
     }
   } catch (error) {
-    appState = {
-      ...appState,
-      message: `Browser storage unavailable: ${error.message}`
-    };
+    appState = buildStartupState(null, new Date().toISOString());
+    appState.message = `Browser storage unavailable: ${error.message}`;
+    render();
+    return;
+  }
+}
+
+async function persistStartupState(fallbackMessage) {
+  try {
+    await saveAppState(appState);
+  } catch (error) {
+    appState.message = `${fallbackMessage}: ${error.message}`;
     render();
   }
 }
@@ -50,22 +58,22 @@ function render() {
 }
 
 function renderEmptyState() {
-  return `
-    <main class="app">
-      <section class="hero card">
-        <p class="eyebrow">Russian through John</p>
-        <h1>Langtu MVP</h1>
-        <p class="lead">Import a private text bundle, screen A0 upward, then study vocabulary, grammar, and expressions through verse context. No restricted text is shipped with the public app.</p>
-        <div class="actions">
-          <label class="button primary" for="bundle-file">Import study bundle</label>
-          <input class="hidden-input" id="bundle-file" type="file" accept=".json,.langtu,application/json">
-          <button class="button secondary" type="button" data-action="load-demo">Load artificial demo</button>
-          <a class="button ghost" href="README.md">Read design</a>
-        </div>
-        <p class="notice">The demo uses artificial Russian sentences only. Real NRP or NIV text must be provided by the user as a private local bundle.</p>
-      </section>
-    </main>
-  `;
+    return `
+      <main class="app">
+        <section class="hero card">
+          <p class="eyebrow">Russian through John</p>
+          <h1>Langtu MVP</h1>
+          <p class="lead">Import a private text bundle, screen A0 upward, then study vocabulary, grammar, and expressions through verse context. No restricted text is shipped with the public app.</p>
+          <div class="actions">
+            <label class="button primary" for="bundle-file">Import study bundle</label>
+            <input class="hidden-input" id="bundle-file" type="file" accept=".json,.langtu,application/json">
+            <a class="button ghost" href="README.md">Read design</a>
+          </div>
+          <p class="notice">${escapeHtml(defaultStartupMessage)}</p>
+          <p class="notice">The demo uses artificial Russian sentences only. Real NRP or NIV text must be provided by the user as a private local bundle.</p>
+        </section>
+      </main>
+    `;
 }
 
 function renderStudyApp() {
@@ -224,16 +232,14 @@ async function handleClick(event) {
   const target = event.target.closest('button, a, label');
   if (!target) return;
 
-  if (target.dataset.action === 'load-demo') {
-    await loadBundle(DEMO_BUNDLE, 'Artificial demo bundle loaded into IndexedDB.');
-  }
-
   if (target.dataset.action === 'clear-data') {
-    appState = { bundle: null, progress: null, message: '' };
+    appState = buildStartupState(null, new Date().toISOString());
+    appState.message = 'Local data cleared and demo bundle reloaded.';
     render();
 
     try {
       await clearAppState();
+      await persistStartupState('Could not persist cleared startup state to browser storage');
     } catch (error) {
       appState.message = `Could not clear browser storage: ${error.message}`;
       render();
