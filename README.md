@@ -8,6 +8,8 @@ The public app is intended to be deployable on GitHub Pages. Restricted Bible te
 
 The goal is to help the learner progress from basic Russian recognition to active understanding of the Gospel of John in Russian.
 
+Documentation and code comments in this repository are maintained in English.
+
 ## How the Language Learning Model Works
 
 Langtu is built on a word-centered language-learning model.
