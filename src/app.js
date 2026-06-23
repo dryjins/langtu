@@ -14,6 +14,7 @@ import { buildStartupState, defaultStartupMessage } from './startup.js';
 const root = document.getElementById('app-root');
 
 const VALID_VIEWS = ['session', 'vocabulary', 'drill'];
+const VALID_LEVEL_FILTERS = ['all', ...LEVELS];
 const VALID_LIST_TYPES = ['all', 'vocabulary', 'grammar', 'expression'];
 const VALID_LIST_STATES = ['all', 'new', 'screening', 'learning', 'weak', 'known', 'retired', 'audit_due'];
 
@@ -21,7 +22,7 @@ const DEFAULT_UI = {
   view: 'session',
   listType: 'vocabulary',
   listState: 'all',
-  selectedLevel: 'A0',
+  selectedLevel: 'all',
   drillItemId: null
 };
 
@@ -62,7 +63,6 @@ async function init() {
 
 function normalizeAppState(rawState, now = new Date().toISOString()) {
   const startup = buildStartupState(rawState, now);
-  const level = startup?.progress?.currentLevel || 'A0';
   const sourceUi = rawState?.ui || {};
 
   return {
@@ -72,7 +72,7 @@ function normalizeAppState(rawState, now = new Date().toISOString()) {
       view: sanitizeValue(sourceUi.view, VALID_VIEWS, DEFAULT_UI.view),
       listType: sanitizeValue(sourceUi.listType, VALID_LIST_TYPES, DEFAULT_UI.listType),
       listState: sanitizeValue(sourceUi.listState, VALID_LIST_STATES, DEFAULT_UI.listState),
-      selectedLevel: LEVELS.includes(sourceUi.selectedLevel) ? sourceUi.selectedLevel : level,
+      selectedLevel: 'all',
       drillItemId: typeof sourceUi.drillItemId === 'string' ? sourceUi.drillItemId : null
     }
   };
@@ -300,13 +300,18 @@ function renderVocabularyView() {
     type: appState.ui.listType,
     state: appState.ui.listState
   });
-  const levelCounts = summarizeInventoryCounts(getInventoryItems(bundle, progress, { level }));
+  const levelCounts = summarizeInventoryCounts(getInventoryItems(bundle, progress, {
+    level,
+    type: appState.ui.listType,
+    state: 'all'
+  }));
+  const levelLabel = level === 'all' ? 'All levels' : `Level ${level}`;
 
   return `
     <main class="app study-layout">
       <header class="topbar">
         <div>
-          <p class="eyebrow">Level ${escapeHtml(level)} vocabulary</p>
+          <p class="eyebrow">${escapeHtml(levelLabel)} vocabulary</p>
           <h1>Vocabulary list</h1>
           <p class="muted">Scan every word, its status, meaning, and first linked example sentence.</p>
         </div>
@@ -320,6 +325,7 @@ function renderVocabularyView() {
           <div>
             <label class="filter-label" for="vocab-level">Level</label>
             <select id="vocab-level" class="select" data-action="set-selected-level" data-action-group="vocabulary">
+              <option value="all" ${level === 'all' ? 'selected' : ''}>All levels</option>
               ${LEVELS.map((value) => `<option value="${value}" ${value === level ? 'selected' : ''}>${value}</option>`).join('')}
             </select>
           </div>
@@ -568,6 +574,8 @@ async function handleClick(event) {
 
   if (target.dataset.action === 'open-vocabulary') {
     appState.ui.view = 'vocabulary';
+    appState.ui.selectedLevel = 'all';
+    appState.ui.listType = 'vocabulary';
     render();
     return;
   }
@@ -616,7 +624,7 @@ async function handleChange(event) {
   const { target } = event;
 
   if (target.dataset.action === 'set-selected-level') {
-    const normalized = sanitizeValue(target.value, LEVELS, appState.progress.currentLevel);
+    const normalized = sanitizeValue(target.value, VALID_LEVEL_FILTERS, appState.ui.selectedLevel);
     appState.ui.selectedLevel = normalized;
     appState.ui.view = 'vocabulary';
     render();

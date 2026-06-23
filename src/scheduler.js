@@ -12,6 +12,15 @@ const ITEM_TYPE_ORDER = {
   grammar: 1,
   expression: 2
 };
+const LEVEL_ORDER = {
+  A0: 0,
+  A1: 1,
+  A2: 2,
+  B1: 3,
+  B2: 4,
+  C1: 5,
+  C2: 6
+};
 
 const ANSWER_TO_STATE = {
   known: 'known',
@@ -54,12 +63,15 @@ export function getInventoryItems(bundle, progress, options = {}) {
   }
 
   return bundle.items
-    .filter((item) => item.level === level)
+    .filter((item) => level === 'all' || item.level === level)
     .map((item) => ({ item, record: progress.items[item.id] }))
     .filter((entry) => entry.record !== undefined)
     .filter((entry) => typeFilter === 'all' || entry.item.type === typeFilter)
     .filter((entry) => stateFilter === 'all' || entry.record.state === stateFilter)
     .sort((a, b) => {
+      const levelDelta = (LEVEL_ORDER[a.item.level] ?? 99) - (LEVEL_ORDER[b.item.level] ?? 99);
+      if (levelDelta !== 0) return levelDelta;
+
       const typeDelta = (ITEM_TYPE_ORDER[a.item.type] ?? 99) - (ITEM_TYPE_ORDER[b.item.type] ?? 99);
       if (typeDelta !== 0) return typeDelta;
 

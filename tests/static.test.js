@@ -29,6 +29,9 @@ test('app exposes vocabulary inventory and sentence drill modes', () => {
 test('vocabulary view renders a compact table with examples', () => {
   const script = readFileSync('src/app.js', 'utf8');
 
+  assert.match(script, /selectedLevel: 'all'/);
+  assert.match(script, /<option value="all"/);
+  assert.match(script, /All levels/);
   assert.match(script, /function renderVocabularyRow\(/);
   assert.match(script, /function getItemExample\(/);
   assert.match(script, /vocabulary-table/);

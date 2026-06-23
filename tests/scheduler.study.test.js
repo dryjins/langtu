@@ -87,6 +87,23 @@ test('getInventoryItems returns only items from selected level and filters by ty
   assert.equal(a0Vocabulary.every((entry) => entry.item.level === 'A0'), true);
 });
 
+test('getInventoryItems can return vocabulary across all levels', () => {
+  const bundle = makeBundle();
+  const progress = createInitialProgress(bundle, '2026-06-23T00:00:00.000Z');
+
+  const vocabulary = getInventoryItems(bundle, progress, {
+    level: 'all',
+    type: 'vocabulary',
+    state: 'all'
+  });
+
+  assert.deepEqual(vocabulary.map((entry) => entry.item.id), [
+    'v.beginnings',
+    'v.word',
+    'v.verse'
+  ]);
+});
+
 test('getInventoryItems filters by state after user answers', () => {
   const bundle = makeBundle();
   let progress = createInitialProgress(bundle, '2026-06-23T00:00:00.000Z');
