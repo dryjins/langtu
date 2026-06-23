@@ -280,12 +280,56 @@ npm install
 - Sync latest web bundle into Android assets
 
 ```
+npm run android:sync
 ```
 
 - Build debug APK
 
 ```
+npm run android:assemble
 ```
+
+### Recommended Web-First Flow
+
+- Prepare web assets
+
+```bash
+npm run web:prepare
+```
+
+- Start a local mobile-friendly preview server
+
+```bash
+npm run web:serve
+```
+
+- Open `http://localhost:4173` in a desktop browser or the mobile URL shown in the terminal from another device on the same network.
+- The app starts with a small artificial default bundle for immediate web testing.
+- You can still import a private bundle from local JSON at any time, and "Clear local data" returns to the default demo.
+- Verify bundle import flow and study session behavior in the web UI first.
+- Only after verification, export APK
+
+```bash
+npm run android:assemble
+```
+
+- APK output
+
+```bash
+android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+### GitHub Pages Deployment
+
+- The workflow publishes the static `www/` assets on every push to `main`.
+- GitHub Actions will run `npm test` and `npm run web:prepare` before deployment.
+
+```bash
+name: GitHub Pages
+url: https://<your-account>.github.io/langtu/
+```
+
+- After you set Pages source to GitHub Actions in repository settings, each push to `main` updates the URL above.
 
 ### Artifact
 
@@ -298,6 +342,8 @@ android/app/build/outputs/apk/debug/app-debug.apk
 ### Notes
 
 - `index.html` and `src/*` are copied to `www/` by `npm run web:prepare` before each Android sync/assemble.
+- `npm run android:assemble` also runs `android:ensure-sdk` to populate `android/local.properties` from
+  `ANDROID_HOME` or `ANDROID_SDK_ROOT` when needed.
 - The repository does not include copyrighted bundle content or text/audio files.
 - If you do not have Android Studio available, use an existing CI runner with the same repository and run `npm run android:assemble`.
 
