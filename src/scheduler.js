@@ -6,6 +6,13 @@ const PASS_THRESHOLDS = {
   expression: 0.85
 };
 
+const INVENTORY_STATES = ['new', 'screening', 'learning', 'weak', 'known', 'retired', 'audit_due'];
+const ITEM_TYPE_ORDER = {
+  vocabulary: 0,
+  grammar: 1,
+  expression: 2
+};
+
 const ANSWER_TO_STATE = {
   known: 'known',
   uncertain: 'weak',
@@ -34,6 +41,51 @@ export function createInitialProgress(bundle, now = new Date().toISOString()) {
     updatedAt: now,
     items
   };
+}
+
+export function getInventoryItems(bundle, progress, options = {}) {
+  const level = options.level ?? progress?.currentLevel ?? 'A0';
+  const typeFilter = options.type ?? 'all';
+  const stateFilter = options.state ?? 'all';
+
+  if (!bundle || !Array.isArray(bundle.items) || !progress?.items) {
+    return [];
+  }
+
+  return bundle.items
+    .filter((item) => item.level === level)
+    .map((item) => ({ item, record: progress.items[item.id] }))
+    .filter((entry) => entry.record !== undefined)
+    .filter((entry) => typeFilter === 'all' || entry.item.type === typeFilter)
+    .filter((entry) => stateFilter === 'all' || entry.record.state === stateFilter)
+    .sort((a, b) => {
+      const typeDelta = (ITEM_TYPE_ORDER[a.item.type] ?? 99) - (ITEM_TYPE_ORDER[b.item.type] ?? 99);
+      if (typeDelta !== 0) return typeDelta;
+
+      return a.item.label.localeCompare(b.item.label);
+    });
+}
+
+export function summarizeInventoryCounts(items = []) {
+  const counts = {
+    total: 0,
+    new: 0,
+    screening: 0,
+    learning: 0,
+    weak: 0,
+    known: 0,
+    retired: 0,
+    audit_due: 0
+  };
+
+  for (const entry of items) {
+    counts.total += 1;
+    if (INVENTORY_STATES.includes(entry.record?.state)) {
+      counts[entry.record.state] += 1;
+    }
+  }
+
+  return counts;
 }
 
 export function applyScreeningAnswer(progress, itemId, answer, now = new Date().toISOString()) {

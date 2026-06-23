@@ -16,3 +16,12 @@ test('app renders before waiting for browser storage', () => {
 
   assert.match(script, /async function init\(\) \{\n  render\(\);/);
 });
+
+test('app exposes vocabulary inventory and sentence drill modes', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.match(script, /function renderVocabularyView\(\)/);
+  assert.match(script, /data-action="open-vocabulary"/);
+  assert.match(script, /function renderDrillView\(\)/);
+  assert.match(script, /Repeat the sentence aloud/);
+});

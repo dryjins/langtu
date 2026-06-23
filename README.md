@@ -43,7 +43,7 @@ The learning loop intentionally separates and reconnects three processes:
 
 ### Relation to speaking (sentence repetition)
 
-MVP currently provides text-to-speech playback for Russian verse and sentence chunks. The next linguistic step is explicit sentence repetition flow:
+MVP provides text-to-speech playback for Russian verse and sentence chunks plus an explicit sentence repetition flow:
 
 - present a target sentence/phrase from a linked verse,
 - play model speech,
@@ -51,6 +51,12 @@ MVP currently provides text-to-speech playback for Russian verse and sentence ch
 - use that judgment to update `weak`/`known` states.
 
 This keeps the system within a non-audio, browser-first boundary while adding a productive skill channel in addition to recognition-based queueing.
+
+### Current study screens
+
+- Use the main queue to work on weak, due, and new items for the current level.
+- Use the vocabulary screen to inspect known, weak, new, and audit states by level and item type.
+- Use sentence drill to repeat the linked Russian sentence aloud and then mark the item as known, uncertain, or unknown.
 
 ## How this maps to app behavior
 

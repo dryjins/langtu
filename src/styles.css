@@ -128,6 +128,16 @@ h2 {
   cursor: pointer;
 }
 
+.select {
+  min-height: 42px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fffaf3;
+  color: var(--ink);
+  padding: 0 14px;
+  font-weight: 640;
+}
+
 .button.primary {
   background: var(--accent);
   color: #fffaf3;
@@ -180,6 +190,65 @@ h2 {
 .active-card {
   padding: 22px;
 }
+
+.filter-row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin-bottom: 14px;
+}
+
+.filter-row > div {
+  display: grid;
+  gap: 6px;
+}
+
+.filter-label {
+  color: var(--muted);
+  font-size: 0.83rem;
+}
+
+.meta-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inventory-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.inventory-item {
+  padding: 16px;
+}
+
+.inventory-main {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.inventory-type {
+  color: var(--muted);
+  font-size: 0.84rem;
+  margin: 0 0 6px;
+}
+
+.inventory-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.state-known { border-left: 6px solid var(--green); }
+.state-weak { border-left: 6px solid #bf6b1d; }
+.state-new { border-left: 6px solid var(--accent); }
+.state-screening { border-left: 6px solid #3f5fa5; }
+.state-learning { border-left: 6px solid #4a8a5f; }
+.state-audit_due { border-left: 6px solid #6a4a31; }
+.state-retired { border-left: 6px solid var(--muted); }
 
 .panel-header,
 .verse-heading,
