@@ -25,3 +25,23 @@ test('app exposes vocabulary inventory and sentence drill modes', () => {
   assert.match(script, /function renderDrillView\(\)/);
   assert.match(script, /Repeat the sentence aloud/);
 });
+
+test('vocabulary view renders a compact table with examples', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.match(script, /function renderVocabularyRow\(/);
+  assert.match(script, /function getItemExample\(/);
+  assert.match(script, /vocabulary-table/);
+  assert.match(script, /Example/);
+});
+
+test('vocabulary table styles include compact layout and state colors', () => {
+  const styles = readFileSync('src/styles.css', 'utf8');
+
+  assert.match(styles, /\.vocabulary-table-wrap/);
+  assert.match(styles, /\.vocab-state-bar/);
+  assert.match(styles, /\.vocab-known/);
+  assert.match(styles, /\.vocab-unknown/);
+  assert.match(styles, /\.vocab-not-learned/);
+  assert.match(styles, /\.vocab-weak/);
+});

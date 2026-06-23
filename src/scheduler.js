@@ -29,6 +29,7 @@ export function createInitialProgress(bundle, now = new Date().toISOString()) {
       level: item.level,
       state: 'new',
       correctStreak: 0,
+      lastAnswer: null,
       lastTestedAt: null,
       nextReviewAt: now,
       failReasons: []
@@ -104,6 +105,7 @@ export function applyScreeningAnswer(progress, itemId, answer, now = new Date().
   const nextProgress = cloneProgress(progress);
   const nextRecord = { ...nextProgress.items[itemId] };
   nextRecord.state = nextState;
+  nextRecord.lastAnswer = answer;
   nextRecord.lastTestedAt = now;
   nextRecord.correctStreak = answer === 'known' ? nextRecord.correctStreak + 1 : 0;
   nextRecord.nextReviewAt = answer === 'known' ? addDays(now, 30) : now;

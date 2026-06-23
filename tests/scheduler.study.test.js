@@ -125,3 +125,16 @@ test('summarizeInventoryCounts reports current state distribution for level item
   assert.equal(counts.weak, 2);
   assert.equal(counts.total, 4);
 });
+
+test('applyScreeningAnswer records the last answer category', () => {
+  const bundle = makeBundle();
+  let progress = createInitialProgress(bundle, '2026-06-23T00:00:00.000Z');
+
+  progress = applyScreeningAnswer(progress, 'v.word', 'known', '2026-06-23T00:00:00.000Z');
+  progress = applyScreeningAnswer(progress, 'v.beginnings', 'uncertain', '2026-06-23T00:00:00.000Z');
+  progress = applyScreeningAnswer(progress, 'g.subject-verb', 'unknown', '2026-06-23T00:00:00.000Z');
+
+  assert.equal(progress.items['v.word'].lastAnswer, 'known');
+  assert.equal(progress.items['v.beginnings'].lastAnswer, 'uncertain');
+  assert.equal(progress.items['g.subject-verb'].lastAnswer, 'unknown');
+});

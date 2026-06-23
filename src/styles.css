@@ -214,41 +214,111 @@ h2 {
   gap: 8px;
 }
 
-.inventory-grid {
-  display: grid;
-  gap: 12px;
+.vocabulary-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255, 250, 243, 0.72);
 }
 
-.inventory-item {
-  padding: 16px;
+.vocabulary-table {
+  width: 100%;
+  min-width: 780px;
+  border-collapse: collapse;
 }
 
-.inventory-main {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
+.vocabulary-table th,
+.vocabulary-table td {
+  border-bottom: 1px solid rgba(220, 201, 178, 0.72);
+  padding: 11px 12px;
+  text-align: left;
+  vertical-align: top;
 }
 
-.inventory-type {
+.vocabulary-table th {
   color: var(--muted);
-  font-size: 0.84rem;
-  margin: 0 0 6px;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.inventory-actions {
+.vocabulary-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.state-heading,
+.vocab-state-bar {
+  width: 8px;
+  min-width: 8px;
+  padding: 0 !important;
+}
+
+.vocab-known .vocab-state-bar { background: var(--green); }
+.vocab-unknown .vocab-state-bar { background: var(--danger); }
+.vocab-not-learned .vocab-state-bar { background: var(--muted); }
+.vocab-weak .vocab-state-bar { background: #bf6b1d; }
+.vocab-audit .vocab-state-bar { background: #6a4a31; }
+
+.vocab-word-cell,
+.vocab-meaning-cell,
+.vocab-example-cell {
+  line-height: 1.38;
+}
+
+.vocab-word {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.22rem;
+  line-height: 1.1;
+}
+
+.vocab-meta,
+.vocab-forms,
+.vocab-example-cell small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-top: 3px;
+}
+
+.vocab-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 6px;
 }
 
-.state-known { border-left: 6px solid var(--green); }
-.state-weak { border-left: 6px solid #bf6b1d; }
-.state-new { border-left: 6px solid var(--accent); }
-.state-screening { border-left: 6px solid #3f5fa5; }
-.state-learning { border-left: 6px solid #4a8a5f; }
-.state-audit_due { border-left: 6px solid #6a4a31; }
-.state-retired { border-left: 6px solid var(--muted); }
+.mini-button {
+  min-height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fffaf3;
+  color: var(--accent-dark);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 720;
+  padding: 0 9px;
+}
+
+.mini-button.danger {
+  border-color: rgba(157, 30, 50, 0.42);
+  color: var(--danger);
+}
+
+.badge.weak {
+  background: rgba(191, 107, 29, 0.14);
+  color: #8b4b10;
+}
+
+.badge.unknown {
+  background: rgba(157, 30, 50, 0.12);
+  color: var(--danger);
+}
+
+.badge.not-learned,
+.badge.audit {
+  background: rgba(110, 98, 89, 0.13);
+  color: var(--muted);
+}
 
 .panel-header,
 .verse-heading,

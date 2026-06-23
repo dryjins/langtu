@@ -19,7 +19,7 @@ const VALID_LIST_STATES = ['all', 'new', 'screening', 'learning', 'weak', 'known
 
 const DEFAULT_UI = {
   view: 'session',
-  listType: 'all',
+  listType: 'vocabulary',
   listState: 'all',
   selectedLevel: 'A0',
   drillItemId: null
@@ -308,7 +308,7 @@ function renderVocabularyView() {
         <div>
           <p class="eyebrow">Level ${escapeHtml(level)} vocabulary</p>
           <h1>Vocabulary list</h1>
-          <p class="muted">Filter by type and state and mark items to shape today&apos;s queue.</p>
+          <p class="muted">Scan every word, its status, meaning, and first linked example sentence.</p>
         </div>
         <div class="topbar-actions">
           <button class="button ghost" type="button" data-action="open-session">Back to queue</button>
@@ -326,7 +326,7 @@ function renderVocabularyView() {
           <div>
             <label class="filter-label" for="vocab-type">Type</label>
             <select id="vocab-type" class="select" data-action="set-list-type" data-action-group="vocabulary">
-              <option value="all" ${appState.ui.listType === 'all' ? 'selected' : ''}>All</option>
+              <option value="all" ${appState.ui.listType === 'all' ? 'selected' : ''}>All item types</option>
               <option value="vocabulary" ${appState.ui.listType === 'vocabulary' ? 'selected' : ''}>Vocabulary</option>
               <option value="grammar" ${appState.ui.listType === 'grammar' ? 'selected' : ''}>Grammar</option>
               <option value="expression" ${appState.ui.listType === 'expression' ? 'selected' : ''}>Expression</option>
@@ -349,7 +349,7 @@ function renderVocabularyView() {
         <div class="meta-grid">
           <span class="badge">${levelItems.length} shown</span>
           <span class="badge">${levelCounts.total} total</span>
-          <span class="badge">new ${levelCounts.new}</span>
+          <span class="badge">not learned ${levelCounts.new}</span>
           <span class="badge">weak ${levelCounts.weak}</span>
           <span class="badge">known ${levelCounts.known}</span>
           <span class="badge">audit ${levelCounts.audit_due}</span>
@@ -357,37 +357,100 @@ function renderVocabularyView() {
       </section>
 
       <section class="card panel">
-        <h2>Items</h2>
-        <div class="inventory-grid">
-          ${levelItems.length ? levelItems.map(renderInventoryItem).join('') : '<p class="muted">No items match this filter.</p>'}
-        </div>
+        <h2>Words and examples</h2>
+        ${renderVocabularyTable(levelItems, bundle)}
       </section>
     </main>
   `;
 }
 
-function renderInventoryItem(entry) {
-  const { item, record } = entry;
-  const stateClass = `state-${record.state}`;
+function renderVocabularyTable(entries, bundle) {
+  if (!entries.length) return '<p class="muted">No items match this filter.</p>';
 
   return `
-    <article class="inventory-item card ${stateClass}">
-      <div class="inventory-main">
-        <div>
-          <p class="inventory-type">${escapeHtml(item.type)} / ${escapeHtml(item.level)}</p>
-          <h3>${escapeHtml(item.label)}</h3>
-          <p class="muted">${escapeHtml(getItemMeaning(item))}</p>
-        </div>
-        <span class="badge">${escapeHtml(record.state || 'new')}</span>
-      </div>
-      <p class="inventory-actions">
-        <button class="button secondary" type="button" data-action="start-drill" data-item-id="${escapeAttribute(item.id)}">Practice</button>
-        <button class="button primary" type="button" data-answer="known" data-item-id="${escapeAttribute(item.id)}">Known</button>
-        <button class="button secondary" type="button" data-answer="uncertain" data-item-id="${escapeAttribute(item.id)}">Uncertain</button>
-        <button class="button danger" type="button" data-answer="unknown" data-item-id="${escapeAttribute(item.id)}">Unknown</button>
-      </p>
-    </article>
+    <div class="vocabulary-table-wrap">
+      <table class="vocabulary-table">
+        <thead>
+          <tr>
+            <th class="state-heading" aria-label="State color"></th>
+            <th>Word</th>
+            <th>Meaning</th>
+            <th>Example</th>
+            <th>State</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${entries.map((entry) => renderVocabularyRow(entry, bundle)).join('')}
+        </tbody>
+      </table>
+    </div>
   `;
+}
+
+function renderVocabularyRow(entry, bundle) {
+  const { item, record } = entry;
+  const displayState = getDisplayState(record);
+  const example = getItemExample(bundle, item);
+  const forms = Array.isArray(item.forms) && item.forms.length ? item.forms.join(', ') : '';
+
+  return `
+    <tr class="vocab-row vocab-${displayState.key}">
+      <td class="vocab-state-bar" aria-label="${escapeAttribute(displayState.label)}"></td>
+      <td class="vocab-word-cell">
+        <strong class="vocab-word">${escapeHtml(item.label)}</strong>
+        <span class="vocab-meta">${escapeHtml(item.type)} / ${escapeHtml(item.level)}</span>
+        ${forms ? `<span class="vocab-forms">forms: ${escapeHtml(forms)}</span>` : ''}
+      </td>
+      <td class="vocab-meaning-cell">${escapeHtml(getItemMeaning(item))}</td>
+      <td class="vocab-example-cell">
+        <span>${escapeHtml(example.text)}</span>
+        ${example.reference ? `<small>${escapeHtml(example.reference)}</small>` : ''}
+      </td>
+      <td><span class="badge ${displayState.badgeClass}">${escapeHtml(displayState.label)}</span></td>
+      <td>
+        <div class="vocab-actions">
+          <button class="mini-button" type="button" data-action="start-drill" data-item-id="${escapeAttribute(item.id)}">Drill</button>
+          <button class="mini-button" type="button" data-answer="known" data-item-id="${escapeAttribute(item.id)}">Known</button>
+          <button class="mini-button" type="button" data-answer="uncertain" data-item-id="${escapeAttribute(item.id)}">Unsure</button>
+          <button class="mini-button danger" type="button" data-answer="unknown" data-item-id="${escapeAttribute(item.id)}">Unknown</button>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
+function getDisplayState(record = {}) {
+  if (record.lastAnswer === 'known' || record.state === 'known') {
+    return { key: 'known', label: 'Known', badgeClass: 'pass' };
+  }
+
+  if (record.lastAnswer === 'unknown') {
+    return { key: 'unknown', label: 'Unknown', badgeClass: 'unknown' };
+  }
+
+  if (record.state === 'new' || record.state === 'screening') {
+    return { key: 'not-learned', label: 'Not learned', badgeClass: 'not-learned' };
+  }
+
+  if (record.state === 'retired' || record.state === 'audit_due') {
+    return { key: 'audit', label: 'Audit', badgeClass: 'audit' };
+  }
+
+  return { key: 'weak', label: 'Weak review', badgeClass: 'weak' };
+}
+
+function getItemExample(bundle, item) {
+  const verse = findFirstVerse(bundle, item);
+
+  if (!verse) {
+    return { text: 'No linked example sentence.', reference: '' };
+  }
+
+  return {
+    text: verse.russianText,
+    reference: verse.reference
+  };
 }
 
 function renderDrillView() {
