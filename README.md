@@ -8,6 +8,56 @@ The public app is intended to be deployable on GitHub Pages. Restricted Bible te
 
 The goal is to help the learner progress from basic Russian recognition to active understanding of the Gospel of John in Russian.
 
+## How the Language Learning Model Works
+
+Langtu is built on a word-centered language-learning model.
+
+- The imported bundle provides a small evidence graph:
+  - `vocabulary` items are atomic units (lemma, forms, meaning)
+  - each item is linked to verses
+  - `grammar` and `expression` items are additional learning axes, also linked to verses
+- The app never teaches in a vacuum: every item is practiced in the John context it came from, so learning is always text-grounded.
+
+The learning loop intentionally separates and reconnects three processes:
+
+1. Discovery
+   - The user imports a private bundle.
+   - The app validates and normalizes it into a single internal item graph.
+
+2. Triage (Placement + Daily Selection)
+   - At first launch, the app quickly asks whether A0/A1... items are already known.
+   - Known items are removed from normal work; uncertain and unknown items remain in the active stream.
+
+3. Current-level mastery practice
+   - `new` items are introduced with a limit (small by default).
+   - `weak` / `learning` items are prioritized for repetition.
+   - `known` items are mostly retired but remain eligible for delayed audits.
+
+### Why word-first + sentence-backed expansion
+
+- Vocabulary is the retrieval anchor: it gives the app a measurable unit for progress and recall.
+- Grammar and expression are not independent islands; each is attached to real text so the learner can test transfer to meaning.
+- If a user knows a word but fails a verse, fail reason is traced to grammar/expression pressure, so practice density shifts toward the weak axis instead of repeating the same known words.
+
+### Relation to speaking (sentence repetition)
+
+MVP currently provides text-to-speech playback for Russian verse and sentence chunks. The next linguistic step is explicit sentence repetition flow:
+
+- present a target sentence/phrase from a linked verse,
+- play model speech,
+- let the learner mark whether they could reproduce it,
+- use that judgment to update `weak`/`known` states.
+
+This keeps the system within a non-audio, browser-first boundary while adding a productive skill channel in addition to recognition-based queueing.
+
+## How this maps to app behavior
+
+- Queue prioritization reflects language pedagogy directly: weak items first, uncertain items next, only a small number of new items.
+- Level advancement is strict and cross-orthogonal: vocabulary, grammar, and expression must each clear the gate.
+- The strict gate prevents one-dimensional progress (for example, vocabulary-only completion at a level).
+
+In short, the model is: **identify known vs. unknown at entry, practice only what matters at your level, and keep mastered material for spaced re-check instead of repeated drilling.**
+
 The central learning loop is:
 
 - learn level-based Russian vocabulary from A0 through C2
