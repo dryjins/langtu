@@ -38,6 +38,15 @@ test('vocabulary view renders a compact table with examples', () => {
   assert.match(script, /Example/);
 });
 
+test('opening vocabulary resets filters to full level coverage', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.match(script, /appState\.ui\.view = 'vocabulary'/);
+  assert.match(script, /appState\.ui\.selectedLevel = 'all'/);
+  assert.match(script, /appState\.ui\.listType = 'vocabulary'/);
+  assert.match(script, /appState\.ui\.listState = 'all'/);
+});
+
 test('vocabulary table styles include compact layout and state colors', () => {
   const styles = readFileSync('src/styles.css', 'utf8');
 

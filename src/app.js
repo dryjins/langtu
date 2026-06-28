@@ -576,6 +576,7 @@ async function handleClick(event) {
     appState.ui.view = 'vocabulary';
     appState.ui.selectedLevel = 'all';
     appState.ui.listType = 'vocabulary';
+    appState.ui.listState = 'all';
     render();
     return;
   }
