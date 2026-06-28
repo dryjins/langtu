@@ -1,10 +1,9 @@
-import { LEVELS, normalizeBundle } from './bundle.js';
+import { LEVELS } from './bundle.js';
 import { clearAppState, loadAppState, saveAppState } from './db.js';
 import {
   advanceLevelIfGatePassed,
   applyScreeningAnswer,
   buildDailyQueue,
-  createInitialProgress,
   getInventoryItems,
   getLevelGateStatus,
   summarizeInventoryCounts
@@ -111,22 +110,21 @@ function render() {
 }
 
 function renderEmptyState() {
-    return `
-      <main class="app">
-        <section class="hero card">
-          <p class="eyebrow">Russian through John</p>
-          <h1>Langtu MVP</h1>
-          <p class="lead">Import a private text bundle, screen A0 upward, then study vocabulary, grammar, and expressions through verse context. No restricted text is shipped with the public app.</p>
-          <div class="actions">
-            <label class="button primary" for="bundle-file">Import study bundle</label>
-            <input class="hidden-input" id="bundle-file" type="file" accept=".json,.langtu,application/json">
-            <a class="button ghost" href="README.md">Read design</a>
-          </div>
-          <p class="notice">${escapeHtml(defaultStartupMessage)}</p>
-          <p class="notice">The demo uses artificial Russian sentences only. Real NRP or NIV text must be provided by the user as a private local bundle.</p>
-        </section>
-      </main>
-    `;
+  return `
+    <main class="app">
+      <section class="hero card">
+        <p class="eyebrow">Russian through John</p>
+        <h1>Langtu MVP</h1>
+        <p class="lead">The app starts with an offline English-Russian starter bundle and stores all progress in the browser.</p>
+        <div class="actions">
+          <button class="button primary" type="button" data-action="open-vocabulary">Open vocabulary</button>
+          <a class="button ghost" href="README.md">Read design</a>
+        </div>
+        <p class="notice">${escapeHtml(defaultStartupMessage)}</p>
+        <p class="notice">Starter content is complete for all levels and is editable only through the app and browser storage.</p>
+      </section>
+    </main>
+  `;
 }
 
 function renderStudyApp() {
@@ -135,27 +133,23 @@ function renderStudyApp() {
   const gate = getLevelGateStatus(bundle, progress, level);
   const queue = buildDailyQueue(bundle, progress, { level, now: new Date().toISOString() });
   const activeEntry = queue.at(0);
-  const topVerseControls = activeEntry
-    ? `<button class="button secondary" type="button" data-action="open-drill" data-item-id="${escapeAttribute(activeEntry.item.id)}">Practice this item</button>`
-    : `<button class="button secondary" type="button" data-action="open-vocabulary">Open vocabulary</button>`;
 
   return `
     <main class="app study-layout">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Current level ${level}</p>
-          <h1>Langtu MVP</h1>
-          <p class="muted">${escapeHtml(bundle.title)}</p>
-        </div>
-        <div class="topbar-actions">
-          <label class="button secondary" for="bundle-file">Replace bundle</label>
-          <input class="hidden-input" id="bundle-file" type="file" accept=".json,.langtu,application/json">
-          <button class="button ghost" type="button" data-action="clear-data">Clear local data</button>
-          <button class="button secondary" type="button" data-action="open-vocabulary">Vocabulary</button>
-        </div>
-      </header>
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Current level ${level}</p>
+            <h1>Langtu MVP</h1>
+            <p class="muted">${escapeHtml(bundle.title)}</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="button ghost" type="button" data-action="clear-data">Clear local data</button>
+            <button class="button secondary" type="button" data-action="open-vocabulary">Vocabulary</button>
+          </div>
+        </header>
 
       ${message ? `<div class="notice">${escapeHtml(message)}</div>` : ''}
+      <p class="muted">Study focused on sentence memorization: repeat the linked sentence, then mark word recall quality.</p>
 
       <section class="dashboard">
         ${renderGatePanel(gate)}
@@ -165,13 +159,6 @@ function renderStudyApp() {
       <section class="workbench">
         ${activeEntry ? renderActiveCard(activeEntry, bundle) : renderEmptyQueue(gate)}
         ${renderVerseBrowser(bundle)}
-      </section>
-
-      <section class="card panel">
-        <div class="panel-header">
-          <h2>Quick study action</h2>
-        </div>
-        ${topVerseControls}
       </section>
     </main>
   `;
@@ -595,16 +582,6 @@ async function handleClick(event) {
     return;
   }
 
-  if (target.dataset.action === 'open-drill') {
-    appState.ui.view = 'drill';
-    appState.ui.drillItemId = target.dataset.itemId || '';
-    if (!appState.ui.drillItemId) {
-      appState.ui.drillItemId = null;
-    }
-    render();
-    return;
-  }
-
   if (target.dataset.action === 'advance-level') {
     advanceLevel();
     return;
@@ -644,35 +621,6 @@ async function handleChange(event) {
     appState.ui.view = 'vocabulary';
     render();
     return;
-  }
-
-  if (target.id !== 'bundle-file') return;
-  const file = event.target.files?.item(0);
-  if (!file) return;
-
-  try {
-    const text = await file.text();
-    const rawBundle = JSON.parse(text);
-    await loadBundle(rawBundle, `${file.name} imported into this browser.`);
-  } catch (error) {
-    appState.message = `Import failed: ${error.message}`;
-    render();
-  }
-}
-
-async function loadBundle(rawBundle, message) {
-  const bundle = normalizeBundle(rawBundle);
-  const progress = createInitialProgress(bundle, new Date().toISOString());
-  appState = normalizeAppState({ bundle, progress, message }, new Date().toISOString());
-  appState.message = message;
-  appState.ui.view = 'session';
-  render();
-
-  try {
-    await saveAppState(appState);
-  } catch (error) {
-    appState.message = `Loaded in memory, but browser storage failed: ${error.message}`;
-    render();
   }
 }
 

@@ -26,6 +26,23 @@ test('app exposes vocabulary inventory and sentence drill modes', () => {
   assert.match(script, /Repeat the sentence aloud/);
 });
 
+test('app does not expose bundle file import controls', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.doesNotMatch(script, /bundle-file/);
+  assert.doesNotMatch(script, /loadBundle\(/);
+  assert.doesNotMatch(script, /Import study bundle/);
+  assert.doesNotMatch(script, /Replace bundle/);
+});
+
+test('app does not show quick study action panel', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.doesNotMatch(script, /Quick study action/);
+  assert.doesNotMatch(script, /topVerseControls/);
+  assert.doesNotMatch(script, /Practice this item/);
+});
+
 test('vocabulary view renders a compact table with examples', () => {
   const script = readFileSync('src/app.js', 'utf8');
 
