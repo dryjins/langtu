@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { LEVELS, normalizeBundle } from '../src/bundle.js';
+import { normalizeBundle } from '../src/bundle.js';
 import { buildStartupState, defaultStartupMessage } from '../src/startup.js';
+import { getInventoryItems } from '../src/scheduler.js';
 
 function makeSavedBundle() {
   return normalizeBundle({
@@ -68,19 +69,18 @@ test('default startup state uses artificial demo bundle when no saved state exis
   assert.equal(Object.keys(state.progress.items).length, state.bundle.items.length);
 });
 
-test('default startup bundle includes vocabulary for every supported level', () => {
+test('default startup bundle exposes all vocabulary in full inventory view', () => {
   const now = '2026-01-01T00:00:00.000Z';
 
   const state = buildStartupState(null, now);
-  const byLevel = Object.fromEntries(LEVELS.map((level) => [level, 0]));
 
-  for (const item of state.bundle.vocabulary) {
-    byLevel[item.level] += 1;
-  }
+  const allVocabulary = getInventoryItems(state.bundle, state.progress, {
+    level: 'all',
+    type: 'vocabulary',
+    state: 'all'
+  });
 
-  for (const level of LEVELS) {
-    assert.ok(byLevel[level] > 0, `missing vocabulary for ${level}`);
-  }
+  assert.equal(allVocabulary.length, state.bundle.vocabulary.length);
 });
 
 test('normalizeBundle can load default startup dataset structure', () => {
