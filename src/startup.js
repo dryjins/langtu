@@ -1,10 +1,10 @@
 import { createInitialProgress } from './scheduler.js';
-import { DEMO_BUNDLE } from './demo-bundle.js';
+import { DEFAULT_BUNDLE } from './default-bundle.js';
 import { LEVELS, normalizeBundle } from './bundle.js';
 
-export const defaultStartupMessage = 'Default artificial demo bundle loaded for quick testing.';
+export const defaultStartupMessage = 'Default curated bundle loaded from public sources and original A1 skill content.';
 
-const normalizedDefaultBundle = normalizeBundle(DEMO_BUNDLE);
+const normalizedDefaultBundle = normalizeBundle(DEFAULT_BUNDLE);
 const validLevels = new Set(LEVELS);
 
 function sanitizeLevel(level) {
@@ -14,8 +14,8 @@ function sanitizeLevel(level) {
 export function buildStartupState(savedState, now = new Date().toISOString()) {
   if (savedState?.bundle && savedState?.progress) {
     const rawBundle = savedState.bundle;
-    const usesLatestDemoBundle = rawBundle?.title === DEMO_BUNDLE.title;
-    const bundle = usesLatestDemoBundle ? normalizedDefaultBundle : normalizeBundle(rawBundle);
+    const usesLatestDefaultBundle = rawBundle?.title === DEFAULT_BUNDLE.title;
+    const bundle = usesLatestDefaultBundle ? normalizedDefaultBundle : normalizeBundle(rawBundle);
     const baselineProgress = createInitialProgress(bundle, now);
     const repairedProgress = {
       ...baselineProgress,

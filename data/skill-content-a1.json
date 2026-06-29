@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "level": "A1",
+  "method": "Original prose authored for this repository. Topics reflect standard CEFR A1 milestones in noun morphology, verb inflection, case usage, and routine interactive phrases. No text was copied from any third-party site.",
+  "generatedAt": "2026-06-29",
+  "grammar": [
+    {
+      "id": "g.a1-noun-gender",
+      "level": "A1",
+      "name": "Noun gender recognition",
+      "explanation": "Recognize masculine nouns by a consonant or a soft sign ending (стол, словарь), feminine by -а, -я, or -ь ending (книга, неделя, семья), and neuter by -о or -е ending (окно, море). Gender dictates adjective endings and verb past-tense forms."
+    },
+    {
+      "id": "g.a1-noun-plural",
+      "level": "A1",
+      "name": "Basic plural endings",
+      "explanation": "Spot the three main plural patterns. Most masculine and feminine nouns add -ы or -и (стол → столы, книга → книги, where -и follows г, к, х, ж, ш, ч, щ). Many neuter nouns and a handful of masculines shift to -а or -я (окно → окна). A small core (e.g., друг → друзья, ребёнок → дети) has irregular plurals worth memorizing."
+    },
+    {
+      "id": "g.a1-personal-pronouns",
+      "level": "A1",
+      "name": "Personal pronouns in the nominative",
+      "explanation": "Use я (I), ты (you, singular informal), вы (you, singular formal or plural), он (he), она (she), оно (it), мы (we), and они (they). The form вы covers both politeness toward one stranger and address to a group."
+    },
+    {
+      "id": "g.a1-possessive-pronouns",
+      "level": "A1",
+      "name": "Possessive pronouns",
+      "explanation": "Distinguish agreeing possessives мой/твой/наш/ваш (they change form: моя книга, моё окно) from the invariable forms его/её/их. The agreeing set must agree with the gender and number of the possessed noun, not the possessor."
+    },
+    {
+      "id": "g.a1-adjective-agreement",
+      "level": "A1",
+      "name": "Basic adjective agreement",
+      "explanation": "Match adjectives to the noun's gender in nominative singular: новый дом (masculine), новая книга (feminine), новое окно (neuter). Plural ending is -ые (after consonants and most vowels) or -ие (after г, к, х, ж, ш, ч, щ)."
+    },
+    {
+      "id": "g.a1-demonstratives",
+      "level": "A1",
+      "name": "Demonstratives этот and тот",
+      "explanation": "Use этот for items close to the speaker ('this') and тот for items farther away ('that'). Both decline like adjectives and must agree with the noun they modify."
+    },
+    {
+      "id": "g.a1-present-tense",
+      "level": "A1",
+      "name": "Present tense of regular verbs",
+      "explanation": "First-conjugation verbs (читать, работать, говорить) take the endings -ю/-у, -ешь, -ет, -ем, -ете, -ют/-ут. Second-conjugation verbs (говорить type: жить, видеть) swap to -у/-ю, -ишь, -ит, -им, -ите, -ат/-ят. Identify the conjugation by the infinitive theme vowel before -ть."
+    },
+    {
+      "id": "g.a1-past-tense",
+      "level": "A1",
+      "name": "Past tense by gender",
+      "explanation": "Form the past tense from the verb stem with -л for masculine (он читал), -ла for feminine (она читала), -ло for neuter (оно читало), and -ли for plural (они читали). The verb 'to be' has no present tense in modern Russian; use 'есть' only for existence or to emphasize identification."
+    },
+    {
+      "id": "g.a1-prepositional-case",
+      "level": "A1",
+      "name": "Prepositional case for location",
+      "explanation": "Use в or на plus prepositional singular to express where something is (в школе 'at school', на столе 'on the table'). Endings are -е for most nouns, but -и is required after stems ending in г, к, х, ж, ш, ч, щ (в книге, на ноже)."
+    },
+    {
+      "id": "g.a1-accusative-case",
+      "level": "A1",
+      "name": "Accusative for direct objects",
+      "explanation": "Mark the direct object of a transitive verb with accusative. Inanimate objects usually keep the nominative form (я вижу стол). Animate masculine singular and all animate plurals shift to genitive-like forms (я вижу студента, я вижу студентов)."
+    },
+    {
+      "id": "g.a1-negation",
+      "level": "A1",
+      "name": "Negation with не",
+      "explanation": "Place не immediately before the verb (я не знаю 'I don't know') or the noun (он не студент 'he is not a student'). Russian uses double negation for emphasis: никто не знает, ничего не вижу."
+    },
+    {
+      "id": "g.a1-adverb-basics",
+      "level": "A1",
+      "name": "Common adverbs of place and manner",
+      "explanation": "Recognize the core adverbs: где 'where', здесь 'here', там 'there', дома 'at home' for place; хорошо 'well', плохо 'badly', быстро 'fast', медленно 'slowly' for manner. Adverbs do not change form."
+    },
+    {
+      "id": "g.a1-numbers-1-10",
+      "level": "A1",
+      "name": "Numbers 1 to 10 with nouns",
+      "explanation": "Use один, одна, одно (agrees with the noun's gender: один стол, одна книга, одно окно). Use два/две (gender-distinguished). Numbers three through ten take genitive plural for animate nouns (пять студентов) and nominative plural for inanimate (пять столов)."
+    }
+  ],
+  "expressions": [
+    {
+      "id": "e.a1-hello-formal",
+      "level": "A1",
+      "phrase": "Здравствуйте.",
+      "meaning": "Hello (formal, used with strangers, elders, or a group)."
+    },
+    {
+      "id": "e.a1-hello-informal",
+      "level": "A1",
+      "phrase": "Привет.",
+      "meaning": "Hi / Hello (informal, used with one person you know well)."
+    },
+    {
+      "id": "e.a1-goodbye",
+      "level": "A1",
+      "phrase": "До свидания.",
+      "meaning": "Goodbye (neutral or formal, works in most contexts)."
+    },
+    {
+      "id": "e.a1-my-name",
+      "level": "A1",
+      "phrase": "Меня зовут ...",
+      "meaning": "My name is ... (literally 'they call me ...'). Replace the dots with the speaker's name in nominative."
+    },
+    {
+      "id": "e.a1-how-are-you",
+      "level": "A1",
+      "phrase": "Как дела?",
+      "meaning": "How are you? (informal singular; widely used in everyday speech.)"
+    },
+    {
+      "id": "e.a1-thanks",
+      "level": "A1",
+      "phrase": "Спасибо.",
+      "meaning": "Thank you."
+    },
+    {
+      "id": "e.a1-please",
+      "level": "A1",
+      "phrase": "Пожалуйста.",
+      "meaning": "Please / You're welcome / Here you go. Same form covers at least three polite functions."
+    },
+    {
+      "id": "e.a1-yes-no",
+      "level": "A1",
+      "phrase": "Да. / Нет.",
+      "meaning": "Yes. / No. Use нет alone to refuse; не is a particle that negates a single word."
+    },
+    {
+      "id": "e.a1-i-understand",
+      "level": "A1",
+      "phrase": "Я понимаю. / Я не понимаю.",
+      "meaning": "I understand. / I do not understand."
+    },
+    {
+      "id": "e.a1-how-to-say",
+      "level": "A1",
+      "phrase": "Как это по-русски?",
+      "meaning": "How do you say this in Russian? Useful when you know the English word but lack the Russian one."
+    },
+    {
+      "id": "e.a1-where-is",
+      "level": "A1",
+      "phrase": "Где ...?",
+      "meaning": "Where is ...? / Where are ...? The noun that fills the gap stays in prepositional case."
+    },
+    {
+      "id": "e.a1-i-want",
+      "level": "A1",
+      "phrase": "Я хочу ...",
+      "meaning": "I want ... (the object following хочу is in accusative: Я хочу чай, not Я хочу чая in this neutral A1 frame)."
+    }
+  ]
+}

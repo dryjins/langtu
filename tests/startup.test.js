@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { normalizeBundle } from '../src/bundle.js';
 import { buildStartupState, defaultStartupMessage } from '../src/startup.js';
-import { DEMO_BUNDLE } from '../src/demo-bundle.js';
+import { DEFAULT_BUNDLE } from '../src/default-bundle.js';
 import { getInventoryItems } from '../src/scheduler.js';
 
 function makeSavedBundle() {
@@ -56,13 +56,13 @@ test('saved state is used when bundle and progress exist', () => {
   assert.equal(state.message, 'from local storage');
 });
 
-test('default startup state uses artificial demo bundle when no saved state exists', () => {
+test('default startup state uses curated default bundle when no saved state exists', () => {
   const now = '2026-01-01T00:00:00.000Z';
 
   const state = buildStartupState(null, now);
 
   assert.equal(state.message, defaultStartupMessage);
-  assert.equal(state.bundle.title, 'Artificial GosRU demo bundle');
+  assert.equal(state.bundle.title, DEFAULT_BUNDLE.title);
   assert.equal(state.progress.currentLevel, 'A0');
   assert.equal(state.progress.createdAt, now);
   assert.equal(state.progress.updatedAt, now);
@@ -84,29 +84,30 @@ test('default startup bundle exposes all vocabulary in full inventory view', () 
   assert.equal(allVocabulary.length, state.bundle.vocabulary.length);
 });
 
-test('stale demo bundle saved in storage is upgraded to the latest demo items', () => {
+test('stale default bundle saved in storage is upgraded to the latest default items', () => {
   const now = '2026-01-03T00:00:00.000Z';
-  const normalizedDemo = normalizeBundle(DEMO_BUNDLE);
-  const staleDemoBundle = {
+  const normalizedDefault = normalizeBundle(DEFAULT_BUNDLE);
+  const firstVocab = DEFAULT_BUNDLE.vocabulary[0];
+  const staleDefaultBundle = {
     version: 1,
-    title: DEMO_BUNDLE.title,
-    verses: DEMO_BUNDLE.verses.slice(0, 1),
-    vocabulary: DEMO_BUNDLE.vocabulary.slice(0, 1),
+    title: DEFAULT_BUNDLE.title,
+    verses: DEFAULT_BUNDLE.verses.slice(0, 1),
+    vocabulary: [firstVocab],
     grammar: [],
     expressions: []
   };
 
   const savedState = {
-    bundle: staleDemoBundle,
+    bundle: staleDefaultBundle,
     progress: {
       currentLevel: 'A1',
       createdAt: '2025-12-01T00:00:00.000Z',
       updatedAt: '2025-12-01T00:00:00.000Z',
       items: {
-        [DEMO_BUNDLE.vocabulary[0].id]: {
-          id: DEMO_BUNDLE.vocabulary[0].id,
+        [firstVocab.id]: {
+          id: firstVocab.id,
           type: 'vocabulary',
-          level: DEMO_BUNDLE.vocabulary[0].level,
+          level: firstVocab.level,
           state: 'known',
           correctStreak: 3,
           lastAnswer: 'known',
@@ -122,12 +123,12 @@ test('stale demo bundle saved in storage is upgraded to the latest demo items', 
 
   const state = buildStartupState(savedState, now);
 
-  assert.equal(state.bundle.title, DEMO_BUNDLE.title);
-  assert.equal(state.bundle.items.length, normalizedDemo.items.length);
+  assert.equal(state.bundle.title, DEFAULT_BUNDLE.title);
+  assert.equal(state.bundle.items.length, normalizedDefault.items.length);
   assert.equal(state.progress.currentLevel, 'A1');
-  assert.equal(state.progress.items[DEMO_BUNDLE.vocabulary[0].id].state, 'known');
-  assert.equal(state.progress.items[DEMO_BUNDLE.vocabulary[0].id].correctStreak, 3);
-  assert.equal(Object.keys(state.progress.items).length, normalizedDemo.items.length);
+  assert.equal(state.progress.items[firstVocab.id].state, 'known');
+  assert.equal(state.progress.items[firstVocab.id].correctStreak, 3);
+  assert.equal(Object.keys(state.progress.items).length, normalizedDefault.items.length);
   assert.equal(state.message, 'from local storage');
 });
 
