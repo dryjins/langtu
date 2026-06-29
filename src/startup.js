@@ -2,7 +2,7 @@ import { createInitialProgress } from './scheduler.js';
 import { DEFAULT_BUNDLE } from './default-bundle.js';
 import { LEVELS, normalizeBundle } from './bundle.js';
 
-export const defaultStartupMessage = 'Default curated bundle loaded from public sources and original A1 skill content.';
+export const defaultStartupMessage = 'Default curated bundle loaded from public sources and original A1-C2 skill content.';
 
 const normalizedDefaultBundle = normalizeBundle(DEFAULT_BUNDLE);
 const validLevels = new Set(LEVELS);

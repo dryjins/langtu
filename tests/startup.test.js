@@ -1,5 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { normalizeBundle } from '../src/bundle.js';
 import { buildStartupState, defaultStartupMessage } from '../src/startup.js';
 import { DEFAULT_BUNDLE } from '../src/default-bundle.js';
@@ -82,6 +84,30 @@ test('default startup bundle exposes all vocabulary in full inventory view', () 
   });
 
   assert.equal(allVocabulary.length, state.bundle.vocabulary.length);
+});
+
+test('default startup bundle includes all OpenRussian vocab entries by level', async () => {
+  const dataPath = path.resolve(process.cwd(), 'data/openrussian-vocab-a1-c2.json');
+  const rawSource = JSON.parse(await fs.readFile(dataPath, 'utf8'));
+  const state = buildStartupState(null, '2026-01-01T00:00:00.000Z');
+
+  const sourceByLevel = {};
+  let expectedTotal = 0;
+  for (const [level, items] of Object.entries(rawSource?.itemsByLevel || {})) {
+    if (!Array.isArray(items)) continue;
+    sourceByLevel[level] = items.length;
+    expectedTotal += items.length;
+  }
+
+  const actualByLevel = state.bundle.vocabulary.reduce((acc, item) => {
+    acc[item.level] = (acc[item.level] || 0) + 1;
+    return acc;
+  }, {});
+
+  assert.equal(state.bundle.vocabulary.length, expectedTotal);
+  for (const [level, expectedCount] of Object.entries(sourceByLevel)) {
+    assert.equal(actualByLevel[level], expectedCount);
+  }
 });
 
 test('stale default bundle saved in storage is upgraded to the latest default items', () => {

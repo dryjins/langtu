@@ -18,7 +18,7 @@ const CLI_DEFAULTS = {
   ],
   output: 'src/default-bundle.js',
   chapters: 5,
-  vocabPerLevel: 10,
+  vocabPerLevel: undefined,
   title: 'GosRU starter (curated from public sources and original A1-C2 skill content)'
 };
 
@@ -48,7 +48,7 @@ function buildVocabularyFromOpenRussian(vocabData, vocabPerLevel) {
   const seenIds = new Set();
   for (const level of Object.keys(vocabData?.itemsByLevel || {})) {
     const items = Array.isArray(vocabData.itemsByLevel[level]) ? vocabData.itemsByLevel[level] : [];
-    const picked = items.slice(0, vocabPerLevel);
+    const picked = typeof vocabPerLevel === 'number' ? items.slice(0, vocabPerLevel) : items;
     for (const item of picked) {
       const lemma = String(item.bare || '').trim();
       if (!lemma) continue;
@@ -188,7 +188,7 @@ function printUsage() {
       '--skill path           Source skill content JSON (repeatable; default: A1 + A2 files)',
       '--output path          Output bundle JS (default: src/default-bundle.js)',
       '--chapters n           Chapter count from start (default: 5)',
-      '--vocab-per-level n    Top items per level (default: 10)',
+      '--vocab-per-level n    Top items per level (default: all)',
       '--title str            Bundle title',
       '--help                 Print help'
     ].join('\n') + '\n'
@@ -204,7 +204,7 @@ export async function runCli(argv = process.argv.slice(2)) {
   if (!Number.isFinite(args.chapters) || args.chapters < 0) {
     throw new Error('--chapters must be a non-negative number');
   }
-  if (!Number.isFinite(args.vocabPerLevel) || args.vocabPerLevel < 0) {
+  if (args.vocabPerLevel !== undefined && (!Number.isFinite(args.vocabPerLevel) || args.vocabPerLevel < 0)) {
     throw new Error('--vocab-per-level must be a non-negative number');
   }
   if (!Array.isArray(args.skills) || args.skills.length === 0) {
