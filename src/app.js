@@ -200,8 +200,8 @@ function renderSentenceChallengeCard(challenge) {
   if (!challenge) {
     return `
       <article class="card panel sentence-card">
-        <h2>오늘의 핵심 문장</h2>
-        <p class="muted">학습된 단어가 더 필요합니다. 어휘를 더 익힌 뒤 다시 시도해 주세요.</p>
+        <h2>Today's core sentence</h2>
+        <p class="muted">Learn more vocabulary before this flow is available.</p>
       </article>
     `;
   }
@@ -211,11 +211,11 @@ function renderSentenceChallengeCard(challenge) {
   return `
     <article class="card panel sentence-card">
       <div class="panel-header">
-        <h2>오늘의 핵심 문장</h2>
-        <span class="hint-level">레벨 ${escapeHtml(challenge.focusLevel || '')}</span>
+        <h2>Today's core sentence</h2>
+        <span class="hint-level">Level ${escapeHtml(challenge.focusLevel || '')}</span>
       </div>
-      <p class="muted">문장이 원문과 같은지 선택해 주세요.</p>
-        <p class="sentence-quote">${escapeHtml(challenge.verseReference || challenge.verseId || '문장')}</p>
+      <p class="muted">Select whether the sentence matches the reference sentence.</p>
+        <p class="sentence-quote">${escapeHtml(challenge.verseReference || challenge.verseId || 'Sentence')}</p>
       <div class="sentence-options">
         ${challenge.options.map((option) => `
           <button class="sentence-option" type="button" data-action="judge-sentence" data-answer="${option.isCorrect}">
@@ -232,15 +232,15 @@ function renderSentenceHintPanel(items) {
   if (!items.length) {
     return `
       <article class="card panel sentence-hints-card">
-        <h3>단어 힌트</h3>
-        <p class="muted">현재 문장과 연결된 어휘를 아직 학습하지 않았습니다.</p>
+        <h3>Vocabulary hints</h3>
+        <p class="muted">No related learned vocabulary is linked to this sentence yet.</p>
       </article>
     `;
   }
 
   return `
     <article class="card panel sentence-hints-card">
-      <h3>단어 힌트</h3>
+      <h3>Vocabulary hints</h3>
       <ul class="sentence-hint-list">
         ${items.map((item) => `
           <li class="sentence-hint-item">
@@ -249,7 +249,7 @@ function renderSentenceHintPanel(items) {
               <strong>${escapeHtml(item.label)}</strong>
               <small>${escapeHtml(formatHintKind(item.type))} · ${escapeHtml(getItemMeaning(item))}</small>
             </div>
-            <button class="mini-button" type="button" data-action="speak" data-text="${escapeAttribute(item.label)}">음성</button>
+            <button class="mini-button" type="button" data-action="speak" data-text="${escapeAttribute(item.label)}">Speak</button>
           </li>
         `).join('')}
       </ul>
@@ -639,7 +639,7 @@ async function answerItem(itemId, answer) {
 async function handleSentenceChallenge(isCorrect) {
   const challenge = appState.ui.sentenceChallenge;
   if (!challenge?.itemId) {
-    appState.message = '오늘의 문장 데이터가 없습니다.';
+    appState.message = 'Sentence challenge data is unavailable.';
     render();
     return;
   }
@@ -673,7 +673,7 @@ async function handleSentenceChallenge(isCorrect) {
       ...appState.ui,
       sentenceChallenge: null
     },
-    message: isCorrect ? '정답입니다. 예문이 일치합니다.' : '오답입니다. 다시 들어보고 판단해 보세요.'
+    message: isCorrect ? 'Correct. The example sentence matches.' : 'Incorrect. Listen again and try again.'
   };
 
   render();

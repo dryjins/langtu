@@ -63,6 +63,19 @@ test('session UI includes sentence challenge flow', () => {
   assert.match(styles, /\.hint-level/);
 });
 
+test('sentence challenge UI text stays in English', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.doesNotMatch(script, /오늘의 핵심 문장/);
+  assert.doesNotMatch(script, /학습된 단어가 더 필요합니다/);
+  assert.doesNotMatch(script, /문장이 원문과 같은지 선택해 주세요/);
+  assert.doesNotMatch(script, /단어 힌트/);
+  assert.doesNotMatch(script, /음성/);
+  assert.doesNotMatch(script, /오늘의 문장 데이터가 없습니다/);
+  assert.doesNotMatch(script, /정답입니다/);
+  assert.doesNotMatch(script, /오답입니다/);
+});
+
 test('vocabulary view renders a compact table with examples', () => {
   const script = readFileSync('src/app.js', 'utf8');
 
