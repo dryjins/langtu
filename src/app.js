@@ -11,6 +11,7 @@ import {
 import { buildStartupState, defaultStartupMessage } from './startup.js';
 
 const root = document.getElementById('app-root');
+const APP_NAME = 'Gosru';
 
 const VALID_VIEWS = ['session', 'vocabulary', 'drill'];
 const VALID_LEVEL_FILTERS = ['all', ...LEVELS];
@@ -33,7 +34,7 @@ let appState = {
 };
 
 init().catch((error) => {
-  root.innerHTML = `<main class="app error"><h1>Langtu</h1><p>${escapeHtml(error.message)}</p></main>`;
+   root.innerHTML = `<main class="app error"><h1>${APP_NAME}</h1><p>${escapeHtml(error.message)}</p></main>`;
 });
 
 async function init() {
@@ -114,7 +115,7 @@ function renderEmptyState() {
     <main class="app">
       <section class="hero card">
         <p class="eyebrow">Russian through John</p>
-        <h1>Langtu MVP</h1>
+        <h1>${APP_NAME}</h1>
         <p class="lead">The app starts with an offline English-Russian starter bundle and stores all progress in the browser.</p>
         <div class="actions">
           <button class="button primary" type="button" data-action="open-vocabulary">Open vocabulary</button>
@@ -139,7 +140,7 @@ function renderStudyApp() {
         <header class="topbar">
           <div>
             <p class="eyebrow">Current level ${level}</p>
-            <h1>Langtu MVP</h1>
+            <h1>${APP_NAME}</h1>
             <p class="muted">${escapeHtml(bundle.title)}</p>
           </div>
           <div class="topbar-actions">

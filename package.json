@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
+    "collect:bible-kids": "node ./scripts/collect-bible-by-kids.mjs",
+    "build:book3-vocab-graph": "node ./scripts/build-book3-a1-c2-vocab-graph.mjs",
     "web:prepare": "node ./scripts/copy-web.mjs",
     "web:serve": "node ./scripts/serve-web.mjs",
     "android:ensure-sdk": "node ./scripts/ensure-android-sdk.mjs",

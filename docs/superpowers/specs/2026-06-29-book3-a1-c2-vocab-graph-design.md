@@ -28,6 +28,7 @@ Progress gating currently works on a private study bundle format but lacks a pre
   - `surface-accented`: `accented`에서 강세기호(ʼ,') 제거 후 매칭
   - `stem-fallback`(선택): 간단한 형태복원 후보 생성(`-ть` 계열/굴절종결어미 제거)로 보조 매칭
 - 결과 파일이 deterministic 하게 생성되고, 진행량 계산 파이프라인에서 사용 가능한 형태로 노출
+- 챕터 재방문은 **빈칸 채우기 테스트 성공률**로 판단하며, 테스트 항목은 문장 단위로 생성될 수 있어야 함
 
 ## Scope
 
@@ -66,6 +67,14 @@ with structure:
   - 레벨별 `coveredUnique`, `missingUnique`, `coveredTokenRate`, `missingTokenRate`
   - 누적 기준 레벨(`A1` 누적, `A2` 누적, ... `C2` 누적) 계산
 - `globalCoverage`: 기존 missing-by-level 통계와 cross-check 가능한 전체 통계
+- `reviewStimuli`: 챕터 재방문용 단어 테스트 자극군
+  - `byChapter`: 챕터별 테스트 셋(우선순위순 정렬)
+  - 각 테스트 항목:
+    - `type: 'cloze'`
+    - `chapter`, `lineIndex`, `sentence`
+    - `blankedToken`, `answer`, `acceptableAnswers`
+    - `sourceLevel`, `sourceWordId`, `sourceMatchConfidence`
+    - `location`: { `tokenIndex`, `originalToken`, `matchMethod` }
 
 ## Matching Rules (Hybrid / Mixed Strategy)
 
@@ -109,15 +118,18 @@ with structure:
 - 누적 레벨 기준은 `A1` ~ 현재 레벨까지 어휘 리스트를 누적 집합으로 확장
 - 미커버 단어는 `globalCoverage`와 `chapterCoverageByLevel.missingByLevel`에 추출
 
-### Revisit Signal
+### Revisit Rule for Chapter Selection
 
-To support revisit decisions without forcing 1:1 pairing, export a compact `revisitHints` section:
+- 챕터 재방문 점수는 챕터의 고우선 미커버 단어 비중, 챕터 내 미커버 토큰 비중, 최근 재방문 빈도(향후 입력 가능)로 계산
+- 이 점수 계산 근거는 `reviewStimuli` 생성 시점에서 보존하며, 스케줄러는 테스트 실패/정답률에 따라 이 점수를 업데이트할 수 있도록 구조만 준비
 
-- `candidateWord`: 낮은 커버리지/높은 빈도 미커버 단어 또는 미흡 레벨 단어
-- `candidateChapters`: 해당 단어의 핵심 출현 챕터 top-k
-- `priority`: 단어 중요도 가중치 (예: 출현 빈도, 현재 레벨 적합성, 직전 진도 반영도) 기반 정렬
+### Revisit by Word Test (Cloze)
 
-This section is intentionally optional and can be empty in the initial pass. It is a separate object so we can add richer scheduling logic later without changing core coverage fields.
+- 재방문은 단어 커버리지를 개선하는 방향이어야 하므로, 챕터 선택 시 해당 챕터의 `reviewStimuli.byChapter` 항목으로 단어 빈칸 테스트를 우선 노출한다.
+- 한 테스트는 1개 정답(빈칸), 그 외는 선택형이거나 사용자가 자유입력 텍스트로 처리 가능.
+- 텍스트 정답 비교는 정규화 파이프라인(`lowercase`, `ё->е`, combining marks 제거) 기준으로 수행.
+- 테스트 생성은 `reviewStimuli`에서만 보관하고, 앱 스케줄러는 이 구조를 읽어 챕터 재방문 정책을 결정한다.
+- 동일 단어가 여러 문장에서 출현하면 `reviewStimuli`는 챕터별로 난이도/빈도 균형을 맞춰 서로 다른 위치를 선택한다.
 
 ## Script Design
 
@@ -146,6 +158,7 @@ Add focused tests:
 - 정규화 테스트: `ё/е`, 강세기호 제거로 secondary match가 생기는지
 - 커버리지 테스트: 작은 fixture로 챕터별 커버리지 합이 토큰/유니크 기준으로 합리적임
 - 회귀 테스트: 기존 보고서(`data/bible-kids-03-missing-by-level-a1-c2.json`)의 누적 커버율과 `globalCoverage.coverageUniqueRate`가 일치/근접한지 비교
+- 테스트 생성 테스트: 각 챕터에서 동일 `lineIndex`가 1회 이상 생성되지 않도록 제한(옵션), 정답 토큰이 원문에 존재하는지 검증
 
 ## Implementation Notes
 
