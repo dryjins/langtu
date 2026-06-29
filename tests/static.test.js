@@ -7,7 +7,7 @@ test('index loads the real MVP app module instead of an inline shell', () => {
 
   assert.match(html, /<div id="app-root"><\/div>/);
   assert.match(html, /type="module"/);
-  assert.match(html, /src="\.\/src\/app\.js"/);
+  assert.match(html, /src="\.\/src\/app\.js(\?[^"]*)?"/);
   assert.doesNotMatch(html, /John corpus shell/);
 });
 
