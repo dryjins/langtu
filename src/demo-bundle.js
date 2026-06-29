@@ -36,6 +36,41 @@ export const DEMO_BUNDLE = {
       russianText: 'Переводчик объясняет оттенки смысла в тексте.',
       englishText: 'The translator explains nuance in the text.',
       notes: 'Artificial sample text for upper-level expression.'
+    },
+    {
+      id: 'demo.2.1',
+      reference: 'Demo 2:1',
+      russianText: 'Книга помогает развивать разговорный навык.',
+      englishText: 'A book helps develop conversational skill.',
+      notes: 'Artificial sample text to support A1 vocabulary.'
+    },
+    {
+      id: 'demo.2.2',
+      reference: 'Demo 2:2',
+      russianText: 'Чтение развивает понятие и аргументированное мышление.',
+      englishText: 'Reading develops the concept and argument-based thinking.',
+      notes: 'Artificial sample text to support A2 and B1 vocabulary.'
+    },
+    {
+      id: 'demo.2.3',
+      reference: 'Demo 2:3',
+      russianText: 'Исследователь изучает оттенки дискуссии и структуру тезисов.',
+      englishText: 'A researcher studies discussion nuance and thesis structure.',
+      notes: 'Artificial sample text to support B2 vocabulary.'
+    },
+    {
+      id: 'demo.2.4',
+      reference: 'Demo 2:4',
+      russianText: 'Аналитик формулирует позицию через точные примеры и выводы.',
+      englishText: 'An analyst states a position through exact examples and conclusions.',
+      notes: 'Artificial sample text to support C1 vocabulary.'
+    },
+    {
+      id: 'demo.2.5',
+      reference: 'Demo 2:5',
+      russianText: 'Научный дискурс связывает аргументы в сложную синтаксическую сеть.',
+      englishText: 'Scientific discourse links arguments in a complex syntactic network.',
+      notes: 'Artificial sample text to support C2 vocabulary.'
     }
   ],
   vocabulary: [
@@ -72,11 +107,43 @@ export const DEMO_BUNDLE = {
       linkedVerseIds: ['demo.1.2']
     },
     {
+      id: 'v.book',
+      level: 'A1',
+      lemma: 'книга',
+      forms: ['книга', 'книге', 'книгу', 'книгой'],
+      meaning: 'book',
+      linkedVerseIds: ['demo.2.1']
+    },
+    {
+      id: 'v.speech',
+      level: 'A1',
+      lemma: 'разговор',
+      forms: ['разговор', 'разговора', 'разговоре'],
+      meaning: 'conversation',
+      linkedVerseIds: ['demo.2.1']
+    },
+    {
       id: 'v.expression',
       level: 'A2',
       lemma: 'выражение',
       forms: ['выражение'],
       meaning: 'expression',
+      linkedVerseIds: ['demo.1.3']
+    },
+    {
+      id: 'v.sent',
+      level: 'A2',
+      lemma: 'предложение',
+      forms: ['предложение', 'предложения', 'предложению'],
+      meaning: 'sentence',
+      linkedVerseIds: ['demo.2.2']
+    },
+    {
+      id: 'v.repeat',
+      level: 'A2',
+      lemma: 'повторять',
+      forms: ['повторять', 'повторяет', 'повторение'],
+      meaning: 'to repeat',
       linkedVerseIds: ['demo.1.3']
     },
     {
@@ -88,12 +155,44 @@ export const DEMO_BUNDLE = {
       linkedVerseIds: ['demo.1.4']
     },
     {
+      id: 'v.b1-topic',
+      level: 'B1',
+      lemma: 'тема',
+      forms: ['тема', 'темы', 'тему', 'теме'],
+      meaning: 'topic',
+      linkedVerseIds: ['demo.2.2']
+    },
+    {
+      id: 'v.b1-thesis',
+      level: 'B1',
+      lemma: 'тезис',
+      forms: ['тезис', 'тезиса'],
+      meaning: 'thesis',
+      linkedVerseIds: ['demo.2.2']
+    },
+    {
       id: 'v.b2-discuss',
       level: 'B2',
       lemma: 'обсуждать',
       forms: ['обсуждать'],
       meaning: 'to discuss',
       linkedVerseIds: ['demo.1.4']
+    },
+    {
+      id: 'v.b2-research',
+      level: 'B2',
+      lemma: 'исследование',
+      forms: ['исследование', 'исследования'],
+      meaning: 'research',
+      linkedVerseIds: ['demo.2.3']
+    },
+    {
+      id: 'v.b2-evidence',
+      level: 'B2',
+      lemma: 'доказательство',
+      forms: ['доказательство', 'доказательства'],
+      meaning: 'evidence',
+      linkedVerseIds: ['demo.2.3']
     },
     {
       id: 'v.c1-interpret',
@@ -104,12 +203,44 @@ export const DEMO_BUNDLE = {
       linkedVerseIds: ['demo.1.5']
     },
     {
+      id: 'v.c1-position',
+      level: 'C1',
+      lemma: 'позиция',
+      forms: ['позиция', 'позиции', 'позицией'],
+      meaning: 'position',
+      linkedVerseIds: ['demo.2.4']
+    },
+    {
+      id: 'v.c1-rigour',
+      level: 'C1',
+      lemma: 'доказательность',
+      forms: ['доказательность'],
+      meaning: 'rigour',
+      linkedVerseIds: ['demo.2.4']
+    },
+    {
       id: 'v.c2-syntax',
       level: 'C2',
       lemma: 'синтаксис',
       forms: ['синтаксиса'],
       meaning: 'syntax',
       linkedVerseIds: ['demo.1.5']
+    },
+    {
+      id: 'v.c2-discourse',
+      level: 'C2',
+      lemma: 'дискурс',
+      forms: ['дискурс', 'дискурса'],
+      meaning: 'discourse',
+      linkedVerseIds: ['demo.2.5']
+    },
+    {
+      id: 'v.c2-rhetoric',
+      level: 'C2',
+      lemma: 'риторика',
+      forms: ['риторика', 'риторику', 'риторики'],
+      meaning: 'rhetoric',
+      linkedVerseIds: ['demo.2.5']
     }
   ],
   grammar: [
