@@ -304,6 +304,89 @@ h2 {
   color: var(--danger);
 }
 
+.sentence-card {
+  display: grid;
+  gap: 14px;
+}
+
+.sentence-quote {
+  margin: 0;
+  font-size: 1.3rem;
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.sentence-options {
+  display: grid;
+  gap: 10px;
+}
+
+.sentence-option {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #fffaf3;
+  color: var(--ink);
+  min-height: 52px;
+  padding: 10px 13px;
+  text-align: left;
+  line-height: 1.34;
+  font-size: 1.02rem;
+  font-weight: 630;
+}
+
+.sentence-option:hover,
+.sentence-option:focus-visible {
+  border-color: var(--accent);
+  background: rgba(255, 250, 243, 0.88);
+}
+
+.sentence-hints-card {
+  display: grid;
+  gap: 10px;
+}
+
+.sentence-hint-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.sentence-hint-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 250, 243, 0.72);
+  padding: 10px;
+}
+
+.sentence-hint-item strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.sentence-hint-item small {
+  display: block;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.hint-level {
+  display: inline-flex;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 77, 115, 0.3);
+  background: rgba(34, 77, 115, 0.12);
+  color: var(--blue);
+  padding: 5px 10px;
+  font-size: 0.76rem;
+  font-weight: 720;
+}
+
 .badge.weak {
   background: rgba(191, 107, 29, 0.14);
   color: #8b4b10;

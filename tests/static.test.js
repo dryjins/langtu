@@ -23,7 +23,7 @@ test('app exposes vocabulary inventory and sentence drill modes', () => {
   assert.match(script, /function renderVocabularyView\(\)/);
   assert.match(script, /data-action="open-vocabulary"/);
   assert.match(script, /function renderDrillView\(\)/);
-  assert.match(script, /Repeat the sentence aloud/);
+  assert.match(script, /judge-sentence/);
 });
 
 test('app does not expose bundle file import controls', () => {
@@ -41,6 +41,26 @@ test('app does not show quick study action panel', () => {
   assert.doesNotMatch(script, /Quick study action/);
   assert.doesNotMatch(script, /topVerseControls/);
   assert.doesNotMatch(script, /Practice this item/);
+});
+
+test('session view is no longer strict gate based', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.doesNotMatch(script, /Strict gate/);
+  assert.doesNotMatch(script, /advance-level/);
+  assert.doesNotMatch(script, /getLevelGateStatus/);
+});
+
+test('session UI includes sentence challenge flow', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+  const styles = readFileSync('src/styles.css', 'utf8');
+
+  assert.match(script, /buildSentenceTruthChallenge/);
+  assert.match(script, /handleSentenceChallenge/);
+  assert.match(script, /data-action="judge-sentence"/);
+  assert.match(script, /option\.isCorrect/);
+  assert.match(styles, /\.sentence-option/);
+  assert.match(styles, /\.hint-level/);
 });
 
 test('vocabulary view renders a compact table with examples', () => {

@@ -1,17 +1,16 @@
 import { LEVELS } from './bundle.js';
 import { clearAppState, loadAppState, saveAppState } from './db.js';
 import {
-  advanceLevelIfGatePassed,
   applyScreeningAnswer,
   buildDailyQueue,
   getInventoryItems,
-  getLevelGateStatus,
   summarizeInventoryCounts
 } from './scheduler.js';
 import { buildStartupState, defaultStartupMessage } from './startup.js';
+import { buildSentenceTruthChallenge } from './sentence-practice.js';
 
 const root = document.getElementById('app-root');
-const APP_NAME = 'Gosru';
+const APP_NAME = 'GosRU';
 
 const VALID_VIEWS = ['session', 'vocabulary', 'drill'];
 const VALID_LEVEL_FILTERS = ['all', ...LEVELS];
@@ -23,7 +22,8 @@ const DEFAULT_UI = {
   listType: 'vocabulary',
   listState: 'all',
   selectedLevel: 'all',
-  drillItemId: null
+  drillItemId: null,
+  sentenceChallenge: null
 };
 
 let appState = {
@@ -69,6 +69,7 @@ function normalizeAppState(rawState, now = new Date().toISOString()) {
     ...startup,
     ui: {
       ...DEFAULT_UI,
+      sentenceChallenge: null,
       view: sanitizeValue(sourceUi.view, VALID_VIEWS, DEFAULT_UI.view),
       listType: sanitizeValue(sourceUi.listType, VALID_LIST_TYPES, DEFAULT_UI.listType),
       listState: sanitizeValue(sourceUi.listState, VALID_LIST_STATES, DEFAULT_UI.listState),
@@ -131,9 +132,7 @@ function renderEmptyState() {
 function renderStudyApp() {
   const { bundle, progress, message } = appState;
   const level = progress.currentLevel;
-  const gate = getLevelGateStatus(bundle, progress, level);
-  const queue = buildDailyQueue(bundle, progress, { level, now: new Date().toISOString() });
-  const activeEntry = queue.at(0);
+  const challenge = getSessionSentenceChallenge();
 
   return `
     <main class="app study-layout">
@@ -150,133 +149,111 @@ function renderStudyApp() {
         </header>
 
       ${message ? `<div class="notice">${escapeHtml(message)}</div>` : ''}
-      <p class="muted">Study focused on sentence memorization: repeat the linked sentence, then mark word recall quality.</p>
 
-      <section class="dashboard">
-        ${renderGatePanel(gate)}
-        ${renderQueuePanel(queue)}
-      </section>
-
-      <section class="workbench">
-        ${activeEntry ? renderActiveCard(activeEntry, bundle) : renderEmptyQueue(gate)}
-        ${renderVerseBrowser(bundle)}
+      <section class="dashboard sentence-layout">
+        ${renderSentenceChallengeCard(challenge)}
+        ${renderSentenceHintPanel(challenge ? challenge.hints : [])}
       </section>
     </main>
   `;
 }
 
-function renderGatePanel(gate) {
+function getSessionSentenceChallenge() {
+  const stored = appState.ui.sentenceChallenge;
+  const level = appState.progress.currentLevel;
+  if (stored?.level === level) {
+    return stored;
+  }
+
+  const challenge = buildSentenceTruthChallenge(appState.bundle, appState.progress, {
+    level,
+    now: new Date().toISOString()
+  });
+
+  if (!challenge) {
+    appState.ui.sentenceChallenge = null;
+    return null;
+  }
+
+  const prepared = {
+    ...challenge,
+    level,
+    options: shuffleSentenceOptions(challenge.options)
+  };
+
+  appState.ui.sentenceChallenge = prepared;
+  return prepared;
+}
+
+function shuffleSentenceOptions(options) {
+  const output = [...options];
+
+  for (let i = output.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [output[i], output[j]] = [output[j], output[i]];
+  }
+
+  return output;
+}
+
+function renderSentenceChallengeCard(challenge) {
+  if (!challenge) {
+    return `
+      <article class="card panel sentence-card">
+        <h2>오늘의 핵심 문장</h2>
+        <p class="muted">학습된 단어가 더 필요합니다. 어휘를 더 익힌 뒤 다시 시도해 주세요.</p>
+      </article>
+    `;
+  }
+
+  const truth = challenge.options.find((entry) => entry.isCorrect)?.text || '';
+
   return `
-    <article class="card panel">
+    <article class="card panel sentence-card">
       <div class="panel-header">
-        <h2>Strict gate</h2>
-        <strong class="badge ${gate.passed ? 'pass' : 'wait'}">${gate.passed ? 'pass' : 'blocked'}</strong>
+        <h2>오늘의 핵심 문장</h2>
+        <span class="hint-level">레벨 ${escapeHtml(challenge.focusLevel || '')}</span>
       </div>
-      <div class="meter-list">
-        ${renderMeter('Vocabulary', gate.vocabulary)}
-        ${renderMeter('Grammar', gate.grammar)}
-        ${renderMeter('Expression', gate.expression)}
-      </div>
-      ${gate.passed ? renderAdvanceButton(gate.level) : '<p class="muted">All three areas must pass before the next level opens.</p>'}
-    </article>
-  `;
-}
-
-function renderAdvanceButton(level) {
-  const nextLevel = LEVELS[LEVELS.indexOf(level) + 1];
-  if (!nextLevel) return '<p class="muted">C2 gate passed. All configured levels are complete.</p>';
-  return `<button class="button primary wide" type="button" data-action="advance-level">Advance to ${nextLevel}</button>`;
-}
-
-function renderMeter(label, status) {
-  const percentage = Math.round(status.ratio * 100);
-  return `
-    <div class="meter-row">
-      <div class="meter-label"><span>${label}</span><span>${status.mastered}/${status.total}</span></div>
-      <div class="meter"><span style="width: ${percentage}%"></span></div>
-    </div>
-  `;
-}
-
-function renderQueuePanel(queue) {
-  return `
-    <article class="card panel">
-      <div class="panel-header">
-        <h2>Today queue</h2>
-        <strong class="badge">${queue.length}</strong>
-      </div>
-      <p class="muted">Weak, uncertain, due, and new items are prioritized. Known items stay out unless an audit is due.</p>
-      <div class="queue-list">
-        ${queue.slice(0, 6).map((entry) => `<span class="queue-chip">${entry.reason}: ${entry.item.type}</span>`).join('') || '<span class="queue-chip">empty</span>'}
-      </div>
-    </article>
-  `;
-}
-
-function renderActiveCard(entry, bundle) {
-  const item = entry.item;
-  const verse = findFirstVerse(bundle, item);
-
-  return `
-    <article class="card active-card">
-      <p class="eyebrow">${escapeHtml(item.type)} · ${escapeHtml(item.level)} · ${escapeHtml(entry.reason)}</p>
-      <h2>${escapeHtml(item.label)}</h2>
-      <p class="meaning">${escapeHtml(getItemMeaning(item))}</p>
-      ${verse ? renderVerseCard(verse) : '<p class="muted">No linked verse.</p>'}
-      ${renderItemNote(item)}
-      <div class="answer-grid">
-        <button class="button primary" type="button" data-answer="known" data-item-id="${escapeAttribute(item.id)}">I know this</button>
-        <button class="button secondary" type="button" data-answer="uncertain" data-item-id="${escapeAttribute(item.id)}">Not sure</button>
-        <button class="button danger" type="button" data-answer="unknown" data-item-id="${escapeAttribute(item.id)}">I do not know</button>
-      </div>
-    </article>
-  `;
-}
-
-function renderVerseCard(verse) {
-  return `
-    <div class="verse-card">
-      <div class="verse-heading">
-        <strong>${escapeHtml(verse.reference)}</strong>
-        <button class="icon-button" type="button" data-action="speak" data-text="${escapeAttribute(verse.russianText)}">Speak</button>
-      </div>
-      <p class="russian">${escapeHtml(verse.russianText)}</p>
-      ${verse.englishText ? `<p class="translation">${escapeHtml(verse.englishText)}</p>` : ''}
-      ${verse.notes ? `<p class="muted">${escapeHtml(verse.notes)}</p>` : ''}
-    </div>
-  `;
-}
-
-function renderItemNote(item) {
-  const text = item.explanation || item.meaning || item.phrase || '';
-  if (!text) return '';
-  return `<p class="note">${escapeHtml(text)}</p>`;
-}
-
-function renderEmptyQueue(gate) {
-  return `
-    <article class="card active-card">
-      <p class="eyebrow">Queue empty</p>
-      <h2>${gate.passed ? 'Level gate passed' : 'Nothing due right now'}</h2>
-      <p class="muted">Import richer data or wait until audits become due. If the gate passed, advance to the next level.</p>
-      ${gate.passed ? renderAdvanceButton(gate.level) : ''}
-    </article>
-  `;
-}
-
-function renderVerseBrowser(bundle) {
-  return `
-    <aside class="card panel verse-browser">
-      <h2>Verse browser</h2>
-      <div class="verse-list">
-        ${bundle.verses.map((verse) => `
-          <button class="verse-list-item" type="button" data-action="speak" data-text="${escapeAttribute(verse.russianText)}">
-            <strong>${escapeHtml(verse.reference)}</strong>
-            <span>${escapeHtml(verse.russianText)}</span>
+      <p class="muted">문장이 원문과 같은지 선택해 주세요.</p>
+        <p class="sentence-quote">${escapeHtml(challenge.verseReference || challenge.verseId || '문장')}</p>
+      <div class="sentence-options">
+        ${challenge.options.map((option) => `
+          <button class="sentence-option" type="button" data-action="judge-sentence" data-answer="${option.isCorrect}">
+            ${escapeHtml(option.text)}
           </button>
         `).join('')}
       </div>
-    </aside>
+      ${truth ? `<button class="icon-button" type="button" data-action="speak" data-text="${escapeAttribute(truth)}">Listen</button>` : ''}
+    </article>
+  `;
+}
+
+function renderSentenceHintPanel(items) {
+  if (!items.length) {
+    return `
+      <article class="card panel sentence-hints-card">
+        <h3>단어 힌트</h3>
+        <p class="muted">현재 문장과 연결된 어휘를 아직 학습하지 않았습니다.</p>
+      </article>
+    `;
+  }
+
+  return `
+    <article class="card panel sentence-hints-card">
+      <h3>단어 힌트</h3>
+      <ul class="sentence-hint-list">
+        ${items.map((item) => `
+          <li class="sentence-hint-item">
+            <div>
+              <span class="hint-level">${escapeHtml(item.level || '')}</span>
+              <strong>${escapeHtml(item.label)}</strong>
+              <small>${escapeHtml(formatHintKind(item.type))} · ${escapeHtml(getItemMeaning(item))}</small>
+            </div>
+            <button class="mini-button" type="button" data-action="speak" data-text="${escapeAttribute(item.label)}">음성</button>
+          </li>
+        `).join('')}
+      </ul>
+    </article>
   `;
 }
 
@@ -434,6 +411,13 @@ function getDisplayState(record = {}) {
   return { key: 'weak', label: 'Weak review', badgeClass: 'weak' };
 }
 
+function formatHintKind(type) {
+  if (type === 'vocabulary') return 'Vocabulary';
+  if (type === 'grammar') return 'Grammar';
+  if (type === 'expression') return 'Expression';
+  return 'Item';
+}
+
 function getItemExample(bundle, item) {
   const verse = findFirstVerse(bundle, item);
 
@@ -565,6 +549,7 @@ async function handleClick(event) {
     appState.ui.selectedLevel = 'all';
     appState.ui.listType = 'vocabulary';
     appState.ui.listState = 'all';
+    appState.ui.sentenceChallenge = null;
     render();
     return;
   }
@@ -572,6 +557,7 @@ async function handleClick(event) {
   if (target.dataset.action === 'open-session') {
     appState.ui.view = 'session';
     appState.ui.drillItemId = null;
+    appState.ui.sentenceChallenge = null;
     render();
     return;
   }
@@ -579,17 +565,18 @@ async function handleClick(event) {
   if (target.dataset.action === 'start-drill') {
     appState.ui.view = 'drill';
     appState.ui.drillItemId = String(target.dataset.itemId || '');
+    appState.ui.sentenceChallenge = null;
     render();
-    return;
-  }
-
-  if (target.dataset.action === 'advance-level') {
-    advanceLevel();
     return;
   }
 
   if (target.dataset.action === 'speak') {
     speakRussian(target.dataset.text || '');
+    return;
+  }
+
+  if (target.dataset.action === 'judge-sentence') {
+    handleSentenceChallenge(target.dataset.answer === 'true');
     return;
   }
 
@@ -649,29 +636,52 @@ async function answerItem(itemId, answer) {
   }
 }
 
-async function advanceLevel() {
-  const previousLevel = appState.progress.currentLevel;
+async function handleSentenceChallenge(isCorrect) {
+  const challenge = appState.ui.sentenceChallenge;
+  if (!challenge?.itemId) {
+    appState.message = '오늘의 문장 데이터가 없습니다.';
+    render();
+    return;
+  }
+
+  let progress = appState.progress;
 
   try {
-    const progress = advanceLevelIfGatePassed(appState.bundle, appState.progress, new Date().toISOString());
-    appState = {
-      ...appState,
+    progress = applyScreeningAnswer(
       progress,
-      message: progress.currentLevel === previousLevel ? 'All configured levels are complete.' : `Advanced to ${progress.currentLevel}.`
-    };
+      challenge.itemId,
+      isCorrect ? 'known' : 'unknown',
+      new Date().toISOString()
+    );
   } catch (error) {
     appState = {
       ...appState,
+      ui: {
+        ...appState.ui,
+        sentenceChallenge: null
+      },
       message: error.message
     };
+    render();
+    return;
   }
+
+  appState = {
+    ...appState,
+    progress,
+    ui: {
+      ...appState.ui,
+      sentenceChallenge: null
+    },
+    message: isCorrect ? '정답입니다. 예문이 일치합니다.' : '오답입니다. 다시 들어보고 판단해 보세요.'
+  };
 
   render();
 
   try {
     await saveAppState(appState);
   } catch (error) {
-    appState.message = `Level changed in memory, but browser storage failed: ${error.message}`;
+    appState.message = `Progress changed in memory, but browser storage failed: ${error.message}`;
     render();
   }
 }
