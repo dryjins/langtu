@@ -19,7 +19,7 @@ const VALID_LIST_STATES = ['all', 'new', 'screening', 'learning', 'weak', 'known
 
 const DEFAULT_UI = {
   view: 'session',
-  listType: 'vocabulary',
+  listType: 'all',
   listState: 'all',
   selectedLevel: 'all',
   drillItemId: null,
@@ -547,7 +547,7 @@ async function handleClick(event) {
   if (target.dataset.action === 'open-vocabulary') {
     appState.ui.view = 'vocabulary';
     appState.ui.selectedLevel = 'all';
-    appState.ui.listType = 'vocabulary';
+    appState.ui.listType = 'all';
     appState.ui.listState = 'all';
     appState.ui.sentenceChallenge = null;
     render();

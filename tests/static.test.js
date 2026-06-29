@@ -93,7 +93,7 @@ test('opening vocabulary resets filters to full level coverage', () => {
 
   assert.match(script, /appState\.ui\.view = 'vocabulary'/);
   assert.match(script, /appState\.ui\.selectedLevel = 'all'/);
-  assert.match(script, /appState\.ui\.listType = 'vocabulary'/);
+  assert.match(script, /appState\.ui\.listType = 'all'/);
   assert.match(script, /appState\.ui\.listState = 'all'/);
 });
 
