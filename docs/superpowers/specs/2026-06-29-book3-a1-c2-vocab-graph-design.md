@@ -4,6 +4,13 @@
 
 Create a reusable graph that connects `data/bible-kids-03.json` (Book 3 text) to A1~C2 vocabulary from `data/openrussian-vocab-a1-c2.json`, and produce chapter-level coverage metrics for progress control.
 
+The chapter-to-word relation is explicitly **N:M** (and naturally also M:N):
+
+- one chapter links to many words
+- one word links to many chapters
+
+The output therefore should never imply one-to-one chapter-word pairing.
+
 ## Why this exists
 
 Progress gating currently works on a private study bundle format but lacks a precomputed dependency map for the current Book 3 corpus. A vocabulary graph lets us answer:
@@ -50,10 +57,11 @@ with structure:
   - `id`, `chapter`, `title`, `lineCount`, `tokenCount`
 - `nodes.vocabulary`: 단어 노드
   - `id`, `word`, `normalized`, `level`, `wordId`, `matchKeys`
-- `edges`: 챕터-단어 연결 목록
+- `edges`: 챕터-단어 연결 목록 (N:M)
   - `sourceChapter`, `targetWord`, `level`, `count`
   - `locations`: 최소 { `chapter`, `lineIndex`, `tokenIndex`, `surface`, `matchMethod` }
   - `matchConfidence` (`1.0` for exact, `<1` for fallback)
+- `edgesByLine` (옵션): 문장/행 단위로 확장할 수 있는 동일 구조의 보조 링크
 - `chapterCoverageByLevel`: 챕터 단위 커버리지
   - 레벨별 `coveredUnique`, `missingUnique`, `coveredTokenRate`, `missingTokenRate`
   - 누적 기준 레벨(`A1` 누적, `A2` 누적, ... `C2` 누적) 계산
@@ -68,6 +76,13 @@ with structure:
 - 결합 문자 제거( combining marks )
 - 앞뒤 공백, 구두점 제거
 - 토큰화: 유니코드 문자열에서 키릴릭 글자 추출 (`[\\p{L}]+` 기준), 실행 환경에서 미지원 시 폴백 정규식을 사용
+- 매칭은 N:M 집계를 전제로 하며, 하나의 단어가 같은 챕터 내에서 여러 번 등장하면 하나의 챕터-단어 엣지에 `count` 누적, `locations` 배열로 대표 위치를 유지합니다.
+
+### 1-b) Relation Interpretation
+
+- `chapter -> word` and `word -> chapter` are both first-class queries.
+- 단일 챕터의 진도 판정은 해당 챕터 엣지의 카운트/커버리지에서 읽고,
+  단일 단어의 재방문 우선순위는 `edges`에서 해당 단어가 등장한 챕터들의 미커버 비중으로 계산합니다.
 
 ### 2) Exact Match
 
@@ -93,6 +108,16 @@ with structure:
 - 유니크 커버리지: 챕터 내 연결된 단어 유니크 수
 - 누적 레벨 기준은 `A1` ~ 현재 레벨까지 어휘 리스트를 누적 집합으로 확장
 - 미커버 단어는 `globalCoverage`와 `chapterCoverageByLevel.missingByLevel`에 추출
+
+### Revisit Signal
+
+To support revisit decisions without forcing 1:1 pairing, export a compact `revisitHints` section:
+
+- `candidateWord`: 낮은 커버리지/높은 빈도 미커버 단어 또는 미흡 레벨 단어
+- `candidateChapters`: 해당 단어의 핵심 출현 챕터 top-k
+- `priority`: 단어 중요도 가중치 (예: 출현 빈도, 현재 레벨 적합성, 직전 진도 반영도) 기반 정렬
+
+This section is intentionally optional and can be empty in the initial pass. It is a separate object so we can add richer scheduling logic later without changing core coverage fields.
 
 ## Script Design
 
