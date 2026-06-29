@@ -60,7 +60,7 @@ test('default startup state uses artificial demo bundle when no saved state exis
   const state = buildStartupState(null, now);
 
   assert.equal(state.message, defaultStartupMessage);
-  assert.equal(state.bundle.title, 'Artificial Langtu demo bundle');
+  assert.equal(state.bundle.title, 'Artificial GosRU demo bundle');
   assert.equal(state.progress.currentLevel, 'A0');
   assert.equal(state.progress.createdAt, now);
   assert.equal(state.progress.updatedAt, now);

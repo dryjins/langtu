@@ -29,7 +29,7 @@ import fs from 'node:fs';
 test('capacitor config and package scripts are wired', () => {
   const config = JSON.parse(fs.readFileSync('capacitor.config.json', 'utf8'));
   assert.equal(config.appId, 'com.dryjins.langtu');
-  assert.equal(config.appName, 'Langtu');
+  assert.equal(config.appName, 'GosRU');
   assert.equal(config.webDir, 'www');
 
   const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));

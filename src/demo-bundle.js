@@ -1,6 +1,6 @@
 export const DEMO_BUNDLE = {
   version: 1,
-  title: 'Artificial Gosru demo bundle',
+  title: 'Artificial GosRU demo bundle',
   verses: [
     {
       id: 'demo.1.1',

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Langtu</string>
-    <string name="title_activity_main">Langtu</string>
+    <string name="app_name">GosRU</string>
+    <string name="title_activity_main">GosRU</string>
     <string name="package_name">com.dryjins.langtu</string>
     <string name="custom_url_scheme">com.dryjins.langtu</string>
 </resources>
