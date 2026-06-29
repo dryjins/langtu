@@ -13,7 +13,9 @@ function sanitizeLevel(level) {
 
 export function buildStartupState(savedState, now = new Date().toISOString()) {
   if (savedState?.bundle && savedState?.progress) {
-    const bundle = normalizeBundle(savedState.bundle);
+    const rawBundle = savedState.bundle;
+    const usesLatestDemoBundle = rawBundle?.title === DEMO_BUNDLE.title;
+    const bundle = usesLatestDemoBundle ? normalizedDefaultBundle : normalizeBundle(rawBundle);
     const baselineProgress = createInitialProgress(bundle, now);
     const repairedProgress = {
       ...baselineProgress,

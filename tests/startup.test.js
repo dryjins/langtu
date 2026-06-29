@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { normalizeBundle } from '../src/bundle.js';
 import { buildStartupState, defaultStartupMessage } from '../src/startup.js';
+import { DEMO_BUNDLE } from '../src/demo-bundle.js';
 import { getInventoryItems } from '../src/scheduler.js';
 
 function makeSavedBundle() {
@@ -81,6 +82,53 @@ test('default startup bundle exposes all vocabulary in full inventory view', () 
   });
 
   assert.equal(allVocabulary.length, state.bundle.vocabulary.length);
+});
+
+test('stale demo bundle saved in storage is upgraded to the latest demo items', () => {
+  const now = '2026-01-03T00:00:00.000Z';
+  const normalizedDemo = normalizeBundle(DEMO_BUNDLE);
+  const staleDemoBundle = {
+    version: 1,
+    title: DEMO_BUNDLE.title,
+    verses: DEMO_BUNDLE.verses.slice(0, 1),
+    vocabulary: DEMO_BUNDLE.vocabulary.slice(0, 1),
+    grammar: [],
+    expressions: []
+  };
+
+  const savedState = {
+    bundle: staleDemoBundle,
+    progress: {
+      currentLevel: 'A1',
+      createdAt: '2025-12-01T00:00:00.000Z',
+      updatedAt: '2025-12-01T00:00:00.000Z',
+      items: {
+        [DEMO_BUNDLE.vocabulary[0].id]: {
+          id: DEMO_BUNDLE.vocabulary[0].id,
+          type: 'vocabulary',
+          level: DEMO_BUNDLE.vocabulary[0].level,
+          state: 'known',
+          correctStreak: 3,
+          lastAnswer: 'known',
+          lastTestedAt: '2025-12-01T00:00:00.000Z',
+          nextReviewAt: '2026-01-01T00:00:00.000Z',
+          failReasons: []
+        }
+      }
+    },
+    message: 'from local storage',
+    storedAt: '2025-12-31T00:00:00.000Z'
+  };
+
+  const state = buildStartupState(savedState, now);
+
+  assert.equal(state.bundle.title, DEMO_BUNDLE.title);
+  assert.equal(state.bundle.items.length, normalizedDemo.items.length);
+  assert.equal(state.progress.currentLevel, 'A1');
+  assert.equal(state.progress.items[DEMO_BUNDLE.vocabulary[0].id].state, 'known');
+  assert.equal(state.progress.items[DEMO_BUNDLE.vocabulary[0].id].correctStreak, 3);
+  assert.equal(Object.keys(state.progress.items).length, normalizedDemo.items.length);
+  assert.equal(state.message, 'from local storage');
 });
 
 test('normalizeBundle can load default startup dataset structure', () => {
