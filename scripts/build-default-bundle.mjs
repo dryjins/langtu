@@ -10,12 +10,16 @@ const CLI_DEFAULTS = {
   vocab: 'data/openrussian-vocab-a1-c2.json',
   skills: [
     'data/skill-content-a1.json',
-    'data/skill-content-a2.json'
+    'data/skill-content-a2.json',
+    'data/skill-content-b1.json',
+    'data/skill-content-b2.json',
+    'data/skill-content-c1.json',
+    'data/skill-content-c2.json'
   ],
   output: 'src/default-bundle.js',
   chapters: 5,
   vocabPerLevel: 10,
-  title: 'GosRU starter (curated from public sources and original skill content)'
+  title: 'GosRU starter (curated from public sources and original A1-C2 skill content)'
 };
 
 function buildVersesFromBible(bibleData, chapters) {

@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "level": "B1",
+  "method": "Original prose authored for this repository. Topics cover independent user language: relative clauses, reported speech, subtle aspect usage, pluralia/singularia tantum, basic participle and passive forms, and conversational expressions for opinions and tentative agreement.",
+  "generatedAt": "2026-06-29",
+  "grammar": [
+    {
+      "id": "g.b1-relative-clause",
+      "level": "B1",
+      "name": "Relative clauses with который",
+      "explanation": "Introduce a relative clause with который, which agrees with its antecedent in gender and number but takes the case required by its role in the sub-clause (not the role the antecedent plays in the main clause). Example: 'книга, которую я читаю' 'the book (f., nom.) that I am reading (acc.)'."
+    },
+    {
+      "id": "g.b1-reported-speech",
+      "level": "B1",
+      "name": "Reported speech with что and чтобы",
+      "explanation": "Report a statement by converting the verb to its past-tense form and introducing the report with что (он сказал, что придёт 'he said (would) come'). Use чтобы to report an order or request with optional infinitive under 'asked': (он попросил, чтобы я помог / он попросил помочь)."
+    },
+    {
+      "id": "g.b1-resultative-aspect",
+      "level": "B1",
+      "name": "Result vs process: choosing aspect",
+      "explanation": "Use perfective to focus on a completed action or its outcome (Я прочитал книгу 'I have read / finished the book'). Use imperfective for process, repetition, or state during a time window (Я читал книгу два часа 'I was reading the book for two hours'). Context time phrases usually tip the choice."
+    },
+    {
+      "id": "g.b1-pluralia-singularia",
+      "level": "B1",
+      "name": "Pluralia tantum and singularia tantum",
+      "explanation": "Recognize nouns that exist only in plural form (часы 'watch/clock', деньги 'money', брюки 'trousers', шахматы 'chess') and nouns that exist only in singular (молоко, золото, нефть). They take plural or singular agreement respectively."
+    },
+    {
+      "id": "g.b1-participle-present",
+      "level": "B1",
+      "name": "Present active participle (basic)",
+      "explanation": "Form present active participles from imperfective verbs (читающий 'one who reads/is reading', говорящий 'one who speaks'). They decline as adjectives. Note that these are mostly written-style; in conversation prefer кто + verb clause (который ...)."
+    },
+    {
+      "id": "g.b1-passive-voice",
+      "level": "B1",
+      "name": "Basic passive with short-form participles",
+      "explanation": "Recognize passive constructions formed from short-form participles (книга написана 'the book is written', дом построен 'the house was built'). The agent is introduced by instrumental (кем?) or implicit. Use '-ся' verbs for in-process passive: книга пишется автором."
+    },
+    {
+      "id": "g.b1-indeclinable",
+      "level": "B1",
+      "name": "Indeclinable words",
+      "explanation": "Identify words that don't decline (palto, кино, метро, кофе, такси) and use them in correct syntactic position with the gender of their meaning; count nouns in such groups often take the genitive (такси — genitive такси)."
+    },
+    {
+      "id": "g.b1-temporal-concessive",
+      "level": "B1",
+      "name": "Conjunction 'пока' for time and concession",
+      "explanation": "Use пока + imperfective to mark ongoing action that serves as background (пока я читал, зазвонил телефон 'while I was reading, the phone rang'). With negation, пока introduces concession: пока он не закончит, не выходи 'don't go out until he finishes.'"
+    },
+    {
+      "id": "g.b1-predicate-adverbs",
+      "level": "B1",
+      "name": "Predicative adverbs (нельзя, можно, жаль)",
+      "explanation": "Recognize short adverbs of state used as predicates (нельзя 'one may not', можно 'one may', жаль 'it is a pity', холодно 'it is cold', пора 'it is time'). They are invariable; the subject is the implied 'one' (Нельзя курить здесь 'One may not smoke here')."
+    },
+    {
+      "id": "g.b1-purpose-clause",
+      "level": "B1",
+      "name": "Purpose clauses: чтобы and зачем",
+      "explanation": "Express purpose with чтобы + infinitive (Он включил свет, чтобы лучше видеть 'He switched on the light in order to see better'). Use зачем to ask why (Зачем ты пришёл? 'Why did you come?'). Distinguish purpose чтобы (negated + не) from result чтобы (Интересно, чтобы ... 'It's interesting that...')."
+    }
+  ],
+  "expressions": [
+    {
+      "id": "e.b1-how-do-you-think",
+      "level": "B1",
+      "phrase": "Как Вы думаете? / Как ты думаешь?",
+      "meaning": "What do you think? (formal or informal respectively). Often used to elicit opinion at the start of a discussion."
+    },
+    {
+      "id": "e.b1-may-i-ask",
+      "level": "B1",
+      "phrase": "Можно спросить?",
+      "meaning": "May I ask? (polite prelude to an unexpected or delicate question)"
+    },
+    {
+      "id": "e.b1-would-like-to-know",
+      "level": "B1",
+      "phrase": "Я хотел бы узнать ...",
+      "meaning": "I would like to know ... (polite request for information; followed by accusative object or a что-clause)."
+    },
+    {
+      "id": "e.b1-it-depends-on",
+      "level": "B1",
+      "phrase": "Это зависит от ...",
+      "meaning": "It depends on ... (the noun after от stays in genitive: Это зависит от погоды 'It depends on the weather')."
+    },
+    {
+      "id": "e.b1-in-my-opinion",
+      "level": "B1",
+      "phrase": "По-моему, ...",
+      "meaning": "In my opinion, ... (the dependent statement follows in nominative/infinitive: По-моему, он прав 'In my opinion, he is right')."
+    },
+    {
+      "id": "e.b1-i-agree",
+      "level": "B1",
+      "phrase": "Я согласен / согласна.",
+      "meaning": "I agree. (agree forms: согласен masculine, согласна feminine). The opinion being agreed with is in nominative or introduced by с."
+    },
+    {
+      "id": "e.b1-moreover",
+      "level": "B1",
+      "phrase": "Более того, ...",
+      "meaning": "Moreover, ... (linker that adds weight to a previous statement)"
+    },
+    {
+      "id": "e.b1-by-the-way",
+      "level": "B1",
+      "phrase": "Кстати, ...",
+      "meaning": "By the way, ... (introduces a topic shift or remembered detail)"
+    },
+    {
+      "id": "e.b1-if-im-not-mistaken",
+      "level": "B1",
+      "phrase": "Если я не ошибаюсь, ...",
+      "meaning": "If I'm not mistaken, ... (a hedge that softens a possibly mistaken statement)"
+    },
+    {
+      "id": "e.b1-it-seems-to-me",
+      "level": "B1",
+      "phrase": "Мне кажется, ...",
+      "meaning": "It seems to me, ... (the dependent clause uses nominative subject + predicate; the speaker's opinion is expressed indirectly.)"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "level": "C2",
+  "method": "Original prose authored for this repository. Topics cover masterful, near-native precision: subtle aspect-pair choosing, register-specific idioms (lofty, official, colloquial), discourse organizers common in academic and journalistic prose, and constructions for stance, emphasis, and contrast at the highest functional level.",
+  "generatedAt": "2026-06-29",
+  "grammar": [
+    {
+      "id": "g.c2-fine-aspect",
+      "level": "C2",
+      "name": "Fine-grained aspect pair selection",
+      "explanation": "Distinguish aspect choices at the highest level of pragmatics. Imperfective for general statements of capability (Я понимаю по-русски 'I understand Russian'), habit (Раньше я читал каждый день 'I used to read every day'), and process (Он шёл очень быстро 'He was walking very fast'); perfective for compact events with sequential or resultative reading (Он вошёл и сел 'He walked in and sat down'). Note how subtle context cues tip the choice."
+    },
+    {
+      "id": "g.c2-verb-government",
+      "level": "C2",
+      "name": "Realignment of verb government under register shift",
+      "explanation": "Several common verbs allow alternative case government depending on meaning or register. Recognise variations such as 'помогать + dative' (помогать другу 'help a friend') vs the expected nominalisation. Mastery is less about rule-memorising than pattern-recognition in context: read in the chosen register for a list of stable pairings."
+    },
+    {
+      "id": "g.c2-noun-plus-infinitive",
+      "level": "C2",
+      "name": "Verbal noun + dependent infinitive",
+      "explanation": "Recognize nominalisations built from verbal nouns: 'желание понять' (genitive) 'the desire to understand', 'попытка объяснить' 'attempt to explain', 'способ выразить' 'way of expressing'. The dependent infinitive stays in perfective when the action is bounded. Often replaces a subordinate clause in formal writing."
+    },
+    {
+      "id": "g.c2-hypostatization",
+      "level": "C2",
+      "name": "Hypostasis: nominal clauses stand in for verbs",
+      "explanation": "Recognize advanced nominalisation strategies: отказ от участия вместо 'Он отказался участвовать' 'his refusal to participate in place of He refused to participate'. The verbal-noun form compresses an entire proposition; the agent assumes genitive ('его отъезд' 'his departure')."
+    },
+    {
+      "id": "g.c2-subordinate-complex",
+      "level": "C2",
+      "name": "Hierarchically stacked subordinate clauses",
+      "explanation": "Recognize multi-level clause hierarchies (sequence: главное → придаточное → придаточное). Mastery is in mapping the dependency tree: which clause licenses what case and tense for its dependencies. Read in print first to acquire the rhythm; production typically uses shorter coordinated structures in speech."
+    },
+    {
+      "id": "g.c2-stylistic-shading",
+      "level": "C2",
+      "name": "Register-specific syntactic choices",
+      "explanation": "Recognise that some constructions mark a register. Inverted word order with a subject fronted for emphasis (Интересная это книга 'This is an interesting book'); short-form adjectives as predicates (Он стар, а не молод); impersonal ne-perfective (Мне хочется спать 'I want to sleep'). Each shifts style by 1-2 levels; use them sparingly and only when warranted."
+    },
+    {
+      "id": "g.c2-pronominal-adverb-pairs",
+      "level": "C2",
+      "name": "Pronominal adverb pairs (там — туда, где — куда)",
+      "explanation": "Distinguish place of rest (там, где) from direction (туда, куда) and source (оттуда, откуда). Recognise the systematic pair formation (где → куда, откуда; тут → туда, оттуда). Master the related time pair когда vs иногда / иногда с + genitive etc."
+    },
+    {
+      "id": "g.c2-imperative-softening",
+      "level": "C2",
+      "name": "Soft imperative particles: -ка, ну-ка, давай(те)",
+      "explanation": "Use the suffix '-ка' for a softened, often offhand imperative (Скажи-ка мне, ... 'Tell me now, ...'). Use 'ну-ка' (often with давай-ка form) for curt invitation to start an action. These do not change the imperative form itself; they add pragmatic flavor in spoken language."
+    },
+    {
+      "id": "g.c2-idiomatic-predicates",
+      "level": "C2",
+      "name": "Idiomatic predicatives and phraseologisms",
+      "explanation": "Recognise a cluster of high-register idioms: то-то и оно 'that's exactly why'; себе на уме 'secretive, scheming'; одним словом 'in a word'; чёрт возьми '(emphatic expletive)'; подумать только 'just imagine that'. Recognize them by fixed collocations and treat them as lexical units."
+    },
+    {
+      "id": "g.c2-evaluative-derivatives",
+      "level": "C2",
+      "name": "Evaluative/attitudinal affixation",
+      "explanation": "Recognize diminutive and augmentative forms beyond the basic diminutive -к / -ок: -ечка, -очка, -ушка for warm / child / affectionate register; -ина, -ище for rough or large; -ан, -як for casual characteristic. Distinguish affect (Он — добрая душа, a kind soul) from literal smallness (чашка 'cup') or from bureaucratic abbreviation (аббревиатура)."
+    }
+  ],
+  "expressions": [
+    {
+      "id": "e.c2-you-dont-say",
+      "level": "C2",
+      "phrase": "И не говорите.",
+      "meaning": "You don't say (lit. 'And don't you speak [of it]!', a colloquial emphatic agreement)"
+    },
+    {
+      "id": "e.c2-come-on",
+      "level": "C2",
+      "phrase": "Вот ещё! / Да ладно!",
+      "meaning": "Oh, come on! / Yeah, right! (a dismissive or skeptical reply to an unlikely claim)"
+    },
+    {
+      "id": "e.c2-i-e",
+      "level": "C2",
+      "phrase": "То есть",
+      "meaning": "That is / i.e. / I mean (used both to paraphrase and to suggest 'in other words')"
+    },
+    {
+      "id": "e.c2-no-offense-but",
+      "level": "C2",
+      "phrase": "Без обид, но ...",
+      "meaning": "No offense, but ... (a colloquial preface that softens a sharp observation)"
+    },
+    {
+      "id": "e.c2-as-you-know",
+      "level": "C2",
+      "phrase": "Как знаете.",
+      "meaning": "As you know / Do as you see fit. (Context-dependent; can mean 'as you wish' or '(do) however you know best')"
+    },
+    {
+      "id": "e.c2-under-no-circumstances",
+      "level": "C2",
+      "phrase": "Ни в коем случае!",
+      "meaning": "Under no circumstances! (emphatic prohibition)"
+    },
+    {
+      "id": "e.c2-well-i-never",
+      "level": "C2",
+      "phrase": "Ну и ну!",
+      "meaning": "Well I never! (an exclamatory interjection of mild shock or astonishment)"
+    },
+    {
+      "id": "e.c2-think-of-that",
+      "level": "C2",
+      "phrase": "Ишь ты! / Тоже мне!",
+      "meaning": "Think of that! / Some (such)! (mildly skeptical interjection in colloquial speech)"
+    },
+    {
+      "id": "e.c2-self-evidently",
+      "level": "C2",
+      "phrase": "Само собой разумеется, что ...",
+      "meaning": "It goes without saying that ... (formal statement of evident fact)"
+    },
+    {
+      "id": "e.c2-in-letter-and-spirit",
+      "level": "C2",
+      "phrase": "Согласно букве и духу ...",
+      "meaning": "In letter and spirit of ... (legalistic/exegetical phrase; the noun after духу usually takes genitive)"
+    }
+  ]
+}

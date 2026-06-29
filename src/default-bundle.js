@@ -1,6 +1,6 @@
 export const DEFAULT_BUNDLE = {
   "version": 1,
-  "title": "GosRU starter (curated from public sources and original skill content)",
+  "title": "GosRU starter (curated from public sources and original A1-C2 skill content)",
   "verses": [
     {
       "id": "book3:c1:l0",
@@ -1480,6 +1480,286 @@ export const DEFAULT_BUNDLE = {
       "name": "Verbs of motion: walking, going by vehicle",
       "explanation": "Distinguish unidirectional (идти 'go (one-way)') from multidirectional (ходить 'go (habitual or return)') for walking, and ехать/ездить for vehicle travel. Unidirectional is used for current single direction; multidirectional for round trips and regular habits (я каждый день хожу в школу).",
       "linkedVerseIds": []
+    },
+    {
+      "id": "g.b1-relative-clause",
+      "level": "B1",
+      "name": "Relative clauses with который",
+      "explanation": "Introduce a relative clause with который, which agrees with its antecedent in gender and number but takes the case required by its role in the sub-clause (not the role the antecedent plays in the main clause). Example: 'книга, которую я читаю' 'the book (f., nom.) that I am reading (acc.)'.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b1-reported-speech",
+      "level": "B1",
+      "name": "Reported speech with что and чтобы",
+      "explanation": "Report a statement by converting the verb to its past-tense form and introducing the report with что (он сказал, что придёт 'he said (would) come'). Use чтобы to report an order or request with optional infinitive under 'asked': (он попросил, чтобы я помог / он попросил помочь).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b1-resultative-aspect",
+      "level": "B1",
+      "name": "Result vs process: choosing aspect",
+      "explanation": "Use perfective to focus on a completed action or its outcome (Я прочитал книгу 'I have read / finished the book'). Use imperfective for process, repetition, or state during a time window (Я читал книгу два часа 'I was reading the book for two hours'). Context time phrases usually tip the choice.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b1-pluralia-singularia",
+      "level": "B1",
+      "name": "Pluralia tantum and singularia tantum",
+      "explanation": "Recognize nouns that exist only in plural form (часы 'watch/clock', деньги 'money', брюки 'trousers', шахматы 'chess') and nouns that exist only in singular (молоко, золото, нефть). They take plural or singular agreement respectively.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b1-participle-present",
+      "level": "B1",
+      "name": "Present active participle (basic)",
+      "explanation": "Form present active participles from imperfective verbs (читающий 'one who reads/is reading', говорящий 'one who speaks'). They decline as adjectives. Note that these are mostly written-style; in conversation prefer кто + verb clause (который ...).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b1-passive-voice",
+      "level": "B1",
+      "name": "Basic passive with short-form participles",
+      "explanation": "Recognize passive constructions formed from short-form participles (книга написана 'the book is written', дом построен 'the house was built'). The agent is introduced by instrumental (кем?) or implicit. Use '-ся' verbs for in-process passive: книга пишется автором.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b1-indeclinable",
+      "level": "B1",
+      "name": "Indeclinable words",
+      "explanation": "Identify words that don't decline (palto, кино, метро, кофе, такси) and use them in correct syntactic position with the gender of their meaning; count nouns in such groups often take the genitive (такси — genitive такси).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b1-temporal-concessive",
+      "level": "B1",
+      "name": "Conjunction 'пока' for time and concession",
+      "explanation": "Use пока + imperfective to mark ongoing action that serves as background (пока я читал, зазвонил телефон 'while I was reading, the phone rang'). With negation, пока introduces concession: пока он не закончит, не выходи 'don't go out until he finishes.'",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b1-predicate-adverbs",
+      "level": "B1",
+      "name": "Predicative adverbs (нельзя, можно, жаль)",
+      "explanation": "Recognize short adverbs of state used as predicates (нельзя 'one may not', можно 'one may', жаль 'it is a pity', холодно 'it is cold', пора 'it is time'). They are invariable; the subject is the implied 'one' (Нельзя курить здесь 'One may not smoke here').",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b1-purpose-clause",
+      "level": "B1",
+      "name": "Purpose clauses: чтобы and зачем",
+      "explanation": "Express purpose with чтобы + infinitive (Он включил свет, чтобы лучше видеть 'He switched on the light in order to see better'). Use зачем to ask why (Зачем ты пришёл? 'Why did you come?'). Distinguish purpose чтобы (negated + не) from result чтобы (Интересно, чтобы ... 'It's interesting that...').",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b2-participle-past-active",
+      "level": "B2",
+      "name": "Past active participle (read or written by whom)",
+      "explanation": "Form past active participles from past-tense stems with -вш- or -ш- ending, used to mean 'the one who once X-ed' (писавший код 'the one who had been writing code', принёсший письмо 'the one who brought the letter'). They decline as adjectives and are mostly literary; in speech prefer кто + relative clause.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b2-participle-present-passive",
+      "level": "B2",
+      "name": "Present passive participle (one being X-ed right now)",
+      "explanation": "Form present passive participles from imperfective transitive verbs with -ем- or -им- endings (читаемый 'being read', видимый 'visible / being seen'). They decline as adjectives and again lean toward writing. Note: not all verbs form this cleanly.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b2-participle-past-passive",
+      "level": "B2",
+      "name": "Past passive participle (X-ed, completed)",
+      "explanation": "Form past passive participles (прочитанный 'having been read', написанный 'written', открытый 'opened'). They decline as long adjectives in writing (прочитанная книга 'the read book'). The short forms serve as predicates (Книга прочитана 'The book has been read').",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b2-verbal-adverb",
+      "level": "B2",
+      "name": "Verbal adverb (деепричастие)",
+      "explanation": "Form a verbal adverb from the imperfective stem for ongoing or simultaneous action (читая 'while reading', говоря 'speaking') and from the perfective stem with -в or -вши for completed action (прочитав 'having read'). The agent of the deeпричастие must match the subject of the main verb (Читая книгу, я заметил ошибку 'Reading the book, I noticed a mistake').",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b2-complex-sentence",
+      "level": "B2",
+      "name": "Multi-clause sentences with mixed subordination",
+      "explanation": "Recognize sentences where multiple subordinate clauses (как, когда, потому что, если, кто, который) coexist. Pay attention to case controls: each relative clause pushes the case of its predicate's object, not its subject. Practice reading complex sentences to internalize clause boundaries.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b2-conditional-particles",
+      "level": "B2",
+      "name": "Connectors with fixed case demands",
+      "explanation": "Recognize connectors that lock down specific case forms: благодаря + dative ('thanks to'), вопреки + dative ('despite'), несмотря на + accusative ('despite'), в связи с + instrumental ('in connection with'), в течение / в продолжение + genitive ('during'). The right case is required even if learners confuse the connector visually.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b2-collective-numerals",
+      "level": "B2",
+      "name": "Collective numerals: двое, трое, ... , десятеро",
+      "explanation": "Use collective numerals (двое 'two of', трое 'three of', четверо 'four of', пятеро 'five of') only with masculine animate plurals or nouns that lack a single form (двое друзей, трое суток, нет двоих ножниц 'there are no two scissors'). Use обычные cardinals elsewhere.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b2-passive-with-preposition",
+      "level": "B2",
+      "name": "Passive agent and instrument",
+      "explanation": "In the written passive, the agent of the action takes instrumental (Книга написана автором 'The book was written by the author'). Sentence-initial or topicalized agents take instrumental without a preposition. With human agents also acceptable: 'со стороны автора' or simple elimination.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b2-numerals-agreement",
+      "level": "B2",
+      "name": "Compound numerals: agreement and case",
+      "explanation": "Compound numerals have multiple parts. Rule of thumb: the noun following matches the last digit's grammatical pattern (двадцать один рубль, двадцать два рубля, двадцать пять рублей). The phrase declines as a unit (нет двадцати одного рубля 'there isn't 21 rubles'). When adjective form is needed, it agrees with the noun, not the numeral.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.b2-paragraph-connectors",
+      "level": "B2",
+      "name": "Contrastive and additive paragraph links",
+      "explanation": "Recognize connectors that signal paragraph-level contrasts (тем не менее 'nevertheless', в отличие от + genitive 'in contrast to', наоборот 'on the contrary') and additive links (более того 'moreover', к тому же 'in addition', помимо этого 'apart from this'). Use them to bind multi-paragraph arguments.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c1-concessive-skolko-ni",
+      "level": "C1",
+      "name": "Concessive 'сколько ни / как ни + verb'",
+      "explanation": "Use сколько ни + verb for 'however much' emphasis (Сколько ни объясняй, он не понимает 'No matter how much you explain, he doesn't understand'). Use как ни + past-tense verb for emphatic concession (Как ни странно, ... 'Strange as it may seem'). Both can serve as a topic for a following clause.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c1-almost-constructions",
+      "level": "C1",
+      "name": "'Едва не' and 'чуть не' (almost constructions)",
+      "explanation": "Use едва не + past-tense verb or чуть не + past-tense verb to mark an action that almost happened but did not (Он едва не упал 'He almost fell'). Both require the negated form (лит. 'did not quite'). The pattern regularly pairs with consequence clauses headed 'но в последний момент...' or 'к счастью,...'.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c1-infinitive-as-agent",
+      "level": "C1",
+      "name": "Infinitive with modal/infinitive expressions",
+      "explanation": "Recap higher-level infinitive patterns: 'хватит + gen. (мне хватит времени)', 'достаточно + gen. (достаточно усилий)', 'незачем + infinitive (незачем спорить 'there is no point arguing'), 'не к чему + infinitive (there is nothing to...). Recognize the implicit impersonal subject.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c1-to-li-to-li",
+      "level": "C1",
+      "name": "Doubt structure 'то ли ... то ли ...'",
+      "explanation": "Use то ли ..., то ли ... to express uncertainty about alternatives (То ли он занят, то ли не хочет разговаривать 'Whether he's busy or doesn't want to talk'). The pattern uses nominative predicates in each clause. Equivalent in meaning to 'либо ... либо ...' but marks doubt instead of free choice.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c1-bud'-to-ili",
+      "level": "C1",
+      "name": "List disjunction 'будь то ... или ...'",
+      "explanation": "Use будь то ... или ... to list examples, including rare ones, with inclusive disjunction (Будь то студент, или преподаватель, или турист — каждый должен был зарегистрироваться 'Be it a student, teacher, or tourist — each had to register'). Conveys 'whether it's X or Y' in a formal register.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c1-evaluative-it-s-worth",
+      "level": "C1",
+      "name": "Modal evaluations стоит/не стоит + infinitive",
+      "explanation": "Use стоит + perfective infinitive for recommendation ('it's worth doing', Стоит прочитать 'It is worth reading'). Negation не стоит + perfective infinitive is a softer prohibition. Both can stand alone or be the matrix for an additional clause.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c1-subjunctive-implicit",
+      "level": "C1",
+      "name": "Implied subjunctive in adverbial particles",
+      "explanation": "Recognize context-driven subjunctive mood without explicit 'бы' because the verb form doubles as a hypothetical (Попроси я его ещё раз — отказал бы 'Had I asked him again, he would have refused'). Often found in narrative or reflective writing; understand rather than produce.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c1-perifrastic-compounds",
+      "level": "C1",
+      "name": "Nominalized infinitives and unipersonal predicates",
+      "explanation": "Refine recognition of constructions like 'Он привык к чтению' (verb + genitive noun), 'У меня нет возможности ехать' (noun + infinitive). Recognize when infinitive is in object role without explicit subject; when the noun is derived from a verb (отъезд 'departure < отъехать').",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c1-reduced-participles",
+      "level": "C1",
+      "name": "Reduced subordinate clauses in writing",
+      "explanation": "Recognize reduced participial / adverbial clauses that omit the conjunction and the matrix verb (Читая книгу, я заметил ошибку 'Reading the book, I noticed a mistake'). The agent of the reduced clause must match the matrix subject; otherwise produce explicit который / когда / потому что forms.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c1-soft-hedge-modal-particles",
+      "level": "C1",
+      "name": "Hedging and epistemic particles",
+      "explanation": "Use modal particles and adverbs to soften claims: пожалуй 'perhaps/maybe' (as a particle), якобы 'allegedly' (reports unverified speech), вроде бы 'seemingly', едва ли 'hardly/scarcely' (negative polarity), чуть ли не 'almost / virtually'. Each combines with a finite verb in a fixed pattern of word order.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c2-fine-aspect",
+      "level": "C2",
+      "name": "Fine-grained aspect pair selection",
+      "explanation": "Distinguish aspect choices at the highest level of pragmatics. Imperfective for general statements of capability (Я понимаю по-русски 'I understand Russian'), habit (Раньше я читал каждый день 'I used to read every day'), and process (Он шёл очень быстро 'He was walking very fast'); perfective for compact events with sequential or resultative reading (Он вошёл и сел 'He walked in and sat down'). Note how subtle context cues tip the choice.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c2-verb-government",
+      "level": "C2",
+      "name": "Realignment of verb government under register shift",
+      "explanation": "Several common verbs allow alternative case government depending on meaning or register. Recognise variations such as 'помогать + dative' (помогать другу 'help a friend') vs the expected nominalisation. Mastery is less about rule-memorising than pattern-recognition in context: read in the chosen register for a list of stable pairings.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c2-noun-plus-infinitive",
+      "level": "C2",
+      "name": "Verbal noun + dependent infinitive",
+      "explanation": "Recognize nominalisations built from verbal nouns: 'желание понять' (genitive) 'the desire to understand', 'попытка объяснить' 'attempt to explain', 'способ выразить' 'way of expressing'. The dependent infinitive stays in perfective when the action is bounded. Often replaces a subordinate clause in formal writing.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c2-hypostatization",
+      "level": "C2",
+      "name": "Hypostasis: nominal clauses stand in for verbs",
+      "explanation": "Recognize advanced nominalisation strategies: отказ от участия вместо 'Он отказался участвовать' 'his refusal to participate in place of He refused to participate'. The verbal-noun form compresses an entire proposition; the agent assumes genitive ('его отъезд' 'his departure').",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c2-subordinate-complex",
+      "level": "C2",
+      "name": "Hierarchically stacked subordinate clauses",
+      "explanation": "Recognize multi-level clause hierarchies (sequence: главное → придаточное → придаточное). Mastery is in mapping the dependency tree: which clause licenses what case and tense for its dependencies. Read in print first to acquire the rhythm; production typically uses shorter coordinated structures in speech.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c2-stylistic-shading",
+      "level": "C2",
+      "name": "Register-specific syntactic choices",
+      "explanation": "Recognise that some constructions mark a register. Inverted word order with a subject fronted for emphasis (Интересная это книга 'This is an interesting book'); short-form adjectives as predicates (Он стар, а не молод); impersonal ne-perfective (Мне хочется спать 'I want to sleep'). Each shifts style by 1-2 levels; use them sparingly and only when warranted.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c2-pronominal-adverb-pairs",
+      "level": "C2",
+      "name": "Pronominal adverb pairs (там — туда, где — куда)",
+      "explanation": "Distinguish place of rest (там, где) from direction (туда, куда) and source (оттуда, откуда). Recognise the systematic pair formation (где → куда, откуда; тут → туда, оттуда). Master the related time pair когда vs иногда / иногда с + genitive etc.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c2-imperative-softening",
+      "level": "C2",
+      "name": "Soft imperative particles: -ка, ну-ка, давай(те)",
+      "explanation": "Use the suffix '-ка' for a softened, often offhand imperative (Скажи-ка мне, ... 'Tell me now, ...'). Use 'ну-ка' (often with давай-ка form) for curt invitation to start an action. These do not change the imperative form itself; they add pragmatic flavor in spoken language.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c2-idiomatic-predicates",
+      "level": "C2",
+      "name": "Idiomatic predicatives and phraseologisms",
+      "explanation": "Recognise a cluster of high-register idioms: то-то и оно 'that's exactly why'; себе на уме 'secretive, scheming'; одним словом 'in a word'; чёрт возьми '(emphatic expletive)'; подумать только 'just imagine that'. Recognize them by fixed collocations and treat them as lexical units.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.c2-evaluative-derivatives",
+      "level": "C2",
+      "name": "Evaluative/attitudinal affixation",
+      "explanation": "Recognize diminutive and augmentative forms beyond the basic diminutive -к / -ок: -ечка, -очка, -ушка for warm / child / affectionate register; -ина, -ище for rough or large; -ан, -як for casual characteristic. Distinguish affect (Он — добрая душа, a kind soul) from literal smallness (чашка 'cup') or from bureaucratic abbreviation (аббревиатура).",
+      "linkedVerseIds": []
     }
   ],
   "expressions": [
@@ -1635,6 +1915,286 @@ export const DEFAULT_BUNDLE = {
       "level": "A2",
       "phrase": "Давай(те) ...",
       "meaning": "Let's ... (informal to one person, давай; plural or polite, давайте. Often followed by 1st person plural: давайте пойдём.)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b1-how-do-you-think",
+      "level": "B1",
+      "phrase": "Как Вы думаете? / Как ты думаешь?",
+      "meaning": "What do you think? (formal or informal respectively). Often used to elicit opinion at the start of a discussion.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b1-may-i-ask",
+      "level": "B1",
+      "phrase": "Можно спросить?",
+      "meaning": "May I ask? (polite prelude to an unexpected or delicate question)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b1-would-like-to-know",
+      "level": "B1",
+      "phrase": "Я хотел бы узнать ...",
+      "meaning": "I would like to know ... (polite request for information; followed by accusative object or a что-clause).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b1-it-depends-on",
+      "level": "B1",
+      "phrase": "Это зависит от ...",
+      "meaning": "It depends on ... (the noun after от stays in genitive: Это зависит от погоды 'It depends on the weather').",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b1-in-my-opinion",
+      "level": "B1",
+      "phrase": "По-моему, ...",
+      "meaning": "In my opinion, ... (the dependent statement follows in nominative/infinitive: По-моему, он прав 'In my opinion, he is right').",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b1-i-agree",
+      "level": "B1",
+      "phrase": "Я согласен / согласна.",
+      "meaning": "I agree. (agree forms: согласен masculine, согласна feminine). The opinion being agreed with is in nominative or introduced by с.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b1-moreover",
+      "level": "B1",
+      "phrase": "Более того, ...",
+      "meaning": "Moreover, ... (linker that adds weight to a previous statement)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b1-by-the-way",
+      "level": "B1",
+      "phrase": "Кстати, ...",
+      "meaning": "By the way, ... (introduces a topic shift or remembered detail)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b1-if-im-not-mistaken",
+      "level": "B1",
+      "phrase": "Если я не ошибаюсь, ...",
+      "meaning": "If I'm not mistaken, ... (a hedge that softens a possibly mistaken statement)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b1-it-seems-to-me",
+      "level": "B1",
+      "phrase": "Мне кажется, ...",
+      "meaning": "It seems to me, ... (the dependent clause uses nominative subject + predicate; the speaker's opinion is expressed indirectly.)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b2-nevertheless",
+      "level": "B2",
+      "phrase": "Тем не менее, ...",
+      "meaning": "Nevertheless, ... (signals that the following statement contradicts the previous one)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b2-in-contrast-to",
+      "level": "B2",
+      "phrase": "В отличие от ..., ...",
+      "meaning": "In contrast to ..., ... (the noun after от stays in genitive)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b2-due-to",
+      "level": "B2",
+      "phrase": "В связи с тем, что ...",
+      "meaning": "Due to the fact that ... (formal; takes a full clause)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b2-during",
+      "level": "B2",
+      "phrase": "В течение + gen. / В продолжение + gen.",
+      "meaning": "During ... / For the duration of ... (В течение года 'during the year', в продолжение лета 'for the duration of summer')",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b2-because-of-the-fact-that",
+      "level": "B2",
+      "phrase": "По причине того, что ...",
+      "meaning": "Because of the fact that ... (formal cause link)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b2-despite-the-fact-that",
+      "level": "B2",
+      "phrase": "Несмотря на то, что ...",
+      "meaning": "Despite the fact that ... (formal concessive link)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b2-on-condition-that",
+      "level": "B2",
+      "phrase": "При условии, что ...",
+      "meaning": "On the condition that ... (introduces a prerequisite clause)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b2-in-case",
+      "level": "B2",
+      "phrase": "В случае, если ...",
+      "meaning": "In case (that) ... (introduces a contingent reason or precaution)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b2-as-a-result",
+      "level": "B2",
+      "phrase": "В результате ...",
+      "meaning": "As a result of ... (often followed by genitive: в результате дождя 'as a result of the rain')",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.b2-on-one-hand-other-hand",
+      "level": "B2",
+      "phrase": "С одной стороны, ...; с другой стороны, ...",
+      "meaning": "On the one hand, ...; on the other hand, ... (formal balance framing)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c1-it-should-be-noted",
+      "level": "C1",
+      "phrase": "Надо сказать, что ... / Нужно отметить, что ...",
+      "meaning": "It should be said / It must be noted that ... (introducing a key observation in formal discourse)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c1-most-likely",
+      "level": "C1",
+      "phrase": "По всей вероятности, ... / Скорее всего, ...",
+      "meaning": "In all likelihood, ... / Most likely, ... (epistemic hedging with high confidence)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c1-not-excluded",
+      "level": "C1",
+      "phrase": "Не исключено, что ...",
+      "meaning": "It is not excluded that ... (a softer possibility hedge)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c1-in-the-final-analysis",
+      "level": "C1",
+      "phrase": "В конечном счёте, ...",
+      "meaning": "In the final reckoning, ... / In the long run, ... (summary connector that closes an argument)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c1-however-that-may-be",
+      "level": "C1",
+      "phrase": "Как бы там ни было, ...",
+      "meaning": "However that may be, ... (literary / formal bridging phrase)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c1-by-some-means",
+      "level": "C1",
+      "phrase": "Тем или иным способом, ...",
+      "meaning": "By some means or other, ... (vague or unspecific manner, often paired with hedge 'in one way or another')",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c1-in-one-word",
+      "level": "C1",
+      "phrase": "Одним словом, ... / Другими словами, ...",
+      "meaning": "In one word, ... / In other words, ... (closing or paraphrasing connector)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c1-thats-not-all-yet",
+      "level": "C1",
+      "phrase": "Это ещё ничего.",
+      "meaning": "That's not all yet (a colloquial intensifier meaning 'but there's more / it gets worse')",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c1-the-thing-is",
+      "level": "C1",
+      "phrase": "Дело в том, что ...",
+      "meaning": "The thing is that ... (a casual way to introduce an explanatory clause)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c1-provides-an-opportunity",
+      "level": "C1",
+      "phrase": "Это даёт возможность ...",
+      "meaning": "This gives the opportunity to ... (cause-and-effect framing)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c2-you-dont-say",
+      "level": "C2",
+      "phrase": "И не говорите.",
+      "meaning": "You don't say (lit. 'And don't you speak [of it]!', a colloquial emphatic agreement)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c2-come-on",
+      "level": "C2",
+      "phrase": "Вот ещё! / Да ладно!",
+      "meaning": "Oh, come on! / Yeah, right! (a dismissive or skeptical reply to an unlikely claim)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c2-i-e",
+      "level": "C2",
+      "phrase": "То есть",
+      "meaning": "That is / i.e. / I mean (used both to paraphrase and to suggest 'in other words')",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c2-no-offense-but",
+      "level": "C2",
+      "phrase": "Без обид, но ...",
+      "meaning": "No offense, but ... (a colloquial preface that softens a sharp observation)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c2-as-you-know",
+      "level": "C2",
+      "phrase": "Как знаете.",
+      "meaning": "As you know / Do as you see fit. (Context-dependent; can mean 'as you wish' or '(do) however you know best')",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c2-under-no-circumstances",
+      "level": "C2",
+      "phrase": "Ни в коем случае!",
+      "meaning": "Under no circumstances! (emphatic prohibition)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c2-well-i-never",
+      "level": "C2",
+      "phrase": "Ну и ну!",
+      "meaning": "Well I never! (an exclamatory interjection of mild shock or astonishment)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c2-think-of-that",
+      "level": "C2",
+      "phrase": "Ишь ты! / Тоже мне!",
+      "meaning": "Think of that! / Some (such)! (mildly skeptical interjection in colloquial speech)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c2-self-evidently",
+      "level": "C2",
+      "phrase": "Само собой разумеется, что ...",
+      "meaning": "It goes without saying that ... (formal statement of evident fact)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.c2-in-letter-and-spirit",
+      "level": "C2",
+      "phrase": "Согласно букве и духу ...",
+      "meaning": "In letter and spirit of ... (legalistic/exegetical phrase; the noun after духу usually takes genitive)",
       "linkedVerseIds": []
     }
   ]

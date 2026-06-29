@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "level": "C1",
+  "method": "Original prose authored for this repository. Topics cover fluent expression with nuanced control: concessive 'сколько ни', evaluative infinitive phrases, structured doubt ('то ли - то ли'), epistemic and counterfactual clauses, and high-frequency connectors that mark professional reasoning.",
+  "generatedAt": "2026-06-29",
+  "grammar": [
+    {
+      "id": "g.c1-concessive-skolko-ni",
+      "level": "C1",
+      "name": "Concessive 'сколько ни / как ни + verb'",
+      "explanation": "Use сколько ни + verb for 'however much' emphasis (Сколько ни объясняй, он не понимает 'No matter how much you explain, he doesn't understand'). Use как ни + past-tense verb for emphatic concession (Как ни странно, ... 'Strange as it may seem'). Both can serve as a topic for a following clause."
+    },
+    {
+      "id": "g.c1-almost-constructions",
+      "level": "C1",
+      "name": "'Едва не' and 'чуть не' (almost constructions)",
+      "explanation": "Use едва не + past-tense verb or чуть не + past-tense verb to mark an action that almost happened but did not (Он едва не упал 'He almost fell'). Both require the negated form (лит. 'did not quite'). The pattern regularly pairs with consequence clauses headed 'но в последний момент...' or 'к счастью,...'."
+    },
+    {
+      "id": "g.c1-infinitive-as-agent",
+      "level": "C1",
+      "name": "Infinitive with modal/infinitive expressions",
+      "explanation": "Recap higher-level infinitive patterns: 'хватит + gen. (мне хватит времени)', 'достаточно + gen. (достаточно усилий)', 'незачем + infinitive (незачем спорить 'there is no point arguing'), 'не к чему + infinitive (there is nothing to...). Recognize the implicit impersonal subject."
+    },
+    {
+      "id": "g.c1-to-li-to-li",
+      "level": "C1",
+      "name": "Doubt structure 'то ли ... то ли ...'",
+      "explanation": "Use то ли ..., то ли ... to express uncertainty about alternatives (То ли он занят, то ли не хочет разговаривать 'Whether he's busy or doesn't want to talk'). The pattern uses nominative predicates in each clause. Equivalent in meaning to 'либо ... либо ...' but marks doubt instead of free choice."
+    },
+    {
+      "id": "g.c1-bud'-to-ili",
+      "level": "C1",
+      "name": "List disjunction 'будь то ... или ...'",
+      "explanation": "Use будь то ... или ... to list examples, including rare ones, with inclusive disjunction (Будь то студент, или преподаватель, или турист — каждый должен был зарегистрироваться 'Be it a student, teacher, or tourist — each had to register'). Conveys 'whether it's X or Y' in a formal register."
+    },
+    {
+      "id": "g.c1-evaluative-it-s-worth",
+      "level": "C1",
+      "name": "Modal evaluations стоит/не стоит + infinitive",
+      "explanation": "Use стоит + perfective infinitive for recommendation ('it's worth doing', Стоит прочитать 'It is worth reading'). Negation не стоит + perfective infinitive is a softer prohibition. Both can stand alone or be the matrix for an additional clause."
+    },
+    {
+      "id": "g.c1-subjunctive-implicit",
+      "level": "C1",
+      "name": "Implied subjunctive in adverbial particles",
+      "explanation": "Recognize context-driven subjunctive mood without explicit 'бы' because the verb form doubles as a hypothetical (Попроси я его ещё раз — отказал бы 'Had I asked him again, he would have refused'). Often found in narrative or reflective writing; understand rather than produce."
+    },
+    {
+      "id": "g.c1-perifrastic-compounds",
+      "level": "C1",
+      "name": "Nominalized infinitives and unipersonal predicates",
+      "explanation": "Refine recognition of constructions like 'Он привык к чтению' (verb + genitive noun), 'У меня нет возможности ехать' (noun + infinitive). Recognize when infinitive is in object role without explicit subject; when the noun is derived from a verb (отъезд 'departure < отъехать')."
+    },
+    {
+      "id": "g.c1-reduced-participles",
+      "level": "C1",
+      "name": "Reduced subordinate clauses in writing",
+      "explanation": "Recognize reduced participial / adverbial clauses that omit the conjunction and the matrix verb (Читая книгу, я заметил ошибку 'Reading the book, I noticed a mistake'). The agent of the reduced clause must match the matrix subject; otherwise produce explicit который / когда / потому что forms."
+    },
+    {
+      "id": "g.c1-soft-hedge-modal-particles",
+      "level": "C1",
+      "name": "Hedging and epistemic particles",
+      "explanation": "Use modal particles and adverbs to soften claims: пожалуй 'perhaps/maybe' (as a particle), якобы 'allegedly' (reports unverified speech), вроде бы 'seemingly', едва ли 'hardly/scarcely' (negative polarity), чуть ли не 'almost / virtually'. Each combines with a finite verb in a fixed pattern of word order."
+    }
+  ],
+  "expressions": [
+    {
+      "id": "e.c1-it-should-be-noted",
+      "level": "C1",
+      "phrase": "Надо сказать, что ... / Нужно отметить, что ...",
+      "meaning": "It should be said / It must be noted that ... (introducing a key observation in formal discourse)"
+    },
+    {
+      "id": "e.c1-most-likely",
+      "level": "C1",
+      "phrase": "По всей вероятности, ... / Скорее всего, ...",
+      "meaning": "In all likelihood, ... / Most likely, ... (epistemic hedging with high confidence)"
+    },
+    {
+      "id": "e.c1-not-excluded",
+      "level": "C1",
+      "phrase": "Не исключено, что ...",
+      "meaning": "It is not excluded that ... (a softer possibility hedge)"
+    },
+    {
+      "id": "e.c1-in-the-final-analysis",
+      "level": "C1",
+      "phrase": "В конечном счёте, ...",
+      "meaning": "In the final reckoning, ... / In the long run, ... (summary connector that closes an argument)"
+    },
+    {
+      "id": "e.c1-however-that-may-be",
+      "level": "C1",
+      "phrase": "Как бы там ни было, ...",
+      "meaning": "However that may be, ... (literary / formal bridging phrase)"
+    },
+    {
+      "id": "e.c1-by-some-means",
+      "level": "C1",
+      "phrase": "Тем или иным способом, ...",
+      "meaning": "By some means or other, ... (vague or unspecific manner, often paired with hedge 'in one way or another')"
+    },
+    {
+      "id": "e.c1-in-one-word",
+      "level": "C1",
+      "phrase": "Одним словом, ... / Другими словами, ...",
+      "meaning": "In one word, ... / In other words, ... (closing or paraphrasing connector)"
+    },
+    {
+      "id": "e.c1-thats-not-all-yet",
+      "level": "C1",
+      "phrase": "Это ещё ничего.",
+      "meaning": "That's not all yet (a colloquial intensifier meaning 'but there's more / it gets worse')"
+    },
+    {
+      "id": "e.c1-the-thing-is",
+      "level": "C1",
+      "phrase": "Дело в том, что ...",
+      "meaning": "The thing is that ... (a casual way to introduce an explanatory clause)"
+    },
+    {
+      "id": "e.c1-provides-an-opportunity",
+      "level": "C1",
+      "phrase": "Это даёт возможность ...",
+      "meaning": "This gives the opportunity to ... (cause-and-effect framing)"
+    }
+  ]
+}

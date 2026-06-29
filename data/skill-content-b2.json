@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "level": "B2",
+  "method": "Original prose authored for this repository. Topics cover upper-intermediate written and spoken expression: full participle system (active and passive in all four series), adverbial participles, complex multi-clause sentences, collective numerals, and connective phrases that bridge paragraphs and arguments.",
+  "generatedAt": "2026-06-29",
+  "grammar": [
+    {
+      "id": "g.b2-participle-past-active",
+      "level": "B2",
+      "name": "Past active participle (read or written by whom)",
+      "explanation": "Form past active participles from past-tense stems with -вш- or -ш- ending, used to mean 'the one who once X-ed' (писавший код 'the one who had been writing code', принёсший письмо 'the one who brought the letter'). They decline as adjectives and are mostly literary; in speech prefer кто + relative clause."
+    },
+    {
+      "id": "g.b2-participle-present-passive",
+      "level": "B2",
+      "name": "Present passive participle (one being X-ed right now)",
+      "explanation": "Form present passive participles from imperfective transitive verbs with -ем- or -им- endings (читаемый 'being read', видимый 'visible / being seen'). They decline as adjectives and again lean toward writing. Note: not all verbs form this cleanly."
+    },
+    {
+      "id": "g.b2-participle-past-passive",
+      "level": "B2",
+      "name": "Past passive participle (X-ed, completed)",
+      "explanation": "Form past passive participles (прочитанный 'having been read', написанный 'written', открытый 'opened'). They decline as long adjectives in writing (прочитанная книга 'the read book'). The short forms serve as predicates (Книга прочитана 'The book has been read')."
+    },
+    {
+      "id": "g.b2-verbal-adverb",
+      "level": "B2",
+      "name": "Verbal adverb (деепричастие)",
+      "explanation": "Form a verbal adverb from the imperfective stem for ongoing or simultaneous action (читая 'while reading', говоря 'speaking') and from the perfective stem with -в or -вши for completed action (прочитав 'having read'). The agent of the deeпричастие must match the subject of the main verb (Читая книгу, я заметил ошибку 'Reading the book, I noticed a mistake')."
+    },
+    {
+      "id": "g.b2-complex-sentence",
+      "level": "B2",
+      "name": "Multi-clause sentences with mixed subordination",
+      "explanation": "Recognize sentences where multiple subordinate clauses (как, когда, потому что, если, кто, который) coexist. Pay attention to case controls: each relative clause pushes the case of its predicate's object, not its subject. Practice reading complex sentences to internalize clause boundaries."
+    },
+    {
+      "id": "g.b2-conditional-particles",
+      "level": "B2",
+      "name": "Connectors with fixed case demands",
+      "explanation": "Recognize connectors that lock down specific case forms: благодаря + dative ('thanks to'), вопреки + dative ('despite'), несмотря на + accusative ('despite'), в связи с + instrumental ('in connection with'), в течение / в продолжение + genitive ('during'). The right case is required even if learners confuse the connector visually."
+    },
+    {
+      "id": "g.b2-collective-numerals",
+      "level": "B2",
+      "name": "Collective numerals: двое, трое, ... , десятеро",
+      "explanation": "Use collective numerals (двое 'two of', трое 'three of', четверо 'four of', пятеро 'five of') only with masculine animate plurals or nouns that lack a single form (двое друзей, трое суток, нет двоих ножниц 'there are no two scissors'). Use обычные cardinals elsewhere."
+    },
+    {
+      "id": "g.b2-passive-with-preposition",
+      "level": "B2",
+      "name": "Passive agent and instrument",
+      "explanation": "In the written passive, the agent of the action takes instrumental (Книга написана автором 'The book was written by the author'). Sentence-initial or topicalized agents take instrumental without a preposition. With human agents also acceptable: 'со стороны автора' or simple elimination."
+    },
+    {
+      "id": "g.b2-numerals-agreement",
+      "level": "B2",
+      "name": "Compound numerals: agreement and case",
+      "explanation": "Compound numerals have multiple parts. Rule of thumb: the noun following matches the last digit's grammatical pattern (двадцать один рубль, двадцать два рубля, двадцать пять рублей). The phrase declines as a unit (нет двадцати одного рубля 'there isn't 21 rubles'). When adjective form is needed, it agrees with the noun, not the numeral."
+    },
+    {
+      "id": "g.b2-paragraph-connectors",
+      "level": "B2",
+      "name": "Contrastive and additive paragraph links",
+      "explanation": "Recognize connectors that signal paragraph-level contrasts (тем не менее 'nevertheless', в отличие от + genitive 'in contrast to', наоборот 'on the contrary') and additive links (более того 'moreover', к тому же 'in addition', помимо этого 'apart from this'). Use them to bind multi-paragraph arguments."
+    }
+  ],
+  "expressions": [
+    {
+      "id": "e.b2-nevertheless",
+      "level": "B2",
+      "phrase": "Тем не менее, ...",
+      "meaning": "Nevertheless, ... (signals that the following statement contradicts the previous one)"
+    },
+    {
+      "id": "e.b2-in-contrast-to",
+      "level": "B2",
+      "phrase": "В отличие от ..., ...",
+      "meaning": "In contrast to ..., ... (the noun after от stays in genitive)"
+    },
+    {
+      "id": "e.b2-due-to",
+      "level": "B2",
+      "phrase": "В связи с тем, что ...",
+      "meaning": "Due to the fact that ... (formal; takes a full clause)"
+    },
+    {
+      "id": "e.b2-during",
+      "level": "B2",
+      "phrase": "В течение + gen. / В продолжение + gen.",
+      "meaning": "During ... / For the duration of ... (В течение года 'during the year', в продолжение лета 'for the duration of summer')"
+    },
+    {
+      "id": "e.b2-because-of-the-fact-that",
+      "level": "B2",
+      "phrase": "По причине того, что ...",
+      "meaning": "Because of the fact that ... (formal cause link)"
+    },
+    {
+      "id": "e.b2-despite-the-fact-that",
+      "level": "B2",
+      "phrase": "Несмотря на то, что ...",
+      "meaning": "Despite the fact that ... (formal concessive link)"
+    },
+    {
+      "id": "e.b2-on-condition-that",
+      "level": "B2",
+      "phrase": "При условии, что ...",
+      "meaning": "On the condition that ... (introduces a prerequisite clause)"
+    },
+    {
+      "id": "e.b2-in-case",
+      "level": "B2",
+      "phrase": "В случае, если ...",
+      "meaning": "In case (that) ... (introduces a contingent reason or precaution)"
+    },
+    {
+      "id": "e.b2-as-a-result",
+      "level": "B2",
+      "phrase": "В результате ...",
+      "meaning": "As a result of ... (often followed by genitive: в результате дождя 'as a result of the rain')"
+    },
+    {
+      "id": "e.b2-on-one-hand-other-hand",
+      "level": "B2",
+      "phrase": "С одной стороны, ...; с другой стороны, ...",
+      "meaning": "On the one hand, ...; on the other hand, ... (formal balance framing)"
+    }
+  ]
+}
