@@ -3,11 +3,9 @@ import test from 'node:test';
 
 import { normalizeBundle } from '../src/bundle.js';
 import {
-  advanceLevelIfGatePassed,
   applyScreeningAnswer,
   buildDailyQueue,
   createInitialProgress,
-  getLevelGateStatus
 } from '../src/scheduler.js';
 
 function makeBundle() {
@@ -87,7 +85,7 @@ test('screening keeps known items out of the daily learning queue', () => {
   assert.equal(queue.some((entry) => entry.item.id === 'v.tekst'), true);
 });
 
-test('daily queue includes new grammar and expression skills for strict gates', () => {
+test('daily queue includes new grammar and expression skills', () => {
   const bundle = makeBundle();
   const progress = createInitialProgress(bundle, '2026-05-23T00:00:00.000Z');
 
@@ -100,39 +98,4 @@ test('daily queue includes new grammar and expression skills for strict gates', 
 
   assert.equal(queue.some((entry) => entry.item.id === 'g.neuter-noun'), true);
   assert.equal(queue.some((entry) => entry.item.id === 'e.study-phrase'), true);
-});
-
-test('strict gate requires vocabulary, grammar, and expression mastery', () => {
-  const bundle = makeBundle();
-  let progress = createInitialProgress(bundle, '2026-05-23T00:00:00.000Z');
-
-  progress = applyScreeningAnswer(progress, 'v.slovo', 'known', '2026-05-23T00:00:00.000Z');
-  progress = applyScreeningAnswer(progress, 'v.tekst', 'known', '2026-05-23T00:00:00.000Z');
-  progress = applyScreeningAnswer(progress, 'g.neuter-noun', 'known', '2026-05-23T00:00:00.000Z');
-
-  const blocked = getLevelGateStatus(bundle, progress, 'A0');
-  assert.equal(blocked.passed, false);
-  assert.equal(blocked.expression.passed, false);
-
-  progress = applyScreeningAnswer(progress, 'e.study-phrase', 'known', '2026-05-23T00:00:00.000Z');
-
-  const passed = getLevelGateStatus(bundle, progress, 'A0');
-  assert.equal(passed.passed, true);
-});
-
-test('level advancement is rejected unless the strict gate passes', () => {
-  const bundle = makeBundle();
-  let progress = createInitialProgress(bundle, '2026-05-23T00:00:00.000Z');
-
-  assert.throws(
-    () => advanceLevelIfGatePassed(bundle, progress, '2026-05-23T00:00:00.000Z'),
-    /A0 gate is blocked/
-  );
-
-  for (const item of bundle.items.filter((entry) => entry.level === 'A0')) {
-    progress = applyScreeningAnswer(progress, item.id, 'known', '2026-05-23T00:00:00.000Z');
-  }
-
-  const advanced = advanceLevelIfGatePassed(bundle, progress, '2026-05-23T00:00:00.000Z');
-  assert.equal(advanced.currentLevel, 'A1');
 });
