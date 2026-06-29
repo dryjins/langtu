@@ -1,6 +1,6 @@
 export const DEFAULT_BUNDLE = {
   "version": 1,
-  "title": "GosRU starter (curated from public sources and original A1 skill content)",
+  "title": "GosRU starter (curated from public sources and original skill content)",
   "verses": [
     {
       "id": "book3:c1:l0",
@@ -1396,6 +1396,90 @@ export const DEFAULT_BUNDLE = {
       "name": "Numbers 1 to 10 with nouns",
       "explanation": "Use один, одна, одно (agrees with the noun's gender: один стол, одна книга, одно окно). Use два/две (gender-distinguished). Numbers three through ten take genitive plural for animate nouns (пять студентов) and nominative plural for inanimate (пять столов).",
       "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-genitive-case",
+      "level": "A2",
+      "name": "Genitive case for possession and negation",
+      "explanation": "Use genitive after negation (у меня нет книги), to indicate possession (дом отца), after numeric expressions 2-4 with animate plurals (двух студентов), and after many prepositions (около, у, без, после). Endings -а/-я shift to -ы/-и in animate plural; other patterns include -а/-я → -ов/-ев for hard plurals and -ей for soft.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-dative-case",
+      "level": "A2",
+      "name": "Dative case for indirect objects",
+      "explanation": "Mark the recipient with dative (я даю книгу другу 'I give the book to a friend'). Use dative after нужно, надо, можно, нельзя plus dative subject for impersonal expressions (Мне нужно время 'I need time'). Endings: -у/-ю for masculine and -е/-и otherwise.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-instrumental-case",
+      "level": "A2",
+      "name": "Instrumental case for tool and accompaniment",
+      "explanation": "Use instrumental for the instrument with which an action is performed (писать ручкой 'to write with a pen') and for accompaniment after с (с другом 'with a friend'). Endings: -ом/-ем for masculine singular, -ой/-ей for feminine singular, -ами/-ями for plurals.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-aspect-impf-vs-pf",
+      "level": "A2",
+      "name": "Imperfective vs perfective aspect basics",
+      "explanation": "Russian verbs come in aspect pairs. Imperfective (писать) marks ongoing or repeated actions and is used with time expressions; perfective (написать) marks completed actions and a definite result. Recognize perfective by prefixes: написать, сделать, прочитать. Choose perfective when stating completion, imperfective when describing process or habit.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-reflexive-verbs",
+      "level": "A2",
+      "name": "Reflexive verbs with -ся",
+      "explanation": "Add the particle -ся (after consonants) or -сь (after vowels) to mark self-referential, reciprocal, or impersonal meaning (одеваться 'to dress oneself', встречаться 'to meet each other', хочется 'one wants'). Reflexive endings shift slightly: -ться in 3rd person singular preserves the soft sign.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-short-adjectives",
+      "level": "A2",
+      "name": "Short-form adjectives for predicates",
+      "explanation": "Use short-form adjectives to describe a temporary state or to predicate a property (дверь открыта 'the door is open', он болен 'he is sick'). Short forms agree with the noun in gender and number; they cannot normally be modified by adverbs of degree.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-comparative",
+      "level": "A2",
+      "name": "Comparative of adjectives",
+      "explanation": "Form the comparative in two main ways: add -ее or -ей (быстрее, быстрей) to long adjectives, or use a stem form (больше, лучше, хуже, дальше) for the most common irregular comparatives. Note that 'than' takes genitive (больше, чем сада... / bigger than the garden).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-conjunctions",
+      "level": "A2",
+      "name": "Coordinate and subordinate conjunctions",
+      "explanation": "Recognize basic conjunctions by function. Coordinate: и 'and', а 'and/but', но 'but', или 'or', однако 'however'. Subordinate: что 'that', потому что 'because', когда 'when', если 'if', чтобы 'in order to / that', как 'how / as'. Identify them to parse simple compound sentences.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-conditional",
+      "level": "A2",
+      "name": "Conditional mood with бы",
+      "explanation": "To express 'would do / would be', place the particle бы next to the verb in its past-tense form, in either order: я бы пошёл 'I would go', если бы ты знал 'if you knew'. The conditional construction occurs in both main and subordinate clauses.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-numbers-11-100",
+      "level": "A2",
+      "name": "Numbers 11 through 100 with nouns",
+      "explanation": "Numbers 11-19 decline like feminine nouns in genitive singular (одиннадцати часов 'of 11 hours'). Numbers like 20, 30, 40 and above decline in genitive plural (двадцати рублей, ста рублей). After these compounds, the noun that follows is genitive plural (пятьдесят рублей, but 21 рубль, 22 рубля, 25 рублей).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-time-expressions",
+      "level": "A2",
+      "name": "Time and frequency expressions",
+      "explanation": "Distinguish adverbs (всегда 'always', часто 'often', иногда 'sometimes', редко 'rarely', никогда 'never') from prepositional time phrases (каждый день, по утрам, на этой неделе). Place adverbs before or after the verb; the position affects emphasis, not meaning.",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "g.a2-verb-of-motion-walk",
+      "level": "A2",
+      "name": "Verbs of motion: walking, going by vehicle",
+      "explanation": "Distinguish unidirectional (идти 'go (one-way)') from multidirectional (ходить 'go (habitual or return)') for walking, and ехать/ездить for vehicle travel. Unidirectional is used for current single direction; multidirectional for round trips and regular habits (я каждый день хожу в школу).",
+      "linkedVerseIds": []
     }
   ],
   "expressions": [
@@ -1481,6 +1565,76 @@ export const DEFAULT_BUNDLE = {
       "level": "A1",
       "phrase": "Я хочу ...",
       "meaning": "I want ... (the object following хочу is in accusative: Я хочу чай, not Я хочу чая in this neutral A1 frame).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.a2-may-may-not",
+      "level": "A2",
+      "phrase": "Можно... / Нельзя...",
+      "meaning": "One may... / One may not... (impersonal; can also be followed by an infinitive: Можно войти? 'May I come in?')",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.a2-do-you-mind",
+      "level": "A2",
+      "phrase": "Вы не возражаете, если ...?",
+      "meaning": "Do you mind if ...? (formal singular or polite plural).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.a2-i-like",
+      "level": "A2",
+      "phrase": "Мне нравится ... / Я люблю ...",
+      "meaning": "I like ... / I love ... (нравится takes a nominative subject: Мне нравится музыка; любить takes an accusative object: Я люблю музыку).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.a2-i-need",
+      "level": "A2",
+      "phrase": "Мне нужен / нужна / нужно / нужны ...",
+      "meaning": "I need ... (the short form agrees in gender/number with the needed item; the needed item itself is in genitive when it's a noun).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.a2-i-can-i-must",
+      "level": "A2",
+      "phrase": "Я умею ... / Я должен ...",
+      "meaning": "I can (know how to) ... / I must ... (умею implies learned ability; должен is obligation; both followed by infinitive).",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.a2-how-to-get-to",
+      "level": "A2",
+      "phrase": "Как пройти к ...? / Как добраться до ...?",
+      "meaning": "How do I get to ...? (пройти for walking directions; добраться covers all transport.)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.a2-how-much-does-it-cost",
+      "level": "A2",
+      "phrase": "Сколько стоит ...?",
+      "meaning": "How much does ... cost? (Сколько стоит этот журнал? 'How much does this magazine cost?')",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.a2-i-think-that",
+      "level": "A2",
+      "phrase": "Я думаю, что ...",
+      "meaning": "I think that ... (the dependent clause is introduced by что in indicative; the verb inside is in the usual tense/aspect.)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.a2-i-would-like",
+      "level": "A2",
+      "phrase": "Я хотел бы ... / Я хотела бы ...",
+      "meaning": "I would like ... (a polite conditional form; gender agrees with the speaker. Followed by an infinitive.)",
+      "linkedVerseIds": []
+    },
+    {
+      "id": "e.a2-lets",
+      "level": "A2",
+      "phrase": "Давай(те) ...",
+      "meaning": "Let's ... (informal to one person, давай; plural or polite, давайте. Often followed by 1st person plural: давайте пойдём.)",
       "linkedVerseIds": []
     }
   ]

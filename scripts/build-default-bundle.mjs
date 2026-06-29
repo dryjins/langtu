@@ -8,11 +8,14 @@ const projectDir = path.dirname(scriptDir);
 const CLI_DEFAULTS = {
   bible: 'data/bible-kids-03.json',
   vocab: 'data/openrussian-vocab-a1-c2.json',
-  skill: 'data/skill-content-a1.json',
+  skills: [
+    'data/skill-content-a1.json',
+    'data/skill-content-a2.json'
+  ],
   output: 'src/default-bundle.js',
   chapters: 5,
   vocabPerLevel: 10,
-  title: 'GosRU starter (curated from public sources and original A1 skill content)'
+  title: 'GosRU starter (curated from public sources and original skill content)'
 };
 
 function buildVersesFromBible(bibleData, chapters) {
@@ -66,19 +69,43 @@ function buildVocabularyFromOpenRussian(vocabData, vocabPerLevel) {
   return vocabulary;
 }
 
-function buildSkillsFromContent(skillData) {
-  const grammar = Array.isArray(skillData?.grammar) ? skillData.grammar : [];
-  const expressions = Array.isArray(skillData?.expressions) ? skillData.expressions : [];
-  return {
-    grammar: grammar.map((g) => ({ ...g, linkedVerseIds: Array.isArray(g.linkedVerseIds) ? g.linkedVerseIds : [] })),
-    expressions: expressions.map((e) => ({ ...e, linkedVerseIds: Array.isArray(e.linkedVerseIds) ? e.linkedVerseIds : [] }))
-  };
+function buildSkillsFromContents(skillDataList) {
+  const grammar = [];
+  const expressions = [];
+  const seenGrammar = new Set();
+  const seenExpression = new Set();
+
+  for (const skillData of skillDataList) {
+    const sourceFile = skillData?.__source || '<inline>';
+    for (const g of Array.isArray(skillData?.grammar) ? skillData.grammar : []) {
+      if (seenGrammar.has(g.id)) {
+        throw new Error(`duplicate grammar id ${g.id} (in ${sourceFile})`);
+      }
+      seenGrammar.add(g.id);
+      grammar.push({
+        ...g,
+        linkedVerseIds: Array.isArray(g.linkedVerseIds) ? g.linkedVerseIds : []
+      });
+    }
+    for (const e of Array.isArray(skillData?.expressions) ? skillData.expressions : []) {
+      if (seenExpression.has(e.id)) {
+        throw new Error(`duplicate expression id ${e.id} (in ${sourceFile})`);
+      }
+      seenExpression.add(e.id);
+      expressions.push({
+        ...e,
+        linkedVerseIds: Array.isArray(e.linkedVerseIds) ? e.linkedVerseIds : []
+      });
+    }
+  }
+
+  return { grammar, expressions };
 }
 
-export function buildDefaultBundleFromSources({ bibleData, vocabData, skillData, chapters, vocabPerLevel, title }) {
+export function buildDefaultBundleFromSources({ bibleData, vocabData, skillDataList, chapters, vocabPerLevel, title }) {
   const verses = buildVersesFromBible(bibleData, chapters);
   const vocabulary = buildVocabularyFromOpenRussian(vocabData, vocabPerLevel);
-  const { grammar, expressions } = buildSkillsFromContent(skillData);
+  const { grammar, expressions } = buildSkillsFromContents(skillDataList);
   return {
     version: 1,
     title,
@@ -94,7 +121,7 @@ function serializeBundle(bundle) {
 }
 
 function parseArgs(argv) {
-  const args = { ...CLI_DEFAULTS };
+  const args = { ...CLI_DEFAULTS, skills: [...CLI_DEFAULTS.skills] };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (!arg.startsWith('--')) continue;
@@ -117,7 +144,7 @@ function parseArgs(argv) {
         break;
       case 'skill':
         if (!hasNext) throw new Error('--skill requires a value');
-        args.skill = next;
+        args.skills.push(next);
         i += 1;
         break;
       case 'output':
@@ -154,7 +181,7 @@ function printUsage() {
       '',
       '--bible path           Source bible JSON',
       '--vocab path           Source vocab JSON',
-      '--skill path           Source skill content JSON',
+      '--skill path           Source skill content JSON (repeatable; default: A1 + A2 files)',
       '--output path          Output bundle JS (default: src/default-bundle.js)',
       '--chapters n           Chapter count from start (default: 5)',
       '--vocab-per-level n    Top items per level (default: 10)',
@@ -176,15 +203,23 @@ export async function runCli(argv = process.argv.slice(2)) {
   if (!Number.isFinite(args.vocabPerLevel) || args.vocabPerLevel < 0) {
     throw new Error('--vocab-per-level must be a non-negative number');
   }
+  if (!Array.isArray(args.skills) || args.skills.length === 0) {
+    throw new Error('at least one --skill file is required');
+  }
 
   const bible = JSON.parse(await fs.readFile(path.resolve(projectDir, args.bible), 'utf8'));
   const vocab = JSON.parse(await fs.readFile(path.resolve(projectDir, args.vocab), 'utf8'));
-  const skill = JSON.parse(await fs.readFile(path.resolve(projectDir, args.skill), 'utf8'));
+  const skillDataList = await Promise.all(
+    args.skills.map(async (file) => {
+      const parsed = JSON.parse(await fs.readFile(path.resolve(projectDir, file), 'utf8'));
+      return { ...parsed, __source: file };
+    })
+  );
 
   const bundle = buildDefaultBundleFromSources({
     bibleData: bible,
     vocabData: vocab,
-    skillData: skill,
+    skillDataList,
     chapters: args.chapters,
     vocabPerLevel: args.vocabPerLevel,
     title: args.title
@@ -194,7 +229,7 @@ export async function runCli(argv = process.argv.slice(2)) {
   await fs.mkdir(path.dirname(output), { recursive: true });
   await fs.writeFile(output, serializeBundle(bundle));
   process.stdout.write(
-    `Wrote ${output} (verses=${bundle.verses.length}, vocabulary=${bundle.vocabulary.length}, grammar=${bundle.grammar.length}, expressions=${bundle.expressions.length})\n`
+    `Wrote ${output} (verses=${bundle.verses.length}, vocabulary=${bundle.vocabulary.length}, grammar=${bundle.grammar.length}, expressions=${bundle.expressions.length}, sources=${args.skills.length})\n`
   );
 }
 
