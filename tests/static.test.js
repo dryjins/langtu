@@ -78,8 +78,10 @@ test('sentence challenge UI text stays in English', () => {
 
 test('vocabulary view renders a compact table with examples', () => {
   const script = readFileSync('src/app.js', 'utf8');
+  const stateScript = readFileSync('src/app-state.js', 'utf8');
 
-  assert.match(script, /selectedLevel: 'all'/);
+  assert.match(stateScript, /selectedLevel:\s*'all'/);
+  assert.match(stateScript, /listType:\s*'all'/);
   assert.match(script, /<option value="all"/);
   assert.match(script, /All levels/);
   assert.match(script, /function renderVocabularyRow\(/);

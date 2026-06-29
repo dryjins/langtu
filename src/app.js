@@ -7,24 +7,19 @@ import {
   summarizeInventoryCounts
 } from './scheduler.js';
 import { buildStartupState, defaultStartupMessage } from './startup.js';
+import {
+  DEFAULT_UI,
+  VALID_LIST_STATES,
+  VALID_LIST_TYPES,
+  normalizeAppState,
+  sanitizeValue
+} from './app-state.js';
 import { buildSentenceTruthChallenge } from './sentence-practice.js';
 
 const root = document.getElementById('app-root');
 const APP_NAME = 'GosRU';
 
-const VALID_VIEWS = ['session', 'vocabulary', 'drill'];
 const VALID_LEVEL_FILTERS = ['all', ...LEVELS];
-const VALID_LIST_TYPES = ['all', 'vocabulary', 'grammar', 'expression'];
-const VALID_LIST_STATES = ['all', 'new', 'screening', 'learning', 'weak', 'known', 'retired', 'audit_due'];
-
-const DEFAULT_UI = {
-  view: 'session',
-  listType: 'all',
-  listState: 'all',
-  selectedLevel: 'all',
-  drillItemId: null,
-  sentenceChallenge: null
-};
 
 let appState = {
   bundle: null,
@@ -59,28 +54,6 @@ async function init() {
     render();
     return;
   }
-}
-
-function normalizeAppState(rawState, now = new Date().toISOString()) {
-  const startup = buildStartupState(rawState, now);
-  const sourceUi = rawState?.ui || {};
-
-  return {
-    ...startup,
-    ui: {
-      ...DEFAULT_UI,
-      sentenceChallenge: null,
-      view: sanitizeValue(sourceUi.view, VALID_VIEWS, DEFAULT_UI.view),
-      listType: sanitizeValue(sourceUi.listType, VALID_LIST_TYPES, DEFAULT_UI.listType),
-      listState: sanitizeValue(sourceUi.listState, VALID_LIST_STATES, DEFAULT_UI.listState),
-      selectedLevel: 'all',
-      drillItemId: typeof sourceUi.drillItemId === 'string' ? sourceUi.drillItemId : null
-    }
-  };
-}
-
-function sanitizeValue(value, validValues, fallback) {
-  return validValues.includes(value) ? value : fallback;
 }
 
 async function persistStartupState(fallbackMessage) {
