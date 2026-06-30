@@ -86,6 +86,26 @@ test('default startup bundle exposes all vocabulary in full inventory view', () 
   assert.equal(allVocabulary.length, state.bundle.vocabulary.length);
 });
 
+test('default startup bundle can be paginated for the full vocabulary view', async () => {
+  const { sliceVocabularyPage, paginate } = await import('../src/vocab-pagination.js');
+  const state = buildStartupState(null, '2026-01-01T00:00:00.000Z');
+
+  const layout = paginate({ total: state.bundle.vocabulary.length, pageSize: 100, page: 1 });
+  const firstPage = sliceVocabularyPage(
+    state.bundle.vocabulary.map((entry) => ({ id: entry.id })),
+    { page: 1, pageSize: 100 }
+  );
+  const lastPage = sliceVocabularyPage(
+    state.bundle.vocabulary.map((entry) => ({ id: entry.id })),
+    { page: layout.totalPages, pageSize: 100 }
+  );
+
+  assert.equal(layout.totalPages, 53);
+  assert.equal(state.bundle.vocabulary.length, 5266);
+  assert.equal(firstPage.length, 100);
+  assert.equal(lastPage.length, 66);
+});
+
 test('default startup bundle includes all OpenRussian vocab entries by level', async () => {
   const dataPath = path.resolve(process.cwd(), 'data/openrussian-vocab-a1-c2.json');
   const rawSource = JSON.parse(await fs.readFile(dataPath, 'utf8'));

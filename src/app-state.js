@@ -10,6 +10,7 @@ export const DEFAULT_UI = {
   listType: 'all',
   listState: 'all',
   selectedLevel: 'all',
+  vocabPage: 1,
   drillItemId: null,
   sentenceChallenge: null
 };
@@ -31,6 +32,7 @@ export function normalizeAppState(rawState, now = new Date().toISOString()) {
       listType: 'all',
       listState: sanitizeValue(sourceUi.listState, VALID_LIST_STATES, DEFAULT_UI.listState),
       selectedLevel: 'all',
+      vocabPage: 1,
       drillItemId: typeof sourceUi.drillItemId === 'string' ? sourceUi.drillItemId : null
     }
   };

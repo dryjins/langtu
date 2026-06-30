@@ -90,6 +90,18 @@ test('vocabulary view renders a compact table with examples', () => {
   assert.match(script, /Example/);
 });
 
+test('vocabulary view paginates the full inventory', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.match(script, /DEFAULT_VOCAB_PAGE_SIZE|DEFAULT_VOCAB_PAGE_SIZE|sliceVocabularyPage/);
+  assert.match(script, /data-action="vocab-page-prev"/);
+  assert.match(script, /data-action="vocab-page-next"/);
+  assert.match(script, /data-action="vocab-page-first"/);
+  assert.match(script, /data-action="vocab-page-last"/);
+  assert.match(script, /Page /);
+  assert.match(script, /pageSize/);
+});
+
 test('opening vocabulary resets filters to full level coverage', () => {
   const script = readFileSync('src/app.js', 'utf8');
 
@@ -97,6 +109,7 @@ test('opening vocabulary resets filters to full level coverage', () => {
   assert.match(script, /appState\.ui\.selectedLevel = 'all'/);
   assert.match(script, /appState\.ui\.listType = 'all'/);
   assert.match(script, /appState\.ui\.listState = 'all'/);
+  assert.match(script, /appState\.ui\.vocabPage = 1/);
 });
 
 test('vocabulary table styles include compact layout and state colors', () => {
