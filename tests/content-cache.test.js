@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import {
   ensureContentCached,
@@ -88,7 +89,7 @@ test('ensureContentCached rejects malformed content and stores nothing', async (
   );
 });
 
-test('prepareContentCache hashes content with deterministic keys per row', () => {
+test('prepareContentCache requires the caller to provide contentHash; no hashing happens here', () => {
   const noHashMeta = { version: 4, buildAt: '2026-06-30T00:00:00.000Z', title: 'GosRU starter bundle' };
   const prepared = prepareContentCache(noHashMeta, CONTENT);
   assert.equal(prepared.meta.version, 4);
@@ -97,9 +98,16 @@ test('prepareContentCache hashes content with deterministic keys per row', () =>
   assert.equal(prepared.payload.vocabulary.length, 1);
   assert.equal(prepared.payload.grammar.length, 1);
   assert.equal(prepared.payload.expressions.length, 1);
-  assert.equal(typeof prepared.contentHash, 'string');
-  assert.equal(prepared.contentHash.length, 16);
+  assert.equal(prepared.contentHash, null);
 
-  const repeated = prepareContentCache(noHashMeta, CONTENT);
-  assert.equal(repeated.contentHash, prepared.contentHash);
+  const providedMeta = { ...noHashMeta, contentHash: 'builder-supplied-hash' };
+  const preparedWithHash = prepareContentCache(providedMeta, CONTENT);
+  assert.equal(preparedWithHash.contentHash, 'builder-supplied-hash');
+});
+
+test('content-cache module is browser-safe (does not import node: built-ins)', () => {
+  const source = readFileSync('src/content-cache.js', 'utf8');
+  assert.doesNotMatch(source, /from\s+['"]node:/);
+  assert.doesNotMatch(source, /require\(["']node:/);
+  assert.doesNotMatch(source, /createHash|node:crypto/);
 });

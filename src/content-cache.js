@@ -1,15 +1,3 @@
-import { createHash } from 'node:crypto';
-
-function hashContent(payload) {
-  const serialized = JSON.stringify({
-    verses: payload.verses ?? [],
-    vocabulary: payload.vocabulary ?? [],
-    grammar: payload.grammar ?? [],
-    expressions: payload.expressions ?? []
-  });
-  return createHash('sha256').update(serialized).digest('hex').slice(0, 16);
-}
-
 function assertValidContent(content) {
   if (!content || typeof content !== 'object') {
     throw new Error('content bundle must be an object');
@@ -44,12 +32,7 @@ export function prepareContentCache(meta, content) {
     sources: Array.isArray(meta?.sources) ? meta.sources : [],
     contentHash: typeof meta?.contentHash === 'string' && meta.contentHash.length > 0
       ? meta.contentHash
-      : hashContent({
-          verses: content.verses,
-          vocabulary: content.vocabulary,
-          grammar: content.grammar,
-          expressions: content.expressions
-        })
+      : null
   };
 
   const payload = {
@@ -88,6 +71,9 @@ function isFresh(stored, meta) {
 
 export async function ensureContentCached({ backend, meta, content }) {
   const prepared = prepareContentCache(meta, content);
+  if (!prepared.contentHash) {
+    throw new Error('meta.contentHash is required to compare with stored cache');
+  }
   const stored = await resolveStoredContent(backend);
   const fresh = isFresh(stored, prepared.meta);
 

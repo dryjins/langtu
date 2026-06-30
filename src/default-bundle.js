@@ -1,7 +1,7 @@
 export const DEFAULT_CONTENT = {
   "version": 1,
   "title": "GosRU starter (curated from public sources and original A1-C2 skill content)",
-  "buildAt": "2026-06-30T04:10:37.406Z",
+  "buildAt": "2026-06-30T04:18:35.375Z",
   "sources": [
     "data/skill-content-a1.json",
     "data/skill-content-a2.json",
