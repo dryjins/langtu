@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import {
   buildSentenceQuiz,
   selectDailySentence,
-  buildDistractorSentences
+  buildDistractorSentences,
+  hasMinimumQuizInputs
 } from '../src/sentence-quiz.js';
 
 const BUNDLE = {
@@ -84,5 +85,17 @@ test('buildDistractorSentences prefers verses that share the first word and simi
   for (const text of distractors) {
     assert.notEqual(text, focus.russianText);
   }
+});
+
+test('buildDistractorSentences never returns the focus verse and deduplicates by normalized text', () => {
+  const focus = BUNDLE.verses[0];
+  const distractors = buildDistractorSentences(BUNDLE, focus, { now: '2026-06-30T00:00:00.000Z' });
+  const normalized = distractors.map((t) => t.replace(/\s+/g, ' ').trim().toLowerCase());
+  assert.equal(new Set(normalized).size, distractors.length);
+});
+
+test('hasMinimumQuizInputs requires at least five verses', () => {
+  assert.equal(hasMinimumQuizInputs({ verses: [{}] }), false);
+  assert.equal(hasMinimumQuizInputs({ verses: BUNDLE.verses }), true);
 });
 
