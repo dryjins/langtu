@@ -21,6 +21,7 @@ import {
   sanitizeValue
 } from './app-state.js';
 import { buildSentenceTruthChallenge } from './sentence-practice.js';
+import { buildSentenceQuiz, selectDailySentence } from './sentence-quiz.js';
 import {
   applyVerseAnswer,
   groupVersesByChapter,
@@ -163,13 +164,15 @@ function renderEmptyState() {
 function renderStudyApp() {
   const { bundle, progress, message } = appState;
   const level = progress.currentLevel;
-  const challenge = getSessionSentenceChallenge();
+  const now = new Date().toISOString();
+  const daily = selectDailySentence(bundle, { level, now });
+  const quiz = buildSentenceQuiz(bundle, { level, now });
 
   return `
     <main class="app study-layout">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Current level ${level}</p>
+            <p class="eyebrow">Current level ${escapeHtml(level)}</p>
             <h1>${APP_NAME}</h1>
             <p class="muted">${escapeHtml(bundle.title)}</p>
           </div>
@@ -184,11 +187,133 @@ function renderStudyApp() {
 
       ${message ? `<div class="notice">${escapeHtml(message)}</div>` : ''}
 
-      <section class="dashboard sentence-layout">
-        ${renderSentenceChallengeCard(challenge)}
-        ${renderSentenceHintPanel(challenge ? challenge.hints : [])}
-      </section>
+      ${renderDailyHero(daily, level)}
+      ${renderExplanationSplit(daily, bundle)}
+      ${renderSentenceQuiz(quiz)}
     </main>
+  `;
+}
+
+function renderDailyHero(verse, level) {
+  if (!verse) {
+    return `
+      <section class="card panel daily-hero empty">
+        <p class="eyebrow">Today's verse</p>
+        <h2>No verse available yet</h2>
+        <p class="muted">Complete a few vocabulary drills so the daily verse can unlock.</p>
+      </section>
+    `;
+  }
+  return `
+    <section class="card panel daily-hero">
+      <p class="eyebrow">Today's verse · Level ${escapeHtml(level)}</p>
+      <h2 class="daily-hero-text">${escapeHtml(verse.russianText)}</h2>
+      <p class="muted">
+        ${verse.reference ? `<span>${escapeHtml(verse.reference)}</span>` : 'Reference line'}
+        <button class="icon-button" type="button" data-action="speak" data-text="${escapeAttribute(verse.russianText)}">Listen</button>
+      </p>
+    </section>
+  `;
+}
+
+function renderExplanationSplit(verse, bundle) {
+  if (!verse) {
+    return `
+      <section class="explanation-split">
+        <article class="card panel">
+          <h3>Words</h3>
+          <p class="muted">Reveal a verse first to see word-by-word meaning.</p>
+        </article>
+        <article class="card panel">
+          <h3>Grammar and Expressions</h3>
+          <p class="muted">Reveal a verse first to see the grammar and expression notes.</p>
+        </article>
+      </section>
+    `;
+  }
+  const linked = (bundle?.items ?? []).filter((item) => Array.isArray(item.linkedVerseIds) && item.linkedVerseIds.includes(verse.id));
+  const words = linked.filter((item) => item.type === 'vocabulary');
+  const skills = linked.filter((item) => item.type === 'grammar' || item.type === 'expression');
+
+  return `
+    <section class="explanation-split">
+      <article class="card panel">
+        <h3>Words</h3>
+        ${words.length === 0
+          ? `<p class="muted">No vocabulary items are linked to this verse yet.</p>`
+          : `<ul class="explanation-list">
+              ${words.map((item) => `
+                <li>
+                  <strong>${escapeHtml(item.label)}</strong>
+                  <small>${escapeHtml(item.level)}</small>
+                  <p>${escapeHtml(getItemMeaning(item))}</p>
+                </li>
+              `).join('')}
+            </ul>`
+        }
+      </article>
+      <article class="card panel">
+        <h3>Grammar and Expressions</h3>
+        ${skills.length === 0
+          ? `<p class="muted">No grammar or expressions are linked to this verse yet.</p>`
+          : `<ul class="explanation-list">
+              ${skills.map((item) => `
+                <li>
+                  <strong>${escapeHtml(item.label)}</strong>
+                  <small>${escapeHtml(item.level)} · ${escapeHtml(item.type)}</small>
+                  <p>${escapeHtml(getItemMeaning(item))}</p>
+                </li>
+              `).join('')}
+            </ul>`
+        }
+      </article>
+    </section>
+  `;
+}
+
+function renderSentenceQuiz(quiz) {
+  if (!quiz) {
+    return `
+      <section class="card panel sentence-quiz empty">
+        <h3>Sentence quiz</h3>
+        <p class="muted">Add at least one verse and a couple of vocabulary words to enable the daily quiz.</p>
+      </section>
+    `;
+  }
+  const isAnswered = Boolean(appState.ui.quizState?.verseId);
+  const lastAnswer = appState.ui.quizState?.verseId === quiz.verseId ? appState.ui.quizState : null;
+
+  return `
+    <section class="card panel sentence-quiz">
+      <header class="panel-header">
+        <h3>Sentence quiz</h3>
+        <span class="muted">Choose the line that matches today's reference.</span>
+      </header>
+      <ol class="sentence-quiz-options" data-verse-id="${escapeAttribute(quiz.verseId)}">
+        ${quiz.options.map((option, index) => `
+          <li class="sentence-quiz-option ${lastAnswer && option.isCorrect ? 'is-correct' : ''} ${lastAnswer && !option.isCorrect && lastAnswer.selectedIndex === index ? 'is-wrong' : ''}">
+            <button class="sentence-quiz-button" type="button" data-action="quiz-answer" data-verse-id="${escapeAttribute(quiz.verseId)}" data-option-index="${index}" ${lastAnswer ? 'disabled' : ''}>
+              <span class="sentence-quiz-letter">${String.fromCharCode(65 + index)}</span>
+              <span class="sentence-quiz-text">${escapeHtml(option.text)}</span>
+            </button>
+          </li>
+        `).join('')}
+      </ol>
+      ${lastAnswer ? renderQuizFeedback(quiz, lastAnswer) : ''}
+      ${isAnswered && lastAnswer && !lastAnswer.correct ? `
+        <button class="button ghost" type="button" data-action="quiz-reset">Try again</button>
+      ` : ''}
+    </section>
+  `;
+}
+
+function renderQuizFeedback(quiz, lastAnswer) {
+  const correct = quiz.options.find((option) => option.isCorrect);
+  return `
+    <p class="muted ${lastAnswer.correct ? 'quiz-feedback-correct' : 'quiz-feedback-wrong'}">
+      ${lastAnswer.correct ? 'Correct. ' : `Not quite. The actual line is: «${escapeHtml(correct?.text ?? '')}». `}
+      <span>Reference: ${escapeHtml(quiz.verseReference)}</span>
+    </p>
   `;
 }
 
@@ -952,10 +1077,44 @@ async function handleClick(event) {
     return;
   }
 
+  if (target.dataset.action === 'quiz-answer') {
+    const verseId = String(target.dataset.verseId || '');
+    const index = Number(target.dataset.optionIndex);
+    recordQuizAnswer(verseId, index);
+    return;
+  }
+
+  if (target.dataset.action === 'quiz-reset') {
+    appState.ui.quizState = null;
+    render();
+    return;
+  }
+
   if (target.dataset.answer && target.dataset.itemId) {
     await answerItem(target.dataset.itemId, target.dataset.answer);
     return;
   }
+}
+
+function recordQuizAnswer(verseId, index) {
+  if (!verseId) return;
+  const level = appState.progress.currentLevel;
+  const now = new Date().toISOString();
+  const quiz = buildSentenceQuiz(appState.bundle, { level, now });
+  if (!quiz || quiz.verseId !== verseId) {
+    appState.ui.quizState = { verseId, selectedIndex: index, correct: false };
+    render();
+    return;
+  }
+  const option = quiz.options[index];
+  if (!option) return;
+
+  appState.ui.quizState = {
+    verseId,
+    selectedIndex: index,
+    correct: option.isCorrect
+  };
+  render();
 }
 
 async function handleChange(event) {

@@ -187,3 +187,14 @@ test('app loads the content bundle through the IndexedDB cache, not direct impor
   assert.match(script, /loadContentBundle|loadCachedContent|content-cache/);
   assert.match(dbScript, /content-bundle/);
 });
+
+test('study app shows a daily hero, two-column explanation, and 5-option quiz', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.match(script, /buildSentenceQuiz/);
+  assert.match(script, /selectDailySentence/);
+  assert.match(script, /data-action="quiz-answer"/);
+  assert.match(script, /renderDailyHero/);
+  assert.match(script, /renderExplanationSplit/);
+  assert.match(script, /renderSentenceQuiz/);
+});

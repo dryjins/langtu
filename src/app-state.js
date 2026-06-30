@@ -12,7 +12,8 @@ export const DEFAULT_UI = {
   selectedLevel: 'all',
   drillItemId: null,
   verseDrillId: null,
-  sentenceChallenge: null
+  sentenceChallenge: null,
+  quizState: null
 };
 
 export function sanitizeValue(value, validValues, fallback) {
@@ -55,7 +56,8 @@ export async function normalizeAppStateAsync(rawState, now = new Date().toISOStr
       listState: sanitizeValue(sourceUi.listState, VALID_LIST_STATES, DEFAULT_UI.listState),
       selectedLevel: 'all',
       drillItemId: typeof sourceUi.drillItemId === 'string' ? sourceUi.drillItemId : null,
-      verseDrillId: typeof sourceUi.verseDrillId === 'string' ? sourceUi.verseDrillId : null
+      verseDrillId: typeof sourceUi.verseDrillId === 'string' ? sourceUi.verseDrillId : null,
+      quizState: sourceUi.quizState && typeof sourceUi.quizState === 'object' ? sourceUi.quizState : null
     }
   };
 }
@@ -85,7 +87,8 @@ export function normalizeAppState(rawState, now = new Date().toISOString(), bund
       listState: sanitizeValue(sourceUi.listState, VALID_LIST_STATES, DEFAULT_UI.listState),
       selectedLevel: 'all',
       drillItemId: typeof sourceUi.drillItemId === 'string' ? sourceUi.drillItemId : null,
-      verseDrillId: typeof sourceUi.verseDrillId === 'string' ? sourceUi.verseDrillId : null
+      verseDrillId: typeof sourceUi.verseDrillId === 'string' ? sourceUi.verseDrillId : null,
+      quizState: sourceUi.quizState && typeof sourceUi.quizState === 'object' ? sourceUi.quizState : null
     }
   };
 }
