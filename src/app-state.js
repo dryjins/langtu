@@ -1,7 +1,7 @@
 import { buildStartupState } from './startup.js';
 
 export const VALID_VIEWS = ['session', 'vocabulary', 'drill'];
-export const VALID_LEVEL_FILTERS = ['all', 'A0', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+export const VALID_LEVEL_FILTERS = ['all', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 export const VALID_LIST_TYPES = ['all', 'vocabulary', 'grammar', 'expression'];
 export const VALID_LIST_STATES = ['all', 'new', 'screening', 'learning', 'weak', 'known', 'retired', 'audit_due'];
 
@@ -10,7 +10,6 @@ export const DEFAULT_UI = {
   listType: 'all',
   listState: 'all',
   selectedLevel: 'all',
-  vocabPage: 1,
   drillItemId: null,
   sentenceChallenge: null
 };
@@ -32,7 +31,6 @@ export function normalizeAppState(rawState, now = new Date().toISOString()) {
       listType: 'all',
       listState: sanitizeValue(sourceUi.listState, VALID_LIST_STATES, DEFAULT_UI.listState),
       selectedLevel: 'all',
-      vocabPage: 1,
       drillItemId: typeof sourceUi.drillItemId === 'string' ? sourceUi.drillItemId : null
     }
   };

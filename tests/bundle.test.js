@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { normalizeBundle } from '../src/bundle.js';
+import { LEVELS, normalizeBundle } from '../src/bundle.js';
+
+test('LEVELS no longer includes the pre-A1 stage', () => {
+  assert.equal(LEVELS.includes('A0'), false);
+  assert.deepEqual(LEVELS, ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']);
+});
 
 function makeBundle(overrides = {}) {
   return {
@@ -18,7 +23,7 @@ function makeBundle(overrides = {}) {
     vocabulary: [
       {
         id: 'v.slovo',
-        level: 'A0',
+        level: 'A1',
         lemma: 'слово',
         forms: ['слово'],
         meaning: 'word',
@@ -30,7 +35,7 @@ function makeBundle(overrides = {}) {
     grammar: [
       {
         id: 'g.neuter-noun',
-        level: 'A0',
+        level: 'A1',
         name: 'Neuter noun recognition',
         explanation: 'Recognize a basic neuter noun form.',
         linkedVerseIds: ['john.1.1']
@@ -39,7 +44,7 @@ function makeBundle(overrides = {}) {
     expressions: [
       {
         id: 'e.study-phrase',
-        level: 'A0',
+        level: 'A1',
         phrase: 'учебный текст',
         meaning: 'study text',
         linkedVerseIds: ['john.1.1']
@@ -59,7 +64,7 @@ test('normalizes vocabulary, grammar, and expression entries into learning items
     bundle.items.map((item) => item.type).sort(),
     ['expression', 'grammar', 'vocabulary']
   );
-  assert.equal(bundle.items.find((item) => item.id === 'v.slovo').level, 'A0');
+  assert.equal(bundle.items.find((item) => item.id === 'v.slovo').level, 'A1');
 });
 
 test('rejects entries that link to a missing verse', () => {
@@ -67,7 +72,7 @@ test('rejects entries that link to a missing verse', () => {
     vocabulary: [
       {
         id: 'v.broken',
-        level: 'A0',
+        level: 'A1',
         lemma: 'нет',
         meaning: 'no',
         linkedVerseIds: ['john.9.99']
@@ -83,7 +88,7 @@ test('rejects duplicate learning item ids across skill types', () => {
     grammar: [
       {
         id: 'v.slovo',
-        level: 'A0',
+        level: 'A1',
         name: 'Duplicate id',
         linkedVerseIds: ['john.1.1']
       }

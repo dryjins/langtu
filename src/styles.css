@@ -221,38 +221,6 @@ h2 {
   background: rgba(255, 250, 243, 0.72);
 }
 
-.vocab-pager {
-  margin-top: 16px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.vocab-pager-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.vocab-page-summary {
-  font-size: 0.92rem;
-  color: var(--muted);
-  margin: 0;
-}
-
-.vocab-page-size {
-  color: var(--muted);
-  font-size: 0.86rem;
-}
-
-.vocab-pager-buttons .mini-button[disabled] {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
 .vocabulary-table {
   width: 100%;
   min-width: 780px;

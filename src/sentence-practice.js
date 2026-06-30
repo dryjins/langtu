@@ -125,7 +125,7 @@ function findVerseFromItem(bundle, item) {
 }
 
 export function buildSentenceTruthChallenge(bundle, progress, options = {}) {
-  const level = options.level ?? progress?.currentLevel ?? 'A0';
+  const level = options.level ?? progress?.currentLevel ?? 'A1';
   const now = options.now ?? new Date().toISOString();
   const focusItem = getFocusItem(bundle, progress, { level, todayItem: options.todayItem });
 

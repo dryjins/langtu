@@ -30,14 +30,14 @@ function makeBundle() {
     vocabulary: [
       {
         id: 'v.word',
-        level: 'A0',
+        level: 'A1',
         lemma: 'слово',
         meaning: 'word',
         linkedVerseIds: ['v.j1']
       },
       {
         id: 'v.beginnings',
-        level: 'A0',
+        level: 'A1',
         lemma: 'начало',
         meaning: 'beginning',
         linkedVerseIds: ['v.j1']
@@ -53,7 +53,7 @@ function makeBundle() {
     grammar: [
       {
         id: 'g.subject-verb',
-        level: 'A0',
+        level: 'A1',
         name: 'Subject-verb order',
         linkedVerseIds: ['v.j1'],
         explanation: 'Recognize simple subject-verb sequence.'
@@ -62,7 +62,7 @@ function makeBundle() {
     expressions: [
       {
         id: 'e.beginning',
-        level: 'A0',
+        level: 'A1',
         phrase: 'в начале',
         meaning: 'in the beginning',
         linkedVerseIds: ['v.j1']
@@ -75,16 +75,14 @@ test('getInventoryItems returns only items from selected level and filters by ty
   const bundle = makeBundle();
   let progress = createInitialProgress(bundle, '2026-06-23T00:00:00.000Z');
 
-  const a0Vocabulary = getInventoryItems(bundle, progress, {
-    level: 'A0',
+  const a1Vocabulary = getInventoryItems(bundle, progress, {
+    level: 'A1',
     type: 'vocabulary',
     state: 'all'
   });
 
-  assert.equal(a0Vocabulary.length, 2);
-  assert.equal(a0Vocabulary.map((entry) => entry.item.id).includes('v.word'), true);
-  assert.equal(a0Vocabulary.map((entry) => entry.item.id).includes('v.beginnings'), true);
-  assert.equal(a0Vocabulary.every((entry) => entry.item.level === 'A0'), true);
+  assert.equal(a1Vocabulary.length, 3);
+  assert.equal(a1Vocabulary.every((entry) => entry.item.level === 'A1'), true);
 });
 
 test('getInventoryItems can return vocabulary across all levels', () => {
@@ -112,12 +110,12 @@ test('getInventoryItems filters by state after user answers', () => {
   progress = applyScreeningAnswer(progress, 'v.beginnings', 'uncertain', '2026-06-23T00:00:00.000Z');
 
   const known = getInventoryItems(bundle, progress, {
-    level: 'A0',
+    level: 'A1',
     state: 'known'
   });
 
   const weak = getInventoryItems(bundle, progress, {
-    level: 'A0',
+    level: 'A1',
     state: 'weak'
   });
 
@@ -135,12 +133,12 @@ test('summarizeInventoryCounts reports current state distribution for level item
   progress = applyScreeningAnswer(progress, 'v.beginnings', 'uncertain', '2026-06-23T00:00:00.000Z');
   progress = applyScreeningAnswer(progress, 'g.subject-verb', 'unknown', '2026-06-23T00:00:00.000Z');
 
-  const counts = summarizeInventoryCounts(getInventoryItems(bundle, progress, { level: 'A0' }));
+  const counts = summarizeInventoryCounts(getInventoryItems(bundle, progress, { level: 'A1' }));
 
-  assert.equal(counts.new, 1);
+  assert.equal(counts.new, 2);
   assert.equal(counts.known, 1);
   assert.equal(counts.weak, 2);
-  assert.equal(counts.total, 4);
+  assert.equal(counts.total, 5);
 });
 
 test('applyScreeningAnswer records the last answer category', () => {

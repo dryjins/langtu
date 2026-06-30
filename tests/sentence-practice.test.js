@@ -20,28 +20,28 @@ function makeBundle() {
     vocabulary: [
       {
         id: 'v.know',
-        level: 'A0',
+        level: 'A1',
         lemma: 'знание',
         meaning: 'knowledge',
         linkedVerseIds: ['verse.1']
       },
       {
         id: 'v.read',
-        level: 'A0',
+        level: 'A1',
         lemma: 'читать',
         meaning: 'to read',
         linkedVerseIds: ['verse.1']
       },
         {
           id: 'v.day',
-          level: 'A0',
+          level: 'A1',
           lemma: 'день',
           meaning: 'day',
           linkedVerseIds: ['verse.1']
         },
         {
           id: 'v.home',
-          level: 'A0',
+          level: 'A1',
           lemma: 'дом',
           meaning: 'home',
           linkedVerseIds: ['verse.1']
@@ -50,7 +50,7 @@ function makeBundle() {
     grammar: [
       {
         id: 'g.adv',
-        level: 'A0',
+        level: 'A1',
         name: 'Adverb placement',
         explanation: 'Recognize adverb placement patterns.',
         linkedVerseIds: ['verse.1']
@@ -59,7 +59,7 @@ function makeBundle() {
     expressions: [
       {
         id: 'e.daily',
-        level: 'A0',
+        level: 'A1',
         phrase: 'каждый день',
         meaning: 'every day',
         linkedVerseIds: ['verse.1']
@@ -77,7 +77,7 @@ test('buildSentenceTruthChallenge builds true and false sentence options', () =>
   progress = applyScreeningAnswer(progress, 'v.home', 'known', '2026-06-29T00:00:00.000Z');
 
   const challenge = buildSentenceTruthChallenge(bundle, progress, {
-    level: 'A0',
+    level: 'A1',
     now: '2026-06-29T01:00:00.000Z'
   });
 
@@ -107,7 +107,7 @@ test('buildSentenceTruthChallenge returns null when cannot build a valid false s
     vocabulary: [
       {
         id: 'v.short',
-        level: 'A0',
+        level: 'A1',
         lemma: 'коротко',
         meaning: 'short',
         linkedVerseIds: ['verse.2']
@@ -117,6 +117,6 @@ test('buildSentenceTruthChallenge returns null when cannot build a valid false s
 
   const progress = createInitialProgress(bundle, '2026-06-29T00:00:00.000Z');
 
-  const challenge = buildSentenceTruthChallenge(bundle, progress, { level: 'A0' });
+  const challenge = buildSentenceTruthChallenge(bundle, progress, { level: 'A1' });
   assert.equal(challenge, null);
 });

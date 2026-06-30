@@ -7,13 +7,12 @@ const ITEM_TYPE_ORDER = {
   expression: 2
 };
 const LEVEL_ORDER = {
-  A0: 0,
-  A1: 1,
-  A2: 2,
-  B1: 3,
-  B2: 4,
-  C1: 5,
-  C2: 6
+  A1: 0,
+  A2: 1,
+  B1: 2,
+  B2: 3,
+  C1: 4,
+  C2: 5
 };
 
 const ANSWER_TO_STATE = {
@@ -40,7 +39,7 @@ export function createInitialProgress(bundle, now = new Date().toISOString()) {
   }
 
   return {
-    currentLevel: 'A0',
+    currentLevel: 'A1',
     createdAt: now,
     updatedAt: now,
     items
@@ -48,7 +47,7 @@ export function createInitialProgress(bundle, now = new Date().toISOString()) {
 }
 
 export function getInventoryItems(bundle, progress, options = {}) {
-  const level = options.level ?? progress?.currentLevel ?? 'A0';
+  const level = options.level ?? progress?.currentLevel ?? 'A1';
   const typeFilter = options.type ?? 'all';
   const stateFilter = options.state ?? 'all';
 
@@ -122,7 +121,7 @@ export function applyScreeningAnswer(progress, itemId, answer, now = new Date().
 }
 
 export function buildDailyQueue(bundle, progress, options = {}) {
-  const level = options.level ?? progress.currentLevel ?? 'A0';
+  const level = options.level ?? progress.currentLevel ?? 'A1';
   const now = options.now ?? new Date().toISOString();
   const newVocabularyLimit = options.newVocabularyLimit ?? 5;
   const auditLimit = options.auditLimit ?? 2;

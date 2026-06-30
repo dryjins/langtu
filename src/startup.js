@@ -8,7 +8,7 @@ const normalizedDefaultBundle = normalizeBundle(DEFAULT_BUNDLE);
 const validLevels = new Set(LEVELS);
 
 function sanitizeLevel(level) {
-  return validLevels.has(level) ? level : 'A0';
+  return validLevels.has(level) ? level : 'A1';
 }
 
 export function buildStartupState(savedState, now = new Date().toISOString()) {

@@ -21,15 +21,15 @@ function makeSavedBundle() {
     ],
     vocabulary: [
       {
-        id: 'v.saved.a0',
-        level: 'A0',
+        id: 'v.saved.a1',
+        level: 'A1',
         lemma: 'check',
         meaning: 'check',
         linkedVerseIds: ['v.saved.1']
       },
       {
-        id: 'v.saved.a1',
-        level: 'A1',
+        id: 'v.saved.a2',
+        level: 'A2',
         lemma: 'satisfaction',
         meaning: 'satisfaction',
         linkedVerseIds: ['v.saved.1']
@@ -45,7 +45,7 @@ test('saved state is used when bundle and progress exist', () => {
   const bundle = makeSavedBundle();
   const savedState = {
     bundle,
-    progress: { currentLevel: 'A0' },
+    progress: { currentLevel: 'A1' },
     message: 'from local storage',
     storedAt: now
   };
@@ -53,8 +53,8 @@ test('saved state is used when bundle and progress exist', () => {
   const state = buildStartupState(savedState, now);
 
   assert.equal(state.bundle.title, 'Saved private study bundle');
-  assert.equal(state.progress.currentLevel, 'A0');
-  assert.equal(state.progress.items['v.saved.a0'].state, 'new');
+  assert.equal(state.progress.currentLevel, 'A1');
+  assert.equal(state.progress.items['v.saved.a1'].state, 'new');
   assert.equal(state.message, 'from local storage');
 });
 
@@ -65,7 +65,7 @@ test('default startup state uses curated default bundle when no saved state exis
 
   assert.equal(state.message, defaultStartupMessage);
   assert.equal(state.bundle.title, DEFAULT_BUNDLE.title);
-  assert.equal(state.progress.currentLevel, 'A0');
+  assert.equal(state.progress.currentLevel, 'A1');
   assert.equal(state.progress.createdAt, now);
   assert.equal(state.progress.updatedAt, now);
   assert.ok(state.progress.items && typeof state.progress.items === 'object');
@@ -84,26 +84,6 @@ test('default startup bundle exposes all vocabulary in full inventory view', () 
   });
 
   assert.equal(allVocabulary.length, state.bundle.vocabulary.length);
-});
-
-test('default startup bundle can be paginated for the full vocabulary view', async () => {
-  const { sliceVocabularyPage, paginate } = await import('../src/vocab-pagination.js');
-  const state = buildStartupState(null, '2026-01-01T00:00:00.000Z');
-
-  const layout = paginate({ total: state.bundle.vocabulary.length, pageSize: 100, page: 1 });
-  const firstPage = sliceVocabularyPage(
-    state.bundle.vocabulary.map((entry) => ({ id: entry.id })),
-    { page: 1, pageSize: 100 }
-  );
-  const lastPage = sliceVocabularyPage(
-    state.bundle.vocabulary.map((entry) => ({ id: entry.id })),
-    { page: layout.totalPages, pageSize: 100 }
-  );
-
-  assert.equal(layout.totalPages, 53);
-  assert.equal(state.bundle.vocabulary.length, 5266);
-  assert.equal(firstPage.length, 100);
-  assert.equal(lastPage.length, 66);
 });
 
 test('default startup bundle includes all OpenRussian vocab entries by level', async () => {
@@ -199,14 +179,14 @@ test('buildStartupState repairs saved progress to match the current bundle', () 
   const savedState = {
     bundle,
     progress: {
-      currentLevel: 'A1',
+      currentLevel: 'A2',
       createdAt: '2025-12-01T00:00:00.000Z',
       updatedAt: '2025-12-01T00:00:00.000Z',
       items: {
-        'v.saved.a0': {
-          id: 'v.saved.a0',
+        'v.saved.a1': {
+          id: 'v.saved.a1',
           type: 'vocabulary',
-          level: 'A0',
+          level: 'A1',
           state: 'known',
           correctStreak: 2,
           lastAnswer: 'known',
@@ -217,7 +197,7 @@ test('buildStartupState repairs saved progress to match the current bundle', () 
         'orphan.old-item': {
           id: 'orphan.old-item',
           type: 'vocabulary',
-          level: 'A0',
+          level: 'A1',
           state: 'known',
           correctStreak: 1,
           lastAnswer: 'known',
@@ -231,10 +211,10 @@ test('buildStartupState repairs saved progress to match the current bundle', () 
 
   const state = buildStartupState(savedState, now);
 
-  assert.equal(state.progress.currentLevel, 'A1');
+  assert.equal(state.progress.currentLevel, 'A2');
   assert.equal(state.progress.createdAt, '2025-12-01T00:00:00.000Z');
-  assert.equal(state.progress.items['v.saved.a0'].state, 'known');
-  assert.equal(state.progress.items['v.saved.a1'].state, 'new');
+  assert.equal(state.progress.items['v.saved.a1'].state, 'known');
+  assert.equal(state.progress.items['v.saved.a2'].state, 'new');
   assert.equal(Object.hasOwn(state.progress.items, 'orphan.old-item'), false);
   assert.equal(Object.keys(state.progress.items).length, bundle.items.length);
 });

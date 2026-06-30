@@ -15,7 +15,6 @@ import {
   sanitizeValue
 } from './app-state.js';
 import { buildSentenceTruthChallenge } from './sentence-practice.js';
-import { DEFAULT_VOCAB_PAGE_SIZE, paginate, sliceVocabularyPage } from './vocab-pagination.js';
 
 const root = document.getElementById('app-root');
 const APP_NAME = 'GosRU';
@@ -234,13 +233,11 @@ function renderSentenceHintPanel(items) {
 function renderVocabularyView() {
   const { bundle, progress } = appState;
   const level = appState.ui.selectedLevel;
-  const filteredItems = getInventoryItems(bundle, progress, {
+  const levelItems = getInventoryItems(bundle, progress, {
     level,
     type: appState.ui.listType,
     state: appState.ui.listState
   });
-  const pageItems = getVocabPageSlice(filteredItems);
-  const pageInfo = currentVocabularyPagination(filteredItems);
   const levelCounts = summarizeInventoryCounts(getInventoryItems(bundle, progress, {
     level,
     type: appState.ui.listType,
@@ -292,75 +289,27 @@ function renderVocabularyView() {
               <option value="audit_due" ${appState.ui.listState === 'audit_due' ? 'selected' : ''}>Audit due</option>
             </select>
           </div>
-          <div>
-            <label class="filter-label" for="vocab-page-size">Rows / page</label>
-            <select id="vocab-page-size" class="select" data-action="set-vocab-page-size" data-action-group="vocabulary">
-              ${[50, 100, 200, 500].map((value) => `<option value="${value}" ${value === pageInfo.pageSize ? 'selected' : ''}>${value}</option>`).join('')}
-            </select>
-          </div>
         </div>
         <div class="meta-grid">
-          <span class="badge">${pageInfo.startIndex + (pageInfo.total > 0 ? 1 : 0)}–${pageInfo.endIndex} of ${pageInfo.total} shown</span>
+          <span class="badge">${levelItems.length} shown</span>
           <span class="badge">${levelCounts.total} total</span>
           <span class="badge">not learned ${levelCounts.new}</span>
           <span class="badge">weak ${levelCounts.weak}</span>
           <span class="badge">known ${levelCounts.known}</span>
           <span class="badge">audit ${levelCounts.audit_due}</span>
         </div>
-        ${renderVocabPaginationControls(pageInfo)}
       </section>
 
       <section class="card panel">
         <h2>Words and examples</h2>
-        ${renderVocabularyTable(pageItems, bundle, pageInfo)}
+        ${renderVocabularyTable(levelItems, bundle)}
       </section>
     </main>
   `;
 }
 
-function getVocabPageSlice(items) {
-  return sliceVocabularyPage(items, {
-    page: appState.ui.vocabPage,
-    pageSize: appState.ui.vocabPageSize || DEFAULT_VOCAB_PAGE_SIZE
-  });
-}
-
-function currentVocabularyPagination(items) {
-  return paginate({
-    total: Array.isArray(items) ? items.length : 0,
-    pageSize: appState.ui.vocabPageSize || DEFAULT_VOCAB_PAGE_SIZE,
-    page: appState.ui.vocabPage
-  });
-}
-
-function renderVocabPaginationControls(pageInfo) {
-  if (!pageInfo || pageInfo.totalPages <= 1) {
-    return pageInfo && pageInfo.totalPages === 1
-      ? `<p class="muted vocab-page-summary">Page ${pageInfo.page} of ${pageInfo.totalPages}</p>`
-      : '';
-  }
-
-  return `
-    <div class="vocab-pager">
-      <span class="muted vocab-page-summary">Page ${pageInfo.page} of ${pageInfo.totalPages}</span>
-      <div class="vocab-pager-buttons">
-        <button class="mini-button" type="button" data-action="vocab-page-first" ${pageInfo.hasPrev ? '' : 'disabled'}>« First</button>
-        <button class="mini-button" type="button" data-action="vocab-page-prev" ${pageInfo.hasPrev ? '' : 'disabled'}>‹ Prev</button>
-        <span class="vocab-page-size">${pageInfo.pageSize} rows / page</span>
-        <button class="mini-button" type="button" data-action="vocab-page-next" ${pageInfo.hasNext ? '' : 'disabled'}>Next ›</button>
-        <button class="mini-button" type="button" data-action="vocab-page-last" ${pageInfo.hasNext ? '' : 'disabled'}>Last »</button>
-      </div>
-    </div>
-  `;
-}
-
-function renderVocabularyTable(entries, bundle, pageInfo) {
-  if (!entries.length) {
-    const emptyMessage = pageInfo && pageInfo.total > 0
-      ? `Page ${pageInfo.page} of ${pageInfo.totalPages} is empty for the current filter.`
-      : 'No items match this filter.';
-    return `<p class="muted">${escapeHtml(emptyMessage)}</p>`;
-  }
+function renderVocabularyTable(entries, bundle) {
+  if (!entries.length) return '<p class="muted">No items match this filter.</p>';
 
   return `
     <div class="vocabulary-table-wrap">
@@ -573,14 +522,8 @@ async function handleClick(event) {
     appState.ui.selectedLevel = 'all';
     appState.ui.listType = 'all';
     appState.ui.listState = 'all';
-    appState.ui.vocabPage = 1;
     appState.ui.sentenceChallenge = null;
     render();
-    return;
-  }
-
-  if (target.dataset.action === 'vocab-page-prev' || target.dataset.action === 'vocab-page-next' || target.dataset.action === 'vocab-page-first' || target.dataset.action === 'vocab-page-last') {
-    handleVocabPageJump(target.dataset.action);
     return;
   }
 
@@ -622,7 +565,6 @@ async function handleChange(event) {
   if (target.dataset.action === 'set-selected-level') {
     const normalized = sanitizeValue(target.value, VALID_LEVEL_FILTERS, appState.ui.selectedLevel);
     appState.ui.selectedLevel = normalized;
-    appState.ui.vocabPage = 1;
     appState.ui.view = 'vocabulary';
     render();
     return;
@@ -630,7 +572,6 @@ async function handleChange(event) {
 
   if (target.dataset.action === 'set-list-type') {
     appState.ui.listType = sanitizeValue(target.value, VALID_LIST_TYPES, appState.ui.listType);
-    appState.ui.vocabPage = 1;
     appState.ui.view = 'vocabulary';
     render();
     return;
@@ -638,49 +579,10 @@ async function handleChange(event) {
 
   if (target.dataset.action === 'set-list-state') {
     appState.ui.listState = sanitizeValue(target.value, VALID_LIST_STATES, appState.ui.listState);
-    appState.ui.vocabPage = 1;
     appState.ui.view = 'vocabulary';
     render();
     return;
   }
-
-  if (target.dataset.action === 'set-vocab-page-size') {
-    const requested = Number(target.value);
-    const fallback = appState.ui.vocabPageSize || DEFAULT_VOCAB_PAGE_SIZE;
-    appState.ui.vocabPageSize = Number.isFinite(requested) && requested > 0 ? requested : fallback;
-    appState.ui.vocabPage = 1;
-    appState.ui.view = 'vocabulary';
-    render();
-    return;
-  }
-}
-
-function handleVocabPageJump(action) {
-  const items = getInventoryItems(appState.bundle, appState.progress, {
-    level: appState.ui.selectedLevel,
-    type: appState.ui.listType,
-    state: appState.ui.listState
-  });
-  const layout = paginate({
-    total: items.length,
-    pageSize: appState.ui.vocabPageSize || DEFAULT_VOCAB_PAGE_SIZE,
-    page: appState.ui.vocabPage
-  });
-
-  if (layout.totalPages === 0) {
-    appState.ui.vocabPage = 0;
-  } else if (action === 'vocab-page-prev') {
-    appState.ui.vocabPage = Math.max(1, layout.page - 1);
-  } else if (action === 'vocab-page-next') {
-    appState.ui.vocabPage = Math.min(layout.totalPages, layout.page + 1);
-  } else if (action === 'vocab-page-first') {
-    appState.ui.vocabPage = 1;
-  } else if (action === 'vocab-page-last') {
-    appState.ui.vocabPage = layout.totalPages;
-  }
-
-  appState.ui.view = 'vocabulary';
-  render();
 }
 
 async function answerItem(itemId, answer) {
