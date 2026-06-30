@@ -102,6 +102,28 @@ function render() {
     return;
   }
 
+  if (appState.ui.view === 'grammar') {
+    root.innerHTML = renderSkillListView({
+      view: 'grammar',
+      title: 'Grammar list',
+      eyebrowSuffix: 'grammar',
+      itemType: 'grammar',
+      description: 'Browse every A1 to C2 grammar pattern and the verse that anchors it.'
+    });
+    return;
+  }
+
+  if (appState.ui.view === 'expressions') {
+    root.innerHTML = renderSkillListView({
+      view: 'expressions',
+      title: 'Expressions list',
+      eyebrowSuffix: 'expressions',
+      itemType: 'expression',
+      description: 'Browse every expression, phrase translation, and a first example line.'
+    });
+    return;
+  }
+
   if (appState.ui.view === 'sentences') {
     root.innerHTML = renderSentencesView();
     return;
@@ -154,6 +176,8 @@ function renderStudyApp() {
           <div class="topbar-actions">
             <button class="button ghost" type="button" data-action="clear-data">Clear local data</button>
             <button class="button secondary" type="button" data-action="open-vocabulary">Vocabulary</button>
+            <button class="button secondary" type="button" data-action="open-grammar">Grammar</button>
+            <button class="button secondary" type="button" data-action="open-expressions">Expressions</button>
             <button class="button secondary" type="button" data-action="open-sentences">Sentences</button>
           </div>
         </header>
@@ -272,12 +296,12 @@ function renderVocabularyView() {
   const level = appState.ui.selectedLevel;
   const levelItems = getInventoryItems(bundle, progress, {
     level,
-    type: appState.ui.listType,
+    type: 'vocabulary',
     state: appState.ui.listState
   });
   const levelCounts = summarizeInventoryCounts(getInventoryItems(bundle, progress, {
     level,
-    type: appState.ui.listType,
+    type: 'vocabulary',
     state: 'all'
   }));
   const levelLabel = level === 'all' ? 'All levels' : `Level ${level}`;
@@ -292,6 +316,9 @@ function renderVocabularyView() {
         </div>
         <div class="topbar-actions">
           <button class="button ghost" type="button" data-action="open-session">Back to queue</button>
+          <button class="button secondary" type="button" data-action="open-grammar">Grammar</button>
+          <button class="button secondary" type="button" data-action="open-expressions">Expressions</button>
+          <button class="button secondary" type="button" data-action="open-sentences">Sentences</button>
         </div>
       </header>
 
@@ -302,15 +329,6 @@ function renderVocabularyView() {
             <select id="vocab-level" class="select" data-action="set-selected-level" data-action-group="vocabulary">
               <option value="all" ${level === 'all' ? 'selected' : ''}>All levels</option>
               ${LEVELS.map((value) => `<option value="${value}" ${value === level ? 'selected' : ''}>${value}</option>`).join('')}
-            </select>
-          </div>
-          <div>
-            <label class="filter-label" for="vocab-type">Type</label>
-            <select id="vocab-type" class="select" data-action="set-list-type" data-action-group="vocabulary">
-              <option value="all" ${appState.ui.listType === 'all' ? 'selected' : ''}>All item types</option>
-              <option value="vocabulary" ${appState.ui.listType === 'vocabulary' ? 'selected' : ''}>Vocabulary</option>
-              <option value="grammar" ${appState.ui.listType === 'grammar' ? 'selected' : ''}>Grammar</option>
-              <option value="expression" ${appState.ui.listType === 'expression' ? 'selected' : ''}>Expression</option>
             </select>
           </div>
           <div>
@@ -340,6 +358,76 @@ function renderVocabularyView() {
       <section class="card panel">
         <h2>Words and examples</h2>
         ${renderVocabularyTable(levelItems, bundle)}
+      </section>
+    </main>
+  `;
+}
+
+function renderSkillListView({ view, title, eyebrowSuffix, itemType, description }) {
+  const { bundle, progress } = appState;
+  const level = appState.ui.selectedLevel;
+  const levelItems = getInventoryItems(bundle, progress, {
+    level,
+    type: itemType,
+    state: appState.ui.listState
+  });
+  const levelCounts = summarizeInventoryCounts(getInventoryItems(bundle, progress, {
+    level,
+    type: itemType,
+    state: 'all'
+  }));
+  const levelLabel = level === 'all' ? 'All levels' : `Level ${level}`;
+
+  return `
+    <main class="app study-layout">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">${escapeHtml(levelLabel)} ${escapeHtml(eyebrowSuffix)}</p>
+          <h1>${escapeHtml(title)}</h1>
+          <p class="muted">${escapeHtml(description)}</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="button ghost" type="button" data-action="open-vocabulary">Vocabulary</button>
+          <button class="button secondary" type="button" data-action="open-sentences">Sentences</button>
+          <button class="button ghost" type="button" data-action="open-session">Back to queue</button>
+        </div>
+      </header>
+
+      <section class="card panel">
+        <div class="filter-row">
+          <div>
+            <label class="filter-label" for="${escapeAttribute(view)}-level">Level</label>
+            <select id="${escapeAttribute(view)}-level" class="select" data-action="set-selected-level" data-action-group="${escapeAttribute(view)}">
+              <option value="all" ${level === 'all' ? 'selected' : ''}>All levels</option>
+              ${LEVELS.map((value) => `<option value="${value}" ${value === level ? 'selected' : ''}>${value}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="filter-label" for="${escapeAttribute(view)}-state">State</label>
+            <select id="${escapeAttribute(view)}-state" class="select" data-action="set-list-state" data-action-group="${escapeAttribute(view)}">
+              <option value="all" ${appState.ui.listState === 'all' ? 'selected' : ''}>All</option>
+              <option value="new" ${appState.ui.listState === 'new' ? 'selected' : ''}>New</option>
+              <option value="screening" ${appState.ui.listState === 'screening' ? 'selected' : ''}>Screening</option>
+              <option value="learning" ${appState.ui.listState === 'learning' ? 'selected' : ''}>Learning</option>
+              <option value="weak" ${appState.ui.listState === 'weak' ? 'selected' : ''}>Weak</option>
+              <option value="known" ${appState.ui.listState === 'known' ? 'selected' : ''}>Known</option>
+              <option value="retired" ${appState.ui.listState === 'retired' ? 'selected' : ''}>Retired</option>
+              <option value="audit_due" ${appState.ui.listState === 'audit_due' ? 'selected' : ''}>Audit due</option>
+            </select>
+          </div>
+        </div>
+        <div class="meta-grid">
+          <span class="badge">${levelItems.length} shown</span>
+          <span class="badge">${levelCounts.total} total</span>
+          <span class="badge">not learned ${levelCounts.new}</span>
+          <span class="badge">weak ${levelCounts.weak}</span>
+          <span class="badge">known ${levelCounts.known}</span>
+        </div>
+      </section>
+
+      <section class="card panel">
+        <h2>${escapeHtml(eyebrowSuffix)}</h2>
+        ${renderSkillTable(levelItems, bundle, itemType)}
       </section>
     </main>
   `;
@@ -390,6 +478,68 @@ function renderVocabularyRow(entry, bundle) {
         <strong class="vocab-word">${escapeHtml(item.label)}</strong>
         <span class="vocab-meta">${escapeHtml(item.type)} / ${escapeHtml(item.level)}</span>
         ${forms ? `<span class="vocab-forms">forms: ${escapeHtml(forms)}</span>` : ''}
+      </td>
+      <td class="vocab-meaning-cell">${escapeHtml(getItemMeaning(item))}</td>
+      <td class="vocab-example-cell">
+        <span>${escapeHtml(example.text)}</span>
+        ${example.reference ? `<small>${escapeHtml(example.reference)}</small>` : ''}
+      </td>
+      <td><span class="badge ${displayState.badgeClass}">${escapeHtml(displayState.label)}</span></td>
+      <td>
+        <div class="vocab-actions">
+          <button class="mini-button" type="button" data-action="start-drill" data-item-id="${escapeAttribute(item.id)}">Drill</button>
+          <button class="mini-button" type="button" data-answer="known" data-item-id="${escapeAttribute(item.id)}">Known</button>
+          <button class="mini-button" type="button" data-answer="uncertain" data-item-id="${escapeAttribute(item.id)}">Unsure</button>
+          <button class="mini-button danger" type="button" data-answer="unknown" data-item-id="${escapeAttribute(item.id)}">Unknown</button>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
+function renderSkillTable(entries, bundle, itemType) {
+  if (!entries.length) return '<p class="muted">No items match this filter.</p>';
+  const labelKey = itemType === 'grammar' ? 'Grammar' : 'Expression';
+  return `
+    <div class="vocabulary-table-wrap">
+      <table class="vocabulary-table">
+        <colgroup>
+          <col class="col-state">
+          <col class="col-word">
+          <col class="col-meaning">
+          <col class="col-example">
+          <col class="col-state-badge">
+          <col class="col-action">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="state-heading" aria-label="State color"></th>
+            <th>${labelKey}</th>
+            <th>Meaning</th>
+            <th>Example</th>
+            <th>State</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${entries.map((entry) => renderSkillRow(entry, bundle)).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderSkillRow(entry, bundle) {
+  const { item, record } = entry;
+  const displayState = getDisplayState(record);
+  const example = getItemExample(bundle, item);
+
+  return `
+    <tr class="vocab-row vocab-${displayState.key}">
+      <td class="vocab-state-bar" aria-label="${escapeAttribute(displayState.label)}"></td>
+      <td class="vocab-word-cell">
+        <strong class="vocab-word">${escapeHtml(item.label)}</strong>
+        <span class="vocab-meta">${escapeHtml(item.level)}</span>
       </td>
       <td class="vocab-meaning-cell">${escapeHtml(getItemMeaning(item))}</td>
       <td class="vocab-example-cell">
@@ -726,7 +876,24 @@ async function handleClick(event) {
   if (target.dataset.action === 'open-vocabulary') {
     appState.ui.view = 'vocabulary';
     appState.ui.selectedLevel = 'all';
-    appState.ui.listType = 'all';
+    appState.ui.listState = 'all';
+    appState.ui.sentenceChallenge = null;
+    render();
+    return;
+  }
+
+  if (target.dataset.action === 'open-grammar') {
+    appState.ui.view = 'grammar';
+    appState.ui.selectedLevel = 'all';
+    appState.ui.listState = 'all';
+    appState.ui.sentenceChallenge = null;
+    render();
+    return;
+  }
+
+  if (target.dataset.action === 'open-expressions') {
+    appState.ui.view = 'expressions';
+    appState.ui.selectedLevel = 'all';
     appState.ui.listState = 'all';
     appState.ui.sentenceChallenge = null;
     render();
@@ -803,9 +970,6 @@ async function handleChange(event) {
   }
 
   if (target.dataset.action === 'set-list-type') {
-    appState.ui.listType = sanitizeValue(target.value, VALID_LIST_TYPES, appState.ui.listType);
-    appState.ui.view = 'vocabulary';
-    render();
     return;
   }
 

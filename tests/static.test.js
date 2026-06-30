@@ -103,12 +103,29 @@ test('app-state supports the sentences and verse-drill views', () => {
   assert.match(stateScript, /verseDrillId/);
 });
 
+test('app exposes dedicated Grammar and Expressions skill views separate from Vocabulary', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+  const stateScript = readFileSync('src/app-state.js', 'utf8');
+
+  assert.match(script, /ui\.view === 'grammar'/);
+  assert.match(script, /ui\.view === 'expressions'/);
+  assert.match(script, /data-action="open-grammar"/);
+  assert.match(script, /data-action="open-expressions"/);
+  assert.match(script, /function renderSkillListView\(/);
+  assert.match(script, /function renderVocabularyTable\(/);
+  assert.doesNotMatch(script, /<option value="all"[^>]*>\s*All item types/);
+  assert.doesNotMatch(stateScript, /listType:\s*'all'/);
+  assert.match(stateScript, /listType:\s*'vocabulary'/);
+  assert.match(stateScript, /'grammar'/);
+  assert.match(stateScript, /'expression'/);
+});
+
 test('vocabulary view renders a compact table with examples', () => {
   const script = readFileSync('src/app.js', 'utf8');
   const stateScript = readFileSync('src/app-state.js', 'utf8');
 
   assert.match(stateScript, /selectedLevel:\s*'all'/);
-  assert.match(stateScript, /listType:\s*'all'/);
+  assert.match(stateScript, /listType:\s*'vocabulary'/);
   assert.match(script, /<option value="all"/);
   assert.match(script, /All levels/);
   assert.match(script, /function renderVocabularyRow\(/);
@@ -125,8 +142,8 @@ test('opening vocabulary resets filters to full level coverage', () => {
 
   assert.match(script, /appState\.ui\.view = 'vocabulary'/);
   assert.match(script, /appState\.ui\.selectedLevel = 'all'/);
-  assert.match(script, /appState\.ui\.listType = 'all'/);
   assert.match(script, /appState\.ui\.listState = 'all'/);
+  assert.doesNotMatch(script, /appState\.ui\.listType = 'all'/);
 });
 
 test('vocabulary table styles include compact layout and state colors', () => {
