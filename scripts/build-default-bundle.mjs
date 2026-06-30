@@ -17,13 +17,16 @@ const CLI_DEFAULTS = {
     'data/skill-content-c2.json'
   ],
   output: 'src/default-bundle.js',
-  chapters: 5,
+  chapters: undefined,
   vocabPerLevel: undefined,
   title: 'GosRU starter (curated from public sources and original A1-C2 skill content)'
 };
 
 function buildVersesFromBible(bibleData, chapters) {
-  const limit = Math.max(0, Math.min(chapters, Array.isArray(bibleData.chapters) ? bibleData.chapters.length : 0));
+  const totalChapters = Array.isArray(bibleData.chapters) ? bibleData.chapters.length : 0;
+  const limit = typeof chapters === 'number'
+    ? Math.max(0, Math.min(chapters, totalChapters))
+    : totalChapters;
   const verses = [];
   for (let ci = 0; ci < limit; ci += 1) {
     const chapter = bibleData.chapters[ci];
@@ -187,7 +190,7 @@ function printUsage() {
       '--vocab path           Source vocab JSON',
       '--skill path           Source skill content JSON (repeatable; default: A1 + A2 files)',
       '--output path          Output bundle JS (default: src/default-bundle.js)',
-      '--chapters n           Chapter count from start (default: 5)',
+      '--chapters n           Chapter count from start (default: all)',
       '--vocab-per-level n    Top items per level (default: all)',
       '--title str            Bundle title',
       '--help                 Print help'
@@ -201,7 +204,7 @@ export async function runCli(argv = process.argv.slice(2)) {
     printUsage();
     return;
   }
-  if (!Number.isFinite(args.chapters) || args.chapters < 0) {
+  if (args.chapters !== undefined && (!Number.isFinite(args.chapters) || args.chapters < 0)) {
     throw new Error('--chapters must be a non-negative number');
   }
   if (args.vocabPerLevel !== undefined && (!Number.isFinite(args.vocabPerLevel) || args.vocabPerLevel < 0)) {

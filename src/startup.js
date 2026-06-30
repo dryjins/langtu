@@ -1,6 +1,7 @@
 import { createInitialProgress } from './scheduler.js';
 import { DEFAULT_BUNDLE } from './default-bundle.js';
 import { LEVELS, normalizeBundle } from './bundle.js';
+import { createInitialVerseProgress } from './verse-state.js';
 
 export const defaultStartupMessage = 'Default curated bundle loaded from public sources and original A1-C2 skill content.';
 
@@ -16,12 +17,29 @@ export function buildStartupState(savedState, now = new Date().toISOString()) {
     const rawBundle = savedState.bundle;
     const usesLatestDefaultBundle = rawBundle?.title === DEFAULT_BUNDLE.title;
     const bundle = usesLatestDefaultBundle ? normalizedDefaultBundle : normalizeBundle(rawBundle);
-    const baselineProgress = createInitialProgress(bundle, now);
+    const baselineItemsProgress = createInitialProgress(bundle, now);
+    const baselineVerseProgress = createInitialVerseProgress(bundle, now);
+
+    const savedVerseProgress = savedState.progress?.verseProgress ?? {};
+    const repairedVerseProgress = { ...baselineVerseProgress };
+
+    for (const verseId of Object.keys(baselineVerseProgress)) {
+      const existing = savedVerseProgress[verseId];
+      if (existing && typeof existing === 'object') {
+        repairedVerseProgress[verseId] = {
+          ...baselineVerseProgress[verseId],
+          ...existing,
+          id: verseId
+        };
+      }
+    }
+
     const repairedProgress = {
-      ...baselineProgress,
+      ...baselineItemsProgress,
       ...savedState.progress,
       currentLevel: sanitizeLevel(savedState.progress.currentLevel),
       items: {},
+      verseProgress: repairedVerseProgress
     };
 
     const savedItems = savedState.progress?.items;
@@ -30,7 +48,7 @@ export function buildStartupState(savedState, now = new Date().toISOString()) {
       if (!item?.id) continue;
       const existing = savedItems?.[item.id] ?? {};
       repairedProgress.items[item.id] = {
-        ...baselineProgress.items[item.id],
+        ...baselineItemsProgress.items[item.id],
         ...existing,
       };
     }
@@ -44,7 +62,10 @@ export function buildStartupState(savedState, now = new Date().toISOString()) {
 
   return {
     bundle: normalizedDefaultBundle,
-    progress: createInitialProgress(normalizedDefaultBundle, now),
+    progress: {
+      ...createInitialProgress(normalizedDefaultBundle, now),
+      verseProgress: createInitialVerseProgress(normalizedDefaultBundle, now)
+    },
     message: defaultStartupMessage
   };
 }

@@ -76,6 +76,33 @@ test('sentence challenge UI text stays in English', () => {
   assert.doesNotMatch(script, /오답입니다/);
 });
 
+test('app exposes a Sentences view with verse drill flow', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.match(script, /data-action="open-sentences"/);
+  assert.match(script, /function renderSentencesView\(/);
+  assert.match(script, /function renderVerseDrillView\(/);
+  assert.match(script, /data-action="start-verse-drill"/);
+  assert.match(script, /data-action="verse-answer-known"/);
+  assert.match(script, /data-action="verse-answer-uncertain"/);
+  assert.match(script, /data-action="verse-answer-unknown"/);
+});
+
+test('app wires the sentences view into the topbar for both empty and study layouts', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+
+  assert.match(script, /ui\.view === 'sentences'/);
+  assert.match(script, /root\.innerHTML = renderSentencesView\(\)/);
+});
+
+test('app-state supports the sentences and verse-drill views', () => {
+  const stateScript = readFileSync('src/app-state.js', 'utf8');
+
+  assert.match(stateScript, /'sentences'/);
+  assert.match(stateScript, /'verse-drill'/);
+  assert.match(stateScript, /verseDrillId/);
+});
+
 test('vocabulary view renders a compact table with examples', () => {
   const script = readFileSync('src/app.js', 'utf8');
   const stateScript = readFileSync('src/app-state.js', 'utf8');

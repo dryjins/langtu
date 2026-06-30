@@ -15,6 +15,12 @@ import {
   sanitizeValue
 } from './app-state.js';
 import { buildSentenceTruthChallenge } from './sentence-practice.js';
+import {
+  applyVerseAnswer,
+  groupVersesByChapter,
+  selectVerseForPractice,
+  summarizeVerseStats
+} from './verse-state.js';
 
 const root = document.getElementById('app-root');
 const APP_NAME = 'GosRU';
@@ -76,6 +82,16 @@ function render() {
     return;
   }
 
+  if (appState.ui.view === 'sentences') {
+    root.innerHTML = renderSentencesView();
+    return;
+  }
+
+  if (appState.ui.view === 'verse-drill') {
+    root.innerHTML = renderVerseDrillView();
+    return;
+  }
+
   if (appState.ui.view === 'drill') {
     root.innerHTML = renderDrillView();
     return;
@@ -118,6 +134,7 @@ function renderStudyApp() {
           <div class="topbar-actions">
             <button class="button ghost" type="button" data-action="clear-data">Clear local data</button>
             <button class="button secondary" type="button" data-action="open-vocabulary">Vocabulary</button>
+            <button class="button secondary" type="button" data-action="open-sentences">Sentences</button>
           </div>
         </header>
 
@@ -498,6 +515,167 @@ function findItemById(bundle, itemId) {
   return bundle.items.find((item) => item.id === itemId) ?? null;
 }
 
+function findVerseById(bundle, verseId) {
+  return bundle.verses.find((verse) => verse.id === verseId) ?? null;
+}
+
+function getVerseStateLabel(state, record) {
+  if (!record || record.state === 'new' || record.state === 'screening') return 'New';
+  if (record.state === 'known') return 'Known';
+  if (record.state === 'weak' || record.state === 'learning') return 'Weak';
+  return state || 'New';
+}
+
+function getVerseStateKey(record) {
+  if (!record) return 'new';
+  if (record.state === 'known') return 'known';
+  if (record.state === 'weak' || record.state === 'learning') return 'weak';
+  return 'new';
+}
+
+function renderSentencesView() {
+  const { bundle, progress } = appState;
+  const verseProgress = progress?.verseProgress ?? {};
+  const stats = summarizeVerseStats(verseProgress, bundle);
+  const groups = groupVersesByChapter(bundle.verses);
+
+  return `
+    <main class="app study-layout">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Verses through John</p>
+          <h1>Sentences</h1>
+          <p class="muted">Read every Book 3 line, listen aloud, and mark whether you can say it back without help.</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="button ghost" type="button" data-action="open-session">Back to queue</button>
+        </div>
+      </header>
+
+      <section class="card panel">
+        <div class="meta-grid">
+          <span class="badge">${stats.total} verses</span>
+          <span class="badge">new ${stats.new}</span>
+          <span class="badge">weak ${stats.weak}</span>
+          <span class="badge">known ${stats.known}</span>
+        </div>
+      </section>
+
+      <section class="card panel">
+        <h2>Verses</h2>
+        <p class="muted">Tap any verse to open the drill view, or use Quick practice to let the app pick the next unlearned line.</p>
+        <div class="verse-actions-row">
+          <button class="button primary" type="button" data-action="start-verse-drill" data-verse-id="">Quick practice</button>
+        </div>
+        ${groups.map((group) => renderVerseChapterGroup(group, verseProgress)).join('')}
+      </section>
+    </main>
+  `;
+}
+
+function renderVerseChapterGroup(group, verseProgress) {
+  return `
+    <details class="verse-chapter" open>
+      <summary class="verse-chapter-heading">Chapter ${group.chapter}</summary>
+      <ul class="verse-list">
+        ${group.verses.map((verse) => renderVerseRow(verse, verseProgress)).join('')}
+      </ul>
+    </details>
+  `;
+}
+
+function renderVerseRow(verse, verseProgress) {
+  const record = verseProgress[verse.id];
+  const label = getVerseStateLabel(verse, record);
+  const stateKey = getVerseStateKey(record);
+  return `
+    <li class="verse-row verse-${stateKey}">
+      <div class="verse-row-text">
+        <span class="verse-row-bar" aria-hidden="true"></span>
+        <div>
+          <p class="verse-row-reference">${escapeHtml(verse.reference)}</p>
+          <p class="verse-row-russian">${escapeHtml(verse.russianText)}</p>
+        </div>
+      </div>
+      <div class="verse-row-actions">
+        <button class="mini-button" type="button" data-action="verse-answer-known" data-verse-id="${escapeAttribute(verse.id)}">Know it</button>
+        <button class="mini-button" type="button" data-action="verse-answer-uncertain" data-verse-id="${escapeAttribute(verse.id)}">Almost</button>
+        <button class="mini-button danger" type="button" data-action="verse-answer-unknown" data-verse-id="${escapeAttribute(verse.id)}">Forget</button>
+        <button class="mini-button" type="button" data-action="speak" data-text="${escapeAttribute(verse.russianText)}">Speak</button>
+        <button class="mini-button" type="button" data-action="start-verse-drill" data-verse-id="${escapeAttribute(verse.id)}">Drill</button>
+        <span class="badge">${escapeHtml(label)}</span>
+      </div>
+    </li>
+  `;
+}
+
+function renderVerseDrillView() {
+  const { bundle, progress } = appState;
+  const requestedId = appState.ui.verseDrillId;
+  const verse = requestedId ? findVerseById(bundle, requestedId) : null;
+  const resolvedVerse = verse ?? selectVerseForPractice(progress?.verseProgress ?? {}, bundle, {
+    level: progress.currentLevel,
+    now: new Date().toISOString()
+  });
+
+  if (!resolvedVerse) {
+    return `
+      <main class="app study-layout">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Verse drill</p>
+            <h1>No verses to drill</h1>
+            <p class="muted">Add at least one Book 3 verse to the bundle to start a drill.</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="button ghost" type="button" data-action="open-sentences">Back to sentences</button>
+          </div>
+        </header>
+      </main>
+    `;
+  }
+
+  const record = progress.verseProgress?.[resolvedVerse.id] ?? { state: 'new', correctStreak: 0 };
+  const stateLabel = getVerseStateLabel(resolvedVerse, record);
+  const stateKey = getVerseStateKey(record);
+
+  return `
+    <main class="app study-layout">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Verse drill</p>
+          <h1>${escapeHtml(resolvedVerse.reference)}</h1>
+          <p class="muted">Read the line aloud, hide it, then mark whether you can reproduce it.</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="button ghost" type="button" data-action="open-sentences">Back to sentences</button>
+        </div>
+      </header>
+
+      <section class="card panel verse-drill-card">
+        <div class="verse-drill-state verse-${stateKey}">
+          <span class="badge">${escapeHtml(stateLabel)}</span>
+          <span class="muted">streak ${record.correctStreak ?? 0}</span>
+        </div>
+        <div class="verse-card drill-verse">
+          <div class="verse-heading">
+            <strong>${escapeHtml(resolvedVerse.reference)}</strong>
+            <button class="icon-button" type="button" data-action="speak" data-text="${escapeAttribute(resolvedVerse.russianText)}">Speak</button>
+          </div>
+          <p class="russian">${escapeHtml(resolvedVerse.russianText)}</p>
+          ${resolvedVerse.englishText ? `<p class="translation">${escapeHtml(resolvedVerse.englishText)}</p>` : ''}
+        </div>
+        <p class="muted">When you are ready, click an answer below. "I can say it" marks the verse known after a 7-day review interval. "Almost" or "Forget" pushes it back to weak review.</p>
+        <div class="answer-grid">
+          <button class="button primary" type="button" data-verse-id="${escapeAttribute(resolvedVerse.id)}" data-action="verse-answer-known">I can say it</button>
+          <button class="button secondary" type="button" data-verse-id="${escapeAttribute(resolvedVerse.id)}" data-action="verse-answer-uncertain">Almost</button>
+          <button class="button danger" type="button" data-verse-id="${escapeAttribute(resolvedVerse.id)}" data-action="verse-answer-unknown">Forget</button>
+        </div>
+      </section>
+    </main>
+  `;
+}
+
 async function handleClick(event) {
   const target = event.target.closest('button, a, label');
   if (!target) return;
@@ -524,6 +702,32 @@ async function handleClick(event) {
     appState.ui.listState = 'all';
     appState.ui.sentenceChallenge = null;
     render();
+    return;
+  }
+
+  if (target.dataset.action === 'open-sentences') {
+    appState.ui.view = 'sentences';
+    appState.ui.verseDrillId = null;
+    appState.ui.sentenceChallenge = null;
+    render();
+    return;
+  }
+
+  if (target.dataset.action === 'start-verse-drill') {
+    const requested = String(target.dataset.verseId || '');
+    if (requested) {
+      appState.ui.verseDrillId = requested;
+    } else {
+      appState.ui.verseDrillId = null;
+    }
+    appState.ui.view = 'verse-drill';
+    appState.ui.sentenceChallenge = null;
+    render();
+    return;
+  }
+
+  if (target.dataset.action === 'verse-answer-known' || target.dataset.action === 'verse-answer-uncertain' || target.dataset.action === 'verse-answer-unknown') {
+    await recordVerseAnswer(target.dataset.verseId || appState.ui.verseDrillId || '', target.dataset.action.replace('verse-answer-', ''));
     return;
   }
 
@@ -605,6 +809,60 @@ async function answerItem(itemId, answer) {
     await saveAppState(appState);
   } catch (error) {
     appState.message = `Progress changed in memory, but browser storage failed: ${error.message}`;
+    render();
+  }
+}
+
+async function recordVerseAnswer(verseId, answer) {
+  if (!verseId) {
+    appState.message = 'Verse id is missing.';
+    render();
+    return;
+  }
+
+  let updatedVerseProgress;
+  try {
+    updatedVerseProgress = applyVerseAnswer(appState.progress.verseProgress, verseId, answer, new Date().toISOString());
+  } catch (error) {
+    appState = {
+      ...appState,
+      message: error.message
+    };
+    render();
+    return;
+  }
+
+  appState = {
+    ...appState,
+    progress: {
+      ...appState.progress,
+      verseProgress: updatedVerseProgress,
+      updatedAt: new Date().toISOString()
+    },
+    message: answer === 'known'
+      ? 'Marked known. Next review in 7 days.'
+      : answer === 'uncertain'
+        ? 'Marked as almost. Stay alert in review.'
+        : 'Marked as forgotten. Will return at the next review.'
+  };
+
+  if (appState.ui.view === 'verse-drill') {
+    const nextVerse = selectVerseForPractice(appState.progress.verseProgress, appState.bundle, {
+      level: appState.progress.currentLevel,
+      now: appState.progress.updatedAt
+    });
+    appState.ui.verseDrillId = nextVerse?.id ?? null;
+    if (!nextVerse) {
+      appState.ui.view = 'sentences';
+    }
+  }
+
+  render();
+
+  try {
+    await saveAppState(appState);
+  } catch (error) {
+    appState.message = `Verse answer saved in memory, but browser storage failed: ${error.message}`;
     render();
   }
 }

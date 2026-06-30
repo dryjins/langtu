@@ -221,6 +221,98 @@ h2 {
   background: rgba(255, 250, 243, 0.72);
 }
 
+.verse-chapter {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 250, 243, 0.7);
+  margin-bottom: 12px;
+  padding: 6px 10px;
+}
+
+.verse-chapter-heading {
+  font-weight: 720;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.verse-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.verse-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr;
+  border-top: 1px solid rgba(220, 201, 178, 0.6);
+  padding: 12px 6px 14px;
+}
+
+.verse-row:first-child {
+  border-top: 0;
+}
+
+.verse-row-text {
+  display: grid;
+  grid-template-columns: 8px 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.verse-row-bar {
+  width: 6px;
+  border-radius: 999px;
+  background: var(--muted);
+}
+
+.verse-known .verse-row-bar { background: var(--green); }
+.verse-weak .verse-row-bar { background: #bf6b1d; }
+.verse-new .verse-row-bar { background: var(--muted); }
+
+.verse-row-reference {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.verse-row-russian {
+  margin: 4px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.verse-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.verse-actions-row {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.verse-drill-card {
+  display: grid;
+  gap: 14px;
+}
+
+.verse-drill-state {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
 .vocabulary-table {
   width: 100%;
   min-width: 780px;

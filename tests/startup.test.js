@@ -70,6 +70,20 @@ test('default startup state uses curated default bundle when no saved state exis
   assert.equal(state.progress.updatedAt, now);
   assert.ok(state.progress.items && typeof state.progress.items === 'object');
   assert.equal(Object.keys(state.progress.items).length, state.bundle.items.length);
+  assert.ok(state.progress.verseProgress && typeof state.progress.verseProgress === 'object');
+  assert.equal(Object.keys(state.progress.verseProgress).length, state.bundle.verses.length);
+});
+
+test('default startup state seeds every book3 verse in verseProgress', () => {
+  const now = '2026-01-01T00:00:00.000Z';
+
+  const state = buildStartupState(null, now);
+
+  const verseIds = state.bundle.verses.map((verse) => verse.id);
+  for (const verseId of verseIds) {
+    assert.equal(state.progress.verseProgress[verseId].state, 'new');
+    assert.equal(state.progress.verseProgress[verseId].correctStreak, 0);
+  }
 });
 
 test('default startup bundle exposes all vocabulary in full inventory view', () => {
@@ -205,6 +219,17 @@ test('buildStartupState repairs saved progress to match the current bundle', () 
           nextReviewAt: '2025-12-02T00:00:00.000Z',
           failReasons: []
         }
+      },
+      verseProgress: {
+        [bundle.verses[0].id]: {
+          id: bundle.verses[0].id,
+          state: 'known',
+          correctStreak: 4,
+          lastAnswer: 'known',
+          lastAnswerAt: '2025-12-15T00:00:00.000Z',
+          nextReviewAt: '2025-12-22T00:00:00.000Z',
+          failReasons: []
+        }
       }
     }
   };
@@ -217,4 +242,37 @@ test('buildStartupState repairs saved progress to match the current bundle', () 
   assert.equal(state.progress.items['v.saved.a2'].state, 'new');
   assert.equal(Object.hasOwn(state.progress.items, 'orphan.old-item'), false);
   assert.equal(Object.keys(state.progress.items).length, bundle.items.length);
+  assert.equal(state.progress.verseProgress[bundle.verses[0].id].state, 'known');
+  assert.equal(state.progress.verseProgress[bundle.verses[0].id].correctStreak, 4);
+});
+
+test('buildStartupState drops saved verseProgress records that no longer match a verse', () => {
+  const now = '2026-01-02T00:00:00.000Z';
+  const bundle = makeSavedBundle();
+
+  const savedState = {
+    bundle,
+    progress: {
+      currentLevel: 'A2',
+      createdAt: '2025-12-01T00:00:00.000Z',
+      updatedAt: '2025-12-01T00:00:00.000Z',
+      items: {},
+      verseProgress: {
+        'orphan.verse.id': {
+          id: 'orphan.verse.id',
+          state: 'known',
+          correctStreak: 5,
+          lastAnswer: 'known',
+          lastAnswerAt: '2025-12-15T00:00:00.000Z',
+          nextReviewAt: '2025-12-22T00:00:00.000Z',
+          failReasons: []
+        }
+      }
+    }
+  };
+
+  const state = buildStartupState(savedState, now);
+
+  assert.equal(Object.hasOwn(state.progress.verseProgress, 'orphan.verse.id'), false);
+  assert.equal(Object.keys(state.progress.verseProgress).length, bundle.verses.length);
 });
