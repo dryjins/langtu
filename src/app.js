@@ -331,6 +331,14 @@ function renderVocabularyTable(entries, bundle) {
   return `
     <div class="vocabulary-table-wrap">
       <table class="vocabulary-table">
+        <colgroup>
+          <col class="col-state">
+          <col class="col-word">
+          <col class="col-meaning">
+          <col class="col-example">
+          <col class="col-state-badge">
+          <col class="col-action">
+        </colgroup>
         <thead>
           <tr>
             <th class="state-heading" aria-label="State color"></th>

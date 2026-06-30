@@ -139,3 +139,23 @@ test('vocabulary table styles include compact layout and state colors', () => {
   assert.match(styles, /\.vocab-not-learned/);
   assert.match(styles, /\.vocab-weak/);
 });
+
+test('vocabulary table uses fixed column widths with example taking the largest share', () => {
+  const styles = readFileSync('src/styles.css', 'utf8');
+  const html = readFileSync('src/app.js', 'utf8');
+
+  assert.match(styles, /\.vocabulary-table\s*\{[^}]*table-layout:\s*fixed/);
+  assert.match(styles, /\.vocabulary-table col\.col-state\s*\{[^}]*width:\s*8px/);
+  assert.match(styles, /\.vocabulary-table col\.col-word\s*\{[^}]*width/);
+  assert.match(styles, /\.vocabulary-table col\.col-meaning\s*\{[^}]*width/);
+  assert.match(styles, /\.vocabulary-table col\.col-example\s*\{[^}]*width/);
+  assert.match(styles, /\.vocabulary-table col\.col-state-badge\s*\{[^}]*width/);
+  assert.match(styles, /\.vocabulary-table col\.col-action\s*\{[^}]*width/);
+  assert.match(styles, /overflow-wrap:\s*anywhere/);
+  assert.match(html, /<col class="col-state"/);
+  assert.match(html, /<col class="col-word"/);
+  assert.match(html, /<col class="col-meaning"/);
+  assert.match(html, /<col class="col-example"/);
+  assert.match(html, /<col class="col-state-badge"/);
+  assert.match(html, /<col class="col-action"/);
+});

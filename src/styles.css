@@ -315,9 +315,17 @@ h2 {
 
 .vocabulary-table {
   width: 100%;
-  min-width: 780px;
+  min-width: 880px;
   border-collapse: collapse;
+  table-layout: fixed;
 }
+
+.vocabulary-table col.col-state { width: 8px; }
+.vocabulary-table col.col-word { width: 130px; }
+.vocabulary-table col.col-meaning { width: 220px; }
+.vocabulary-table col.col-state-badge { width: 92px; }
+.vocabulary-table col.col-action { width: 168px; }
+.vocabulary-table col.col-example { width: auto; }
 
 .vocabulary-table th,
 .vocabulary-table td {
@@ -355,6 +363,18 @@ h2 {
 .vocab-meaning-cell,
 .vocab-example-cell {
   line-height: 1.38;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.vocab-example-cell {
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.vocab-meaning-cell {
+  color: var(--ink);
+  font-size: 0.95rem;
 }
 
 .vocab-word {
@@ -362,6 +382,7 @@ h2 {
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.22rem;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .vocab-meta,
@@ -377,6 +398,15 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.vocab-state-badge-cell {
+  white-space: nowrap;
+}
+
+.vocab-state-badge-cell .badge {
+  display: inline-flex;
+  font-size: 0.74rem;
 }
 
 .mini-button {
