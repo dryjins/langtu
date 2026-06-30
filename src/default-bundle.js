@@ -1,6 +1,15 @@
-export const DEFAULT_BUNDLE = {
+export const DEFAULT_CONTENT = {
   "version": 1,
   "title": "GosRU starter (curated from public sources and original A1-C2 skill content)",
+  "buildAt": "2026-06-30T04:10:37.406Z",
+  "sources": [
+    "data/skill-content-a1.json",
+    "data/skill-content-a2.json",
+    "data/skill-content-b1.json",
+    "data/skill-content-b2.json",
+    "data/skill-content-c1.json",
+    "data/skill-content-c2.json"
+  ],
   "verses": [
     {
       "id": "book3:c1:l0",

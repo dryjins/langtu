@@ -159,3 +159,14 @@ test('vocabulary table uses fixed column widths with example taking the largest 
   assert.match(html, /<col class="col-state-badge"/);
   assert.match(html, /<col class="col-action"/);
 });
+
+test('app loads the content bundle through the IndexedDB cache, not direct import', () => {
+  const script = readFileSync('src/app.js', 'utf8');
+  const startupScript = readFileSync('src/startup.js', 'utf8');
+  const dbScript = readFileSync('src/db.js', 'utf8');
+
+  assert.doesNotMatch(script, /from\s+['"]\.\/default-bundle\.js['"]/);
+  assert.doesNotMatch(startupScript, /from\s+['"]\.\/default-bundle\.js['"]/);
+  assert.match(script, /loadContentBundle|loadCachedContent|content-cache/);
+  assert.match(dbScript, /content-bundle/);
+});

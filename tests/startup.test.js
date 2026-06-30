@@ -3,9 +3,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { normalizeBundle } from '../src/bundle.js';
-import { buildStartupState, defaultStartupMessage } from '../src/startup.js';
-import { DEFAULT_BUNDLE } from '../src/default-bundle.js';
+import { buildStartupState, defaultStartupMessage, getDefaultBundleMeta, loadDefaultBundleContent, buildStartupStateAsync } from '../src/startup.js';
+import { DEFAULT_CONTENT_META } from '../src/default-bundle-meta.js';
+import { DEFAULT_CONTENT } from '../src/default-bundle.js';
 import { getInventoryItems } from '../src/scheduler.js';
+
+const DEFAULT_BUNDLE = DEFAULT_CONTENT;
 
 function makeSavedBundle() {
   return normalizeBundle({
@@ -50,7 +53,7 @@ test('saved state is used when bundle and progress exist', () => {
     storedAt: now
   };
 
-  const state = buildStartupState(savedState, now);
+  const state = buildStartupState({ savedState, content: bundle, now });
 
   assert.equal(state.bundle.title, 'Saved private study bundle');
   assert.equal(state.progress.currentLevel, 'A1');
@@ -61,7 +64,7 @@ test('saved state is used when bundle and progress exist', () => {
 test('default startup state uses curated default bundle when no saved state exists', () => {
   const now = '2026-01-01T00:00:00.000Z';
 
-  const state = buildStartupState(null, now);
+  const state = buildStartupState({ savedState: null, content: DEFAULT_BUNDLE, now });
 
   assert.equal(state.message, defaultStartupMessage);
   assert.equal(state.bundle.title, DEFAULT_BUNDLE.title);
@@ -77,7 +80,7 @@ test('default startup state uses curated default bundle when no saved state exis
 test('default startup state seeds every book3 verse in verseProgress', () => {
   const now = '2026-01-01T00:00:00.000Z';
 
-  const state = buildStartupState(null, now);
+  const state = buildStartupState({ savedState: null, content: DEFAULT_BUNDLE, now });
 
   const verseIds = state.bundle.verses.map((verse) => verse.id);
   for (const verseId of verseIds) {
@@ -89,7 +92,7 @@ test('default startup state seeds every book3 verse in verseProgress', () => {
 test('default startup bundle exposes all vocabulary in full inventory view', () => {
   const now = '2026-01-01T00:00:00.000Z';
 
-  const state = buildStartupState(null, now);
+  const state = buildStartupState({ savedState: null, content: DEFAULT_BUNDLE, now });
 
   const allVocabulary = getInventoryItems(state.bundle, state.progress, {
     level: 'all',
@@ -103,7 +106,7 @@ test('default startup bundle exposes all vocabulary in full inventory view', () 
 test('default startup bundle includes all OpenRussian vocab entries by level', async () => {
   const dataPath = path.resolve(process.cwd(), 'data/openrussian-vocab-a1-c2.json');
   const rawSource = JSON.parse(await fs.readFile(dataPath, 'utf8'));
-  const state = buildStartupState(null, '2026-01-01T00:00:00.000Z');
+  const state = buildStartupState({ savedState: null, content: DEFAULT_BUNDLE, now: '2026-01-01T00:00:00.000Z' });
 
   const sourceByLevel = {};
   let expectedTotal = 0;
@@ -161,7 +164,7 @@ test('stale default bundle saved in storage is upgraded to the latest default it
     storedAt: '2025-12-31T00:00:00.000Z'
   };
 
-  const state = buildStartupState(savedState, now);
+  const state = buildStartupState({ savedState, content: DEFAULT_BUNDLE, now });
 
   assert.equal(state.bundle.title, DEFAULT_BUNDLE.title);
   assert.equal(state.bundle.items.length, normalizedDefault.items.length);
@@ -174,7 +177,7 @@ test('stale default bundle saved in storage is upgraded to the latest default it
 
 test('normalizeBundle can load default startup dataset structure', () => {
   const now = '2026-01-01T00:00:00.000Z';
-  const state = buildStartupState(null, now);
+  const state = buildStartupState({ savedState: null, content: DEFAULT_BUNDLE, now });
 
   const normalized = normalizeBundle({
     ...state.bundle,
@@ -234,7 +237,7 @@ test('buildStartupState repairs saved progress to match the current bundle', () 
     }
   };
 
-  const state = buildStartupState(savedState, now);
+  const state = buildStartupState({ savedState, content: bundle, now });
 
   assert.equal(state.progress.currentLevel, 'A2');
   assert.equal(state.progress.createdAt, '2025-12-01T00:00:00.000Z');
@@ -271,7 +274,7 @@ test('buildStartupState drops saved verseProgress records that no longer match a
     }
   };
 
-  const state = buildStartupState(savedState, now);
+  const state = buildStartupState({ savedState, content: bundle, now });
 
   assert.equal(Object.hasOwn(state.progress.verseProgress, 'orphan.verse.id'), false);
   assert.equal(Object.keys(state.progress.verseProgress).length, bundle.verses.length);

@@ -14,9 +14,12 @@ test('createStorageBackend builds supported storage adapters', () => {
   const backend = createStorageBackend('indexeddb');
 
   assert.equal(backend.name, 'indexeddb');
-  assert.equal(typeof backend.load, 'function');
-  assert.equal(typeof backend.save, 'function');
-  assert.equal(typeof backend.clear, 'function');
+  assert.equal(typeof backend.loadAppState, 'function');
+  assert.equal(typeof backend.saveAppState, 'function');
+  assert.equal(typeof backend.clearAppState, 'function');
+  assert.equal(typeof backend.loadContentBundle, 'function');
+  assert.equal(typeof backend.saveContentBundle, 'function');
+  assert.equal(typeof backend.loadContentVersion, 'function');
 });
 
 test('createStorageBackend rejects unknown backend names', () => {
@@ -27,8 +30,8 @@ test('createStorageBackend rejects unknown backend names', () => {
 
 test('setStorageBackend validates backend contracts', () => {
   assert.throws(() => {
-    setStorageBackend({ load: async () => ({}) });
-  }, /storage backend must implement load, save, and clear/);
+    setStorageBackend({ loadAppState: async () => ({}) });
+  }, /storage backend must implement/);
 });
 
 test('loadAppState/saveAppState/clearAppState delegate to active backend', async () => {
@@ -37,16 +40,22 @@ test('loadAppState/saveAppState/clearAppState delegate to active backend', async
 
   setStorageBackend({
     name: 'memory',
-    load: async () => {
+    loadAppState: async () => {
       log.push('load');
       return { demo: 'state' };
     },
-    save: async () => {
+    saveAppState: async () => {
       log.push('save');
     },
-    clear: async () => {
+    clearAppState: async () => {
       log.push('clear');
-    }
+    },
+    loadContentBundle: async () => null,
+    saveContentBundle: async () => {},
+    clearContentBundle: async () => {},
+    loadContentVersion: async () => null,
+    saveContentVersion: async () => {},
+    clearContentVersion: async () => {}
   });
 
   const loadedState = await loadAppState();
@@ -59,4 +68,12 @@ test('loadAppState/saveAppState/clearAppState delegate to active backend', async
   } finally {
     setStorageBackend(originalBackend);
   }
+});
+
+test('db exposes getDbVersion constant and content store names', async () => {
+  const { getDbVersion, CONTENT_BUNDLE_STORE, CONTENT_VERSION_STORE } = await import('../src/db.js');
+  assert.equal(typeof getDbVersion, 'function');
+  assert.equal(CONTENT_BUNDLE_STORE, 'content-bundle');
+  assert.equal(CONTENT_VERSION_STORE, 'content-version');
+  assert.ok(getDbVersion() >= 2);
 });

@@ -1,4 +1,4 @@
-import { buildStartupState } from './startup.js';
+import { buildStartupState, loadDefaultBundleContent } from './startup.js';
 
 export const VALID_VIEWS = ['session', 'vocabulary', 'drill', 'sentences', 'verse-drill'];
 export const VALID_LEVEL_FILTERS = ['all', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -19,8 +19,50 @@ export function sanitizeValue(value, validValues, fallback) {
   return validValues.includes(value) ? value : fallback;
 }
 
-export function normalizeAppState(rawState, now = new Date().toISOString()) {
-  const startup = buildStartupState(rawState, now);
+export function buildEmptyStartupFallback() {
+  return {
+    bundle: null,
+    progress: null,
+    message: ''
+  };
+}
+
+export async function normalizeAppStateAsync(rawState, now = new Date().toISOString(), incomingContent = null) {
+  let startup;
+  try {
+    const content = incomingContent ?? (rawState?.bundle ? null : await loadDefaultBundleContent());
+    startup = await buildStartupStateAsync({ savedState: rawState, content, now });
+  } catch (error) {
+    startup = buildEmptyStartupFallback();
+  }
+  const sourceUi = rawState?.ui || {};
+
+  return {
+    ...startup,
+    ui: {
+      ...DEFAULT_UI,
+      sentenceChallenge: null,
+      view: sanitizeValue(sourceUi.view, VALID_VIEWS, DEFAULT_UI.view),
+      listType: 'all',
+      listState: sanitizeValue(sourceUi.listState, VALID_LIST_STATES, DEFAULT_UI.listState),
+      selectedLevel: 'all',
+      drillItemId: typeof sourceUi.drillItemId === 'string' ? sourceUi.drillItemId : null,
+      verseDrillId: typeof sourceUi.verseDrillId === 'string' ? sourceUi.verseDrillId : null
+    }
+  };
+}
+
+export function normalizeAppState(rawState, now = new Date().toISOString(), bundle = null, progress = null, message = null) {
+  let startup;
+  if (bundle && progress) {
+    startup = { bundle, progress, message: message || rawState?.message || '' };
+  } else {
+    try {
+      startup = buildStartupState({ savedState: rawState, content: null, now });
+    } catch (error) {
+      startup = buildEmptyStartupFallback();
+    }
+  }
   const sourceUi = rawState?.ui || {};
 
   return {

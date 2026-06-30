@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
@@ -16,10 +17,12 @@ const CLI_DEFAULTS = {
     'data/skill-content-c1.json',
     'data/skill-content-c2.json'
   ],
-  output: 'src/default-bundle.js',
+  outputContent: 'src/default-bundle.js',
+  outputMeta: 'src/default-bundle-meta.js',
   chapters: undefined,
   vocabPerLevel: undefined,
-  title: 'GosRU starter (curated from public sources and original A1-C2 skill content)'
+  title: 'GosRU starter (curated from public sources and original A1-C2 skill content)',
+  version: 1
 };
 
 function buildVersesFromBible(bibleData, chapters) {
@@ -109,22 +112,44 @@ function buildSkillsFromContents(skillDataList) {
   return { grammar, expressions };
 }
 
-export function buildDefaultBundleFromSources({ bibleData, vocabData, skillDataList, chapters, vocabPerLevel, title }) {
+export function buildDefaultBundleFromSources({ bibleData, vocabData, skillDataList, chapters, vocabPerLevel, title, version = 1 }) {
   const verses = buildVersesFromBible(bibleData, chapters);
   const vocabulary = buildVocabularyFromOpenRussian(vocabData, vocabPerLevel);
   const { grammar, expressions } = buildSkillsFromContents(skillDataList);
-  return {
-    version: 1,
+  const buildAt = new Date().toISOString();
+  const content = {
+    version,
     title,
+    buildAt,
+    sources: [...CLI_DEFAULTS.skills],
     verses,
     vocabulary,
     grammar,
     expressions
   };
+  const contentHash = hashContent(content);
+  return {
+    content,
+    meta: { version, title, buildAt, contentHash, sources: content.sources }
+  };
 }
 
 function serializeBundle(bundle) {
-  return `export const DEFAULT_BUNDLE = ${JSON.stringify(bundle, null, 2)};\n`;
+  return `export const DEFAULT_CONTENT = ${JSON.stringify(bundle, null, 2)};\n`;
+}
+
+function serializeMeta(meta) {
+  return `export const DEFAULT_CONTENT_META = ${JSON.stringify(meta, null, 2)};\n`;
+}
+
+function hashContent(payload) {
+  const serialized = JSON.stringify({
+    verses: payload.verses ?? [],
+    vocabulary: payload.vocabulary ?? [],
+    grammar: payload.grammar ?? [],
+    expressions: payload.expressions ?? []
+  });
+  return createHash('sha256').update(serialized).digest('hex').slice(0, 16);
 }
 
 function parseArgs(argv) {
@@ -155,8 +180,19 @@ function parseArgs(argv) {
         i += 1;
         break;
       case 'output':
-        if (!hasNext) throw new Error('--output requires a value');
-        args.output = next;
+      case 'output-content':
+        if (!hasNext) throw new Error('--output-content requires a value');
+        args.outputContent = next;
+        i += 1;
+        break;
+      case 'output-meta':
+        if (!hasNext) throw new Error('--output-meta requires a value');
+        args.outputMeta = next;
+        i += 1;
+        break;
+      case 'version':
+        if (!hasNext) throw new Error('--version requires a number');
+        args.version = Number(next);
         i += 1;
         break;
       case 'chapters':
@@ -189,7 +225,9 @@ function printUsage() {
       '--bible path           Source bible JSON',
       '--vocab path           Source vocab JSON',
       '--skill path           Source skill content JSON (repeatable; default: A1 + A2 files)',
-      '--output path          Output bundle JS (default: src/default-bundle.js)',
+      '--output-content path  Output content JS (default: src/default-bundle.js)',
+      '--output-meta path     Output meta JS (default: src/default-bundle-meta.js)',
+      '--version n            Bundle version (default: 1)',
       '--chapters n           Chapter count from start (default: all)',
       '--vocab-per-level n    Top items per level (default: all)',
       '--title str            Bundle title',
@@ -223,20 +261,25 @@ export async function runCli(argv = process.argv.slice(2)) {
     })
   );
 
-  const bundle = buildDefaultBundleFromSources({
+  const built = buildDefaultBundleFromSources({
     bibleData: bible,
     vocabData: vocab,
     skillDataList,
     chapters: args.chapters,
     vocabPerLevel: args.vocabPerLevel,
-    title: args.title
+    title: args.title,
+    version: args.version
   });
+  const { content, meta } = built;
 
-  const output = path.resolve(projectDir, args.output);
-  await fs.mkdir(path.dirname(output), { recursive: true });
-  await fs.writeFile(output, serializeBundle(bundle));
+  const outputContent = path.resolve(projectDir, args.outputContent);
+  const outputMeta = path.resolve(projectDir, args.outputMeta);
+  await fs.mkdir(path.dirname(outputContent), { recursive: true });
+  await fs.mkdir(path.dirname(outputMeta), { recursive: true });
+  await fs.writeFile(outputContent, serializeBundle(content));
+  await fs.writeFile(outputMeta, serializeMeta(meta));
   process.stdout.write(
-    `Wrote ${output} (verses=${bundle.verses.length}, vocabulary=${bundle.vocabulary.length}, grammar=${bundle.grammar.length}, expressions=${bundle.expressions.length}, sources=${args.skills.length})\n`
+    `Wrote ${outputContent} + ${outputMeta} (verses=${content.verses.length}, vocabulary=${content.vocabulary.length}, grammar=${content.grammar.length}, expressions=${content.expressions.length}, version=${content.version}, hash=${meta.contentHash})\n`
   );
 }
 

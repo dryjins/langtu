@@ -1,12 +1,18 @@
 import { LEVELS } from './bundle.js';
-import { clearAppState, loadAppState, saveAppState } from './db.js';
+import {
+  clearAppState,
+  loadAppState,
+  loadContentBundle,
+  saveAppState,
+  saveContentBundle
+} from './db.js';
 import {
   applyScreeningAnswer,
   buildDailyQueue,
   getInventoryItems,
   summarizeInventoryCounts
 } from './scheduler.js';
-import { buildStartupState, defaultStartupMessage } from './startup.js';
+import { buildStartupStateAsync, defaultStartupMessage, getDefaultBundleMeta, loadDefaultBundleContent } from './startup.js';
 import {
   DEFAULT_UI,
   VALID_LIST_STATES,
@@ -21,6 +27,7 @@ import {
   selectVerseForPractice,
   summarizeVerseStats
 } from './verse-state.js';
+import { ensureContentCached } from './content-cache.js';
 
 const root = document.getElementById('app-root');
 const APP_NAME = 'GosRU';
@@ -45,10 +52,23 @@ async function init() {
 
   try {
     const now = new Date().toISOString();
+    const meta = getDefaultBundleMeta();
+    const cachedContent = await loadContentBundle();
+    const content = (cachedContent && cachedContent.version === meta.version && cachedContent.contentHash === meta.contentHash)
+      ? cachedContent
+      : (await ensureContentCached({
+        backend: {
+          load: () => loadContentBundle(),
+          save: (payload) => saveContentBundle(payload)
+        },
+        meta,
+        content: await loadDefaultBundleContent()
+      })).content;
+
     const savedState = await loadAppState();
     const hasSavedProgress = savedState?.bundle && savedState?.progress;
-
-    appState = normalizeAppState(savedState, now);
+    const startup = await buildStartupStateAsync({ savedState, content, now });
+    appState = normalizeAppState(savedState, now, startup.bundle, startup.progress, startup.message);
     render();
 
     if (!hasSavedProgress) {
